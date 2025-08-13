@@ -24,7 +24,7 @@ with
 $$
 \begin{aligned}
 G(v) &= \omega_e\,(v+\tfrac12) - \omega_e x_e\,(v+\tfrac12)^2 + \omega_e y_e\,(v+\tfrac12)^3, \\
-B_v  &= B_e - \alpha_e\,(v+\tfrac12), \quad
+B_v  &= B_e - \alpha_e\,(v+\tfrac12), \\
 D_v  &= D_e - \beta_e\,(v+\tfrac12), \\
 F_v(N) &= B_v\,N(N+1) - D_v\,\big[N(N+1)\big]^2 .
 \end{aligned}
