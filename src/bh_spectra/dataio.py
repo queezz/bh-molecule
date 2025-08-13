@@ -24,7 +24,9 @@ def n_air(wl_nm: float | np.ndarray) -> float | np.ndarray:
 def load_v00_wavelengths() -> pd.DataFrame:
     """Load 11BH_v00.csv from package resources and convert to wavelengths (nm)."""
     with resources.files("bh_spectra._resources").joinpath("11BH_v00.csv").open("rb") as f:
-        v00_wn = pd.read_csv(f)  # expects columns P,Q,R in wavenumbers (cm^-1)
+        v00_wn = pd.read_csv(
+            f, comment="#"
+        )  # expects columns P,Q,R in wavenumbers (cm^-1)
     wl_vac_nm = 1e7 / v00_wn  # vacuum wavelengths (nm)
     wl_air_nm = wl_vac_nm / n_air(wl_vac_nm)  # convert to air wavelengths
     wl_air_nm.columns = ["P", "Q", "R"]
