@@ -1,0 +1,4 @@
+site_name: BH Spectra
+nav:
+  - Home: index.md
+docs_dir: docs
