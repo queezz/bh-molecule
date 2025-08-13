@@ -1,4 +1,5 @@
 site_name: BH Spectra
 nav:
   - Home: index.md
+  - Physics: physics.md
 docs_dir: docs
