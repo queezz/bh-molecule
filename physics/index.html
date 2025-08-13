@@ -847,33 +847,35 @@
 <h2 id="bhmodel">BHModel<a class="headerlink" href="#bhmodel" title="Permanent link">&para;</a></h2>
 <p>Core BH spectrum model; file I/O is done elsewhere (dataio).</p>
 <h3 id="energy">energy<a class="headerlink" href="#energy" title="Permanent link">&para;</a></h3>
-<p>Rovibronic term value :math:<code>E(v,N)</code> (in cm⁻¹) for a given electronic state.</p>
+<p>Rovibronic term value <span class="arithmatex">\(E(v,N)\)</span> (in cm⁻¹) for a given electronic state.</p>
 <p>The model uses a Dunham-like expansion truncated to
 cubic vibrational terms and quartic (centrifugal distortion) in rotation:</p>
-<p>.. math::
-    E(v,N) \;=\; T_e \;+\; G(v) \;+\; F_v(N),</p>
+<div class="arithmatex">\[
+E(v,N) \;=\; T_e \;+\; G(v) \;+\; F_v(N),
+\]</div>
 <p>with</p>
-<p>.. math::
-    G(v) &amp;= \omega_e\,(v+\tfrac12)\;-\;\omega_e x_e\,(v+\tfrac12)^2\;+\;\omega_e y_e\,(v+\tfrac12)^3, \\
-    B_v  &amp;= B_e \;-\; \alpha_e\,(v+\tfrac12), \qquad
-    D_v  =  D_e \;-\; \beta_e \,(v+\tfrac12), \\
-    F_v(N) &amp;= B_v\,N(N+1)\;-\;D_v\,\big[N(N+1)\big]^2 .</p>
+<div class="arithmatex">\[
+G(v) &amp;= \omega_e\,(v+\tfrac12)\;-\;\omega_e x_e\,(v+\tfrac12)^2\;+\;\omega_e y_e\,(v+\tfrac12)^3, \\\\
+B_v  &amp;= B_e \;-\; \alpha_e\,(v+\tfrac12), \qquad
+D_v  =  D_e \;-\; \beta_e \,(v+\tfrac12), \\\\
+F_v(N) &amp;= B_v\,N(N+1)\;-\;D_v\,\big[N(N+1)\big]^2 .
+\]</div>
 <h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
 <p>v : int
-    Vibrational quantum number :math:<code>v \ge 0</code>.
+    Vibrational quantum number <span class="arithmatex">\(v \ge 0\)</span>.
 N : int
     Rotational quantum number (spinless). For singlet states,
-    :math:<code>J \approx N</code>; fine/Λ-doubling and spin-rotation are neglected here.
+    <span class="arithmatex">\(J \approx N\)</span>; fine/Λ-doubling and spin-rotation are neglected here.
 c : MolecularConstants
     Parameter set for the electronic state (fields in cm⁻¹):
     <code>T_e, omega_e, omega_e_x_e, omega_e_y_e, B_e, alpha_e, D_e, beta_e</code>.</p>
 <h2 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h2>
 <p>float
-    Rovibronic term value :math:<code>E(v,N)</code> in <strong>cm⁻¹</strong>.</p>
+    Rovibronic term value <span class="arithmatex">\(E(v,N)\)</span> in <strong>cm⁻¹</strong>.</p>
 <h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Truncation: includes up to :math:<code>(v+\tfrac12)^3</code> in :math:<code>G(v)</code> and
-:math:<code>[N(N+1)]^2</code> in :math:<code>F_v(N)</code>. Higher-order terms (e.g. :math:<code>H_v</code>
+<li>Truncation: includes up to <span class="arithmatex">\((v+\tfrac12)^3\)</span> in <span class="arithmatex">\(G(v)\)</span> and
+<span class="arithmatex">\([N(N+1)]^2\)</span> in <span class="arithmatex">\(F_v(N)\)</span>. Higher-order terms (e.g. <span class="arithmatex">\(H_v\)</span>
 or additional Dunham coefficients) are omitted.</li>
 <li>Parity/Λ-doubling, spin-rotation, hyperfine, and electronic spin are
 ignored (appropriate for a simplified ^1Π↔^1Σ^+ treatment in this codebase).</li>
@@ -907,22 +909,25 @@ T : float
 <h2 id="notes_1">Notes<a class="headerlink" href="#notes_1" title="Permanent link">&para;</a></h2>
 <p>The Doppler FWHM (in nm) is computed from a compact numerical form
 tailored to this model:</p>
-<p>.. math::
-    \Delta\lambda_D \approx 7.72 \times 10^{-5}\; \lambda\,
-    \sqrt{\frac{T\,K_{2\mathrm{eV}}}{M_{\mathrm{BH}}}}</p>
-<p>where :math:<code>\lambda</code> is in nm, :math:<code>K_{2\mathrm{eV}} = 8.617\times10^{-5}\,\mathrm{eV\,K^{-1}}</code>,
-and :math:<code>M_{\mathrm{BH}}</code> is the BH molecular mass in amu. This is equivalent to the
+<div class="arithmatex">\[
+\Delta\lambda_D \approx 7.72 \times 10^{-5}\; \lambda\,
+\sqrt{\frac{T\,K_{2\mathrm{eV}}}{M_{\mathrm{BH}}}}
+\]</div>
+<p>where <span class="arithmatex">\(\lambda\)</span> is in nm, <span class="arithmatex">\(K_{2\mathrm{eV}} = 8.617\times10^{-5}\,\mathrm{eV\,K^{-1}}\)</span>,
+and <span class="arithmatex">\(M_{\mathrm{BH}}\)</span> is the BH molecular mass in amu. This is equivalent to the
 standard expression</p>
-<p>.. math::
-    \Delta\lambda_D = \lambda \sqrt{\frac{8\ln 2\,k_B T}{m c^2}}</p>
+<div class="arithmatex">\[
+\Delta\lambda_D = \lambda \sqrt{\frac{8\ln 2\,k_B T}{m c^2}}
+\]</div>
 <p>after unit conversions (nm, eV, amu). The total Gaussian FWHM is</p>
-<p>.. math::
-    \Delta\lambda = \sqrt{\Delta\lambda_D^2 + \Delta\lambda_{\mathrm{inst}}^2},</p>
-<p>and the standard deviation is :math:<code>\sigma = \Delta\lambda / (2\sqrt{2\ln 2})</code>.
+<div class="arithmatex">\[
+\Delta\lambda = \sqrt{\Delta\lambda_D^2 + \Delta\lambda_{\mathrm{inst}}^2},
+\]</div>
+<p>and the standard deviation is <span class="arithmatex">\(\sigma = \Delta\lambda / (2\sqrt{2\ln 2})\)</span>.
 The returned profile is</p>
-<p>.. math::
-    g(x) = \frac{1}{\sqrt{2\pi}\,\sigma}\;
-        \exp!\left[-\frac{(x-\lambda)^2}{2\sigma^2}\right].</p>
+<div class="arithmatex">\[
+g(x) = \frac{1}{\sqrt{2\pi}\,\sigma}\;\exp\!\left[-\frac{(x-\lambda)^2}{2\sigma^2}\right].
+\]</div>
 <p>Broadcasting: <code>wl</code>, <code>w_inst</code>, and <code>T</code> may be scalars or arrays
 broadcastable to the shape of <code>x</code>.</p>
 <h2 id="examples_1">Examples<a class="headerlink" href="#examples_1" title="Permanent link">&para;</a></h2>
@@ -937,40 +942,39 @@ float(np.isfinite(g).all())
 </blockquote>
 </blockquote>
 <h3 id="a_coeff">A_coeff<a class="headerlink" href="#a_coeff" title="Permanent link">&para;</a></h3>
-<p>Einstein :math:<code>A_{ul}</code> for a single rovibronic line of the BH
-:math:<code>A\,^1\Pi \rightarrow X\,^1\Sigma^+</code> system.</p>
+<p>Einstein <span class="arithmatex">\(A_{ul}\)</span> for a single rovibronic line of the BH
+<span class="arithmatex">\(A\,^1\Pi \rightarrow X\,^1\Sigma^+\)</span> system.</p>
 <p>This uses band Einstein coefficients (per upper vibrational level) and
 Hönl–London factors to apportion intensity among P/Q/R rotational branches:</p>
-<p>.. math::</p>
-<div class="highlight"><pre><span></span><code>A_{ul}(v&#39;, N_2 \to N_1)
-= \frac{A_{\mathrm{vib}}(v&#39;) \, H_{\mathrm{HL}}(N_2, \Delta N)}
-    {2N_2 + 1},
-</code></pre></div>
+<div class="arithmatex">\[
+A_{ul}(v', N_2 \to N_1)
+= \frac{A_{\mathrm{vib}}(v') \, H_{\mathrm{HL}}(N_2, \Delta N)}{2N_2 + 1},
+\]</div>
 <p>with</p>
-<p>.. math::</p>
-<div class="highlight"><pre><span></span><code>\Delta N = N_2 - N_1 \in \{-1,0,+1\}, \quad
+<div class="arithmatex">\[
+\Delta N = N_2 - N_1 \in \{-1,0,+1\}, \quad
 H_{\mathrm{HL}} =
 \begin{cases}
     N_2/2, &amp; \Delta N = -1 \quad (\text{P}) \\
     (2N_2+1)/2, &amp; \Delta N = 0 \quad (\text{Q}) \\
     (N_2+1)/2, &amp; \Delta N = +1 \quad (\text{R})
 \end{cases}
-</code></pre></div>
+\]</div>
 <h2 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">&para;</a></h2>
 <p>v : int
-    Upper-state vibrational quantum number :math:<code>v'</code>. Supported here: 0, 1, 2.
+    Upper-state vibrational quantum number <span class="arithmatex">\(v'\)</span>. Supported here: 0, 1, 2.
 N2 : int
-    Upper-state rotational quantum number (A-state). For singlets, :math:<code>J = N</code>.
+    Upper-state rotational quantum number (A-state). For singlets, <span class="arithmatex">\(J = N\)</span>.
 N1 : int
     Lower-state rotational quantum number (X-state).</p>
 <h2 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">&para;</a></h2>
 <p>float
-    Line Einstein :math:<code>A_{ul}</code> in s⁻¹.</p>
+    Line Einstein <span class="arithmatex">\(A_{ul}\)</span> in s⁻¹.</p>
 <h2 id="notes_2">Notes<a class="headerlink" href="#notes_2" title="Permanent link">&para;</a></h2>
 <ul>
 <li><code>A_vib[v]</code> are pre-tabulated band Einstein coefficients for
-:math:<code>A(v') \rightarrow X</code> (units s⁻¹), and the Hönl–London factors
-correspond to a :math:<code>^1\Pi \rightarrow {}^1\Sigma^+</code> transition in the
+<span class="arithmatex">\(A(v') \rightarrow X\)</span> (units s⁻¹), and the Hönl–London factors
+correspond to a <span class="arithmatex">\(^1\Pi \rightarrow {}^1\Sigma^+\)</span> transition in the
 Hund's case (a) limit.</li>
 <li>This simplified partition neglects Λ-doubling, parity, and nuclear-spin
 substructure; any additional statistical weights should be applied
@@ -978,7 +982,7 @@ elsewhere (e.g. electronic degeneracy).</li>
 </ul>
 <h2 id="raises">Raises<a class="headerlink" href="#raises" title="Permanent link">&para;</a></h2>
 <p>ValueError
-    If :math:<code>\Delta N \notin \{-1,0,+1\}</code> or <code>v</code> is out of the supported range.</p>
+    If <span class="arithmatex">\(\Delta N \notin \{-1,0,+1\}\)</span> or <code>v</code> is out of the supported range.</p>
 <h2 id="examples_2">Examples<a class="headerlink" href="#examples_2" title="Permanent link">&para;</a></h2>
 <blockquote>
 <blockquote>
@@ -1008,9 +1012,9 @@ T_tra : float
 branch : Branch
     Which rotational branch to synthesize: <code>Branch.P</code>, <code>Branch.Q</code>, or <code>Branch.R</code>.
 v_max : int, default 2
-    Highest upper-state vibrational level :math:<code>v'</code> to include (inclusive).
+    Highest upper-state vibrational level <span class="arithmatex">\(v'\)</span> to include (inclusive).
 N2_max : int, default 22
-    Highest upper-state rotational quantum number :math:<code>N_2</code> to include (inclusive).</p>
+    Highest upper-state rotational quantum number <span class="arithmatex">\(N_2\)</span> to include (inclusive).</p>
 <h2 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">&para;</a></h2>
 <p>ndarray
     Spectrum on <code>x</code> (same shape), in arbitrary units.</p>
@@ -1019,7 +1023,7 @@ N2_max : int, default 22
 <li><strong>A-state physics</strong> (energies, populations) is evaluated from <code>BH_A</code> via <code>energy(...)</code>.</li>
 <li><strong>X-state</strong> enters only through the <strong>tabulated line centers</strong> for the chosen <code>branch</code>.</li>
 <li>Per-line intensity is:
-:math:<code>(h\nu)/(4\pi)\,n'(v',N_2)\,A(v',N_2\!\to\!N_1)\,g_\lambda(x)</code>,
+<span class="arithmatex">\((h\nu)/(4\pi)\,n'(v',N_2)\,A(v',N_2\!\to\!N_1)\,g_\lambda(x)\)</span>,
 where <code>g_\lambda</code> is a Gaussian with Doppler+instrumental width.</li>
 </ul>
 <h3 id="full_fit_model">full_fit_model<a class="headerlink" href="#full_fit_model" title="Permanent link">&para;</a></h3>
@@ -1044,9 +1048,9 @@ w_inst : float
 base : float
     Constant background offset (a.u.).
 I_R7 : float
-    Amplitude for the auxiliary Gaussian at :math:<code>\lambda_{R7}=433.64776244\,\mathrm{nm}</code>.
+    Amplitude for the auxiliary Gaussian at <span class="arithmatex">\(\lambda_{R7}=433.64776244\,\mathrm{nm}\)</span>.
 I_R8 : float
-    Amplitude for the auxiliary Gaussian at :math:<code>\lambda_{R8}=433.33500584\,\mathrm{nm}</code>.</p>
+    Amplitude for the auxiliary Gaussian at <span class="arithmatex">\(\lambda_{R8}=433.33500584\,\mathrm{nm}\)</span>.</p>
 <h2 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">&para;</a></h2>
 <p>ndarray
     Modeled spectrum sampled on <code>x</code> (same shape), in arbitrary units.</p>
