@@ -876,11 +876,11 @@ F_v(N) &amp;= B_v\,N(N+1) - D_v\,\big[N(N+1)\big]^2 .
 \]</div>
 <h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h4>
 <p>v : int
-    Vibrational quantum number <span class="arithmatex">\(v \ge 0\)</span>.
-N : int
+    Vibrational quantum number <span class="arithmatex">\(v \ge 0\)</span>.</p>
+<p>N : int
     Rotational quantum number (spinless). For singlet states,
-    <span class="arithmatex">\(J \approx N\)</span>; fine/Λ-doubling and spin-rotation are neglected here.
-c : MolecularConstants
+    <span class="arithmatex">\(J \approx N\)</span>; fine/Λ-doubling and spin-rotation are neglected here.</p>
+<p>c : MolecularConstants
     Parameter set for the electronic state (fields in cm⁻¹):
     <code>T_e, omega_e, omega_e_x_e, omega_e_y_e, B_e, alpha_e, D_e, beta_e</code>.</p>
 <h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h4>
@@ -904,12 +904,12 @@ c : MolecularConstants
 <p>Gaussian line profile with Doppler + instrumental broadening (FWHMs added in quadrature).</p>
 <h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">&para;</a></h4>
 <p>x : array_like
-    Wavelength axis in <strong>nm</strong>.
-wl : float
-    Line center wavelength in <strong>nm</strong>.
-w_inst : float
-    Instrumental full width at half maximum (FWHM) in <strong>nm</strong>, assumed Gaussian.
-T : float
+    Wavelength axis in <strong>nm</strong>.</p>
+<p>wl : float
+    Line center wavelength in <strong>nm</strong>.</p>
+<p>w_inst : float
+    Instrumental full width at half maximum (FWHM) in <strong>nm</strong>, assumed Gaussian.</p>
+<p>T : float
     Translational/kinetic temperature in <strong>K</strong> for Doppler broadening.</p>
 <h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">&para;</a></h4>
 <p>numpy.ndarray
@@ -995,18 +995,18 @@ N1 : int
 - <strong>Lower X-state</strong> only for <strong>line positions</strong>, read from the <strong>tabulated wavelengths</strong>.</p>
 <h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">&para;</a></h4>
 <p>x : ndarray
-    Wavelength grid in <strong>nm</strong>.
-C : float
-    Population scale (absorbing other constants, path length, etc.).
-T_rot : float
-    Rotational temperature (K) used in Boltzmann factor for A-state populations.
-w_inst : float
-    Instrumental Gaussian FWHM (nm).
-T_tra : float
-    Translational temperature (K) for Doppler broadening in <code>line_profile</code>.
-branch : Branch
-    Which rotational branch to synthesize: <code>Branch.P</code>, <code>Branch.Q</code>, or <code>Branch.R</code>.
-v_max : int, default 2
+    Wavelength grid in <strong>nm</strong>.</p>
+<p>C : float
+    Population scale (absorbing other constants, path length, etc.).</p>
+<p>T_rot : float
+    Rotational temperature (K) used in Boltzmann factor for A-state populations.</p>
+<p>w_inst : float
+    Instrumental Gaussian FWHM (nm).</p>
+<p>T_tra : float
+    Translational temperature (K) for Doppler broadening in <code>line_profile</code>.</p>
+<p>branch : Branch
+    Which rotational branch to synthesize: <code>Branch.P</code>, <code>Branch.Q</code>, or <code>Branch.R</code>.</p>
+<p>v_max : int, default 2
     Highest upper-state vibrational level <span class="arithmatex">\(v'\)</span> to include (inclusive).
 N2_max : int, default 22
     Highest upper-state rotational quantum number <span class="arithmatex">\(N_2\)</span> to include (inclusive).</p>
@@ -1024,23 +1024,23 @@ N2_max : int, default 22
 <h3 id="full_fit_model">full_fit_model<a class="headerlink" href="#full_fit_model" title="Permanent link">&para;</a></h3>
 <p>Composite forward model for the 433 nm window:
 BH Q-branch (A→X) + two fixed auxiliary lines + constant baseline.</p>
-<p>The BH <strong>A-state</strong> populations/energies are computed from parametric constants
-via :meth:<code>spectrum</code> (branch fixed to Q), while <strong>X-state</strong> enters only through
+<p>The BH <strong>A-state</strong> populations/energies are computed from parametric constants</p>
+<p>via :meth:<code>spectrum</code> (branch fixed to Q), while <strong>X-state</strong> enters only through
 the tabulated line centers used inside :meth:<code>spectrum</code>. Two nearby isolated
 features at fixed wavelengths (<code>R7</code>, <code>R8</code>) are modeled as Gaussians and
 added on top, plus a constant baseline.</p>
 <h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">&para;</a></h4>
 <p>x : ndarray
-    Wavelength grid in <strong>nm</strong>.
-C : float
-    Overall population/intensity scale for the BH Q-branch.
-T_rot : float
-    Rotational temperature (K) for the A-state Boltzmann factor.
-dx : float
-    Rigid wavelength shift in <strong>nm</strong> applied to <code>x</code> (accounts for calibration/tilt).
-w_inst : float
-    Instrumental Gaussian FWHM in <strong>nm</strong> used for line broadening.
-base : float
+    Wavelength grid in <strong>nm</strong>.</p>
+<p>C : float
+    Overall population/intensity scale for the BH Q-branch.</p>
+<p>T_rot : float
+    Rotational temperature (K) for the A-state Boltzmann factor.</p>
+<p>dx : float
+    Rigid wavelength shift in <strong>nm</strong> applied to <code>x</code> (accounts for calibration/tilt).</p>
+<p>w_inst : float
+    Instrumental Gaussian FWHM in <strong>nm</strong> used for line broadening.</p>
+<p>base : float
     Constant background offset (a.u.).
 I_R7 : float
     Amplitude for the auxiliary Gaussian at <span class="arithmatex">\(\lambda_{R7}=433.64776244\,\mathrm{nm}\)</span>.
@@ -1116,6 +1116,8 @@ I_R8 : float
     
     
       <script src="../assets/javascripts/bundle.50899def.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       
