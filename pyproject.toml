@@ -1,0 +1,25 @@
+[project]
+name = "bh-spectra"
+version = "0.1.0"
+description = "BH (boron hydride) A–X band spectrum model and fitting tools"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Arseniy Kuzmin" }]
+license = { text = "MIT" }
+dependencies = [
+  "numpy>=1.26",
+  "pandas>=2.0",
+  "scipy>=1.11",
+  "pillow>=10.0",
+  "matplotlib>=3.8"
+]
+
+[tool.setuptools.package-data]
+"bh_spectra._resources" = ["*.csv"]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+bh-spectra = "bh_spectra.cli:main"
