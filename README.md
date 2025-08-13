@@ -38,16 +38,3 @@ See `examples/01_quickstart.py`.
 | `physics.BHModel.full_fit_model` | Adds Q‑branch spectrum + independent R₇/R₈ lines & baseline       |
 | `fit.FrameDataset`               | Iterator over frames and selected channels of an image stack      |
 | `fit.BHFitter.fit_dataset`       | Channel-wise fitting with optional caching                        |
-
-
-## Build Documentation
-
-Project documentation is written in Markdown and built with [MkDocs](https://www.mkdocs.org/).
-To build the HTML site locally:
-
-```bash
-pip install mkdocs
-mkdocs build
-```
-
-The rendered site can be published automatically with GitHub Pages.
