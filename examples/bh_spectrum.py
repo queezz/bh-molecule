@@ -125,7 +125,7 @@ def BH_spec(x, C, T_rot, w_inst, T_tra, branch):
     int = 0
 
     # 0-0帯 波長 (Fernando, JMS (1991)) 0-0 band wavelengths
-    v00_wn = pd.read_csv(r"./11BH_wl_Fernando/11BH_v00.csv")
+    v00_wn = pd.read_csv(r"./11BH_wl_Fernando/11BH_v00.csv", comment="#")
     v00_wl = 1e7 / v00_wn / n_air(1e7 / v00_wn)
 
     for v in range(v_min, v_max + 1):

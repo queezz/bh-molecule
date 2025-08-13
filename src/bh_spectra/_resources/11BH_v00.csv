@@ -1,3 +1,6 @@
+# P, Q, R - are the transition branches.
+# Units: wavenumbers in cm^-1.
+# Columns: P, Q, R = line-center wavenumbers; J = rotational quantum number.
 J,P,Q,R
 0,nan,nan,23097.81
 1,nan,23074.117,23121.849
