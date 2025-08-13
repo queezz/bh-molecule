@@ -4,6 +4,7 @@ import ast
 import tokenize
 from pathlib import Path
 import textwrap
+import re
 
 
 def extract_docs(py_path: Path):
@@ -23,6 +24,23 @@ def extract_docs(py_path: Path):
     return docs
 
 
+def _format_docstring(doc: str) -> str:
+    """Dedent docstring text and add blank lines between parameter entries."""
+    text = textwrap.dedent(doc).strip("\n")
+    lines = text.splitlines()
+    out: list[str] = []
+    for line in lines:
+        if (
+            re.match(r"^[A-Za-z_]+\s*:\s*", line)
+            and out
+            and out[-1].strip()
+            and not out[-1].startswith("####")
+        ):
+            out.append("")
+        out.append(line)
+    return "\n".join(out)
+
+
 def build_markdown(docs: dict) -> str:
     lines = [
         "# Physics API\n\n",
@@ -32,10 +50,10 @@ def build_markdown(docs: dict) -> str:
     class_doc = docs.pop("BHModel", "")
     lines.append("## BHModel\n\n")
     if class_doc:
-        lines.append(textwrap.dedent(class_doc) + "\n\n")
+        lines.append(_format_docstring(class_doc) + "\n\n")
     for name, doc in docs.items():
         lines.append(f"### {name}\n\n")
-        lines.append(textwrap.dedent(doc) + "\n\n")
+        lines.append(_format_docstring(doc) + "\n\n")
     return "".join(lines)
 
 

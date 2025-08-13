@@ -23,7 +23,7 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.inlinehilite
 extra_javascript:
-  # MathJax (loads on all pages; safe default)
+  - javascripts/mathjax.js
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 nav:
   - Home: index.md
