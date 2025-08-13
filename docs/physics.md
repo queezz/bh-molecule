@@ -22,14 +22,15 @@ $$
 with
 
 $$
-G(v) &= \omega_e\,(v+\tfrac12)\;-\;\omega_e x_e\,(v+\tfrac12)^2\;+\;\omega_e y_e\,(v+\tfrac12)^3, \\\\
-B_v  &= B_e \;-\; \alpha_e\,(v+\tfrac12), \qquad
-D_v  =  D_e \;-\; \beta_e \,(v+\tfrac12), \\\\
-F_v(N) &= B_v\,N(N+1)\;-\;D_v\,\big[N(N+1)\big]^2 .
+\begin{aligned}
+G(v) &= \omega_e\,(v+\tfrac12) - \omega_e x_e\,(v+\tfrac12)^2 + \omega_e y_e\,(v+\tfrac12)^3, \\
+B_v  &= B_e - \alpha_e\,(v+\tfrac12), \quad
+D_v  &= D_e - \beta_e\,(v+\tfrac12), \\
+F_v(N) &= B_v\,N(N+1) - D_v\,\big[N(N+1)\big]^2 .
+\end{aligned}
 $$
 
-Parameters
-----------
+#### Parameters
 v : int
     Vibrational quantum number $v \ge 0$.
 N : int
@@ -39,33 +40,30 @@ c : MolecularConstants
     Parameter set for the electronic state (fields in cm⁻¹):
     `T_e, omega_e, omega_e_x_e, omega_e_y_e, B_e, alpha_e, D_e, beta_e`.
 
-Returns
--------
+#### Returns
 float
     Rovibronic term value $E(v,N)$ in **cm⁻¹**.
 
-Notes
------
+#### Notes
 - Truncation: includes up to $(v+\tfrac12)^3$ in $G(v)$ and
-$[N(N+1)]^2$ in $F_v(N)$. Higher-order terms (e.g. $H_v$
-or additional Dunham coefficients) are omitted.
+  $[N(N+1)]^2$ in $F_v(N)$. Higher-order terms (e.g. $H_v$
+  or additional Dunham coefficients) are omitted.
 - Parity/Λ-doubling, spin-rotation, hyperfine, and electronic spin are
-ignored (appropriate for a simplified ^1Π↔^1Σ^+ treatment in this codebase).
+  ignored (appropriate for a simplified ^1Π↔^1Σ^+ treatment in this codebase).
 
-Examples
---------
->>> from bh_spectra.constants import BH_A
->>> E01 = BHModel.energy(v=0, N=1, c=BH_A)
->>> E11 = BHModel.energy(v=1, N=1, c=BH_A)
->>> float(E11 > E01)
-1
+#### Examples
+```python
+from bh_spectra.constants import BH_A
+E01 = BHModel.energy(v=0, N=1, c=BH_A)
+E11 = BHModel.energy(v=1, N=1, c=BH_A)
+assert E11 > E01
+```
 
 ### line_profile
 
 Gaussian line profile with Doppler + instrumental broadening (FWHMs added in quadrature).
 
-Parameters
-----------
+#### Parameters
 x : array_like
     Wavelength axis in **nm**.
 wl : float
@@ -75,13 +73,11 @@ w_inst : float
 T : float
     Translational/kinetic temperature in **K** for Doppler broadening.
 
-Returns
--------
+#### Returns
 numpy.ndarray
     Normalized Gaussian profile sampled on `x` (units ≈ nm⁻¹; area ≈ 1 when integrated over `x`).
 
-Notes
------
+#### Notes
 The Doppler FWHM (in nm) is computed from a compact numerical form
 tailored to this model:
 
@@ -114,12 +110,12 @@ $$
 Broadcasting: `wl`, `w_inst`, and `T` may be scalars or arrays
 broadcastable to the shape of `x`.
 
-Examples
---------
->>> x = np.linspace(433.0, 434.0, 2001)
->>> g = model.line_profile(x, wl=433.5, w_inst=0.02, T=0.0)  # instrument-limited
->>> float(np.isfinite(g).all())
-1
+#### Examples
+```python
+x = np.linspace(433.0, 434.0, 2001)
+g = model.line_profile(x, wl=433.5, w_inst=0.02, T=0.0)  # instrument-limited
+assert np.isfinite(g).all()
+```
 
 ### A_coeff
 
@@ -146,8 +142,7 @@ H_{\mathrm{HL}} =
 \end{cases}
 $$
 
-Parameters
-----------
+#### Parameters
 v : int
     Upper-state vibrational quantum number $v'$. Supported here: 0, 1, 2.
 N2 : int
@@ -155,31 +150,27 @@ N2 : int
 N1 : int
     Lower-state rotational quantum number (X-state).
 
-Returns
--------
+#### Returns
 float
     Line Einstein $A_{ul}$ in s⁻¹.
 
-Notes
------
+#### Notes
 - `A_vib[v]` are pre-tabulated band Einstein coefficients for
-$A(v') \rightarrow X$ (units s⁻¹), and the Hönl–London factors
-correspond to a $^1\Pi \rightarrow {}^1\Sigma^+$ transition in the
-Hund's case (a) limit.
+  $A(v') \rightarrow X$ (units s⁻¹), and the Hönl–London factors
+  correspond to a $^1\Pi \rightarrow {}^1\Sigma^+$ transition in the
+  Hund's case (a) limit.
 - This simplified partition neglects Λ-doubling, parity, and nuclear-spin
-substructure; any additional statistical weights should be applied
-elsewhere (e.g. electronic degeneracy).
+  substructure; any additional statistical weights should be applied
+  elsewhere (e.g. electronic degeneracy).
 
-Raises
-------
+#### Raises
 ValueError
     If $\Delta N \notin \{-1,0,+1\}$ or `v` is out of the supported range.
 
-Examples
---------
->>> A = BHModel.A_coeff(v=0, N2=8, N1=7)   # R branch (ΔN=+1)
->>> A > 0
-True
+#### Examples
+```python
+A = BHModel.A_coeff(v=0, N2=8, N1=7)  # R branch (ΔN=+1)
+```
 
 ### spectrum
 
@@ -189,8 +180,7 @@ This model uses:
 - **Upper (emitting) A-state** rovibrational energies from the **parametric constants** (`BH_A`);
 - **Lower X-state** only for **line positions**, read from the **tabulated wavelengths**.
 
-Parameters
-----------
+#### Parameters
 x : ndarray
     Wavelength grid in **nm**.
 C : float
@@ -208,18 +198,16 @@ v_max : int, default 2
 N2_max : int, default 22
     Highest upper-state rotational quantum number $N_2$ to include (inclusive).
 
-Returns
--------
+#### Returns
 ndarray
     Spectrum on `x` (same shape), in arbitrary units.
 
-Notes
------
+#### Notes
 - **A-state physics** (energies, populations) is evaluated from `BH_A` via `energy(...)`.
 - **X-state** enters only through the **tabulated line centers** for the chosen `branch`.
 - Per-line intensity is:
-$(h\nu)/(4\pi)\,n'(v',N_2)\,A(v',N_2\!\to\!N_1)\,g_\lambda(x)$,
-where `g_\lambda` is a Gaussian with Doppler+instrumental width.
+  $(h\nu)/(4\pi)\,n'(v',N_2)\,A(v',N_2\!\to\!N_1)\,g_\lambda(x)$,
+  where `g_\lambda` is a Gaussian with Doppler+instrumental width.
 
 ### full_fit_model
 
@@ -232,8 +220,7 @@ the tabulated line centers used inside :meth:`spectrum`. Two nearby isolated
 features at fixed wavelengths (``R7``, ``R8``) are modeled as Gaussians and
 added on top, plus a constant baseline.
 
-Parameters
-----------
+#### Parameters
 x : ndarray
     Wavelength grid in **nm**.
 C : float
@@ -251,24 +238,23 @@ I_R7 : float
 I_R8 : float
     Amplitude for the auxiliary Gaussian at $\lambda_{R8}=433.33500584\,\mathrm{nm}$.
 
-Returns
--------
+#### Returns
 ndarray
     Modeled spectrum sampled on `x` (same shape), in arbitrary units.
 
-Notes
------
+#### Notes
 - The BH Q-branch contribution is scaled by ``1e8`` internally to bring values
-to a convenient numeric range for fitting; this does not change relative shapes.
+  to a convenient numeric range for fitting; this does not change relative shapes.
 - The auxiliary lines use :meth:`line_profile` with the same `w_inst` and
-a translational temperature fixed to ``0.0`` (instrument-limited broadening).
-If Doppler broadening is needed, promote `T_tra` to a parameter.
+  a translational temperature fixed to ``0.0`` (instrument-limited broadening).
+  If Doppler broadening is needed, promote `T_tra` to a parameter.
 - Set ``I_R7=I_R8=0`` to exclude the auxiliary features.
 
-Examples
---------
->>> y = model.full_fit_model(
-...     x, C=1.2, T_rot=2100.0, dx=0.005,
-...     w_inst=0.02, base=0.01, I_R7=0.3, I_R8=0.2
-... )
+#### Examples
+```python
+y = model.full_fit_model(
+    x, C=1.2, T_rot=2100.0, dx=0.005,
+    w_inst=0.02, base=0.01, I_R7=0.3, I_R8=0.2,
+)
+```
 
