@@ -24,3 +24,15 @@ y = model.full_fit_model(x, C=1.0, T_rot=2000, dx=0.0, w_inst=0.02, base=0.0, I_
 ```
 
 See `examples/01_quickstart.py`.
+
+## Documentation
+
+Project documentation is written in Markdown and built with [MkDocs](https://www.mkdocs.org/).
+To build the HTML site locally:
+
+```bash
+pip install mkdocs
+mkdocs build
+```
+
+The rendered site can be published automatically with GitHub Pages.
