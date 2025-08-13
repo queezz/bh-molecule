@@ -33,9 +33,11 @@ $$
 #### Parameters
 v : int
     Vibrational quantum number $v \ge 0$.
+
 N : int
     Rotational quantum number (spinless). For singlet states,
     $J \approx N$; fine/Λ-doubling and spin-rotation are neglected here.
+
 c : MolecularConstants
     Parameter set for the electronic state (fields in cm⁻¹):
     `T_e, omega_e, omega_e_x_e, omega_e_y_e, B_e, alpha_e, D_e, beta_e`.
@@ -66,10 +68,13 @@ Gaussian line profile with Doppler + instrumental broadening (FWHMs added in qua
 #### Parameters
 x : array_like
     Wavelength axis in **nm**.
+
 wl : float
     Line center wavelength in **nm**.
+
 w_inst : float
     Instrumental full width at half maximum (FWHM) in **nm**, assumed Gaussian.
+
 T : float
     Translational/kinetic temperature in **K** for Doppler broadening.
 
@@ -183,16 +188,22 @@ This model uses:
 #### Parameters
 x : ndarray
     Wavelength grid in **nm**.
+
 C : float
     Population scale (absorbing other constants, path length, etc.).
+
 T_rot : float
     Rotational temperature (K) used in Boltzmann factor for A-state populations.
+
 w_inst : float
     Instrumental Gaussian FWHM (nm).
+
 T_tra : float
     Translational temperature (K) for Doppler broadening in `line_profile`.
+
 branch : Branch
     Which rotational branch to synthesize: `Branch.P`, `Branch.Q`, or `Branch.R`.
+
 v_max : int, default 2
     Highest upper-state vibrational level $v'$ to include (inclusive).
 N2_max : int, default 22
@@ -215,6 +226,7 @@ Composite forward model for the 433 nm window:
 BH Q-branch (A→X) + two fixed auxiliary lines + constant baseline.
 
 The BH **A-state** populations/energies are computed from parametric constants
+
 via :meth:`spectrum` (branch fixed to Q), while **X-state** enters only through
 the tabulated line centers used inside :meth:`spectrum`. Two nearby isolated
 features at fixed wavelengths (``R7``, ``R8``) are modeled as Gaussians and
@@ -223,14 +235,19 @@ added on top, plus a constant baseline.
 #### Parameters
 x : ndarray
     Wavelength grid in **nm**.
+
 C : float
     Overall population/intensity scale for the BH Q-branch.
+
 T_rot : float
     Rotational temperature (K) for the A-state Boltzmann factor.
+
 dx : float
     Rigid wavelength shift in **nm** applied to `x` (accounts for calibration/tilt).
+
 w_inst : float
     Instrumental Gaussian FWHM in **nm** used for line broadening.
+
 base : float
     Constant background offset (a.u.).
 I_R7 : float
