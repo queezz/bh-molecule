@@ -10,29 +10,31 @@ Core BH spectrum model; file I/O is done elsewhere (dataio).
 
 ### energy
 
-Rovibronic term value :math:`E(v,N)` (in cm⁻¹) for a given electronic state.
+Rovibronic term value $E(v,N)$ (in cm⁻¹) for a given electronic state.
 
 The model uses a Dunham-like expansion truncated to
 cubic vibrational terms and quartic (centrifugal distortion) in rotation:
 
-.. math::
-    E(v,N) \;=\; T_e \;+\; G(v) \;+\; F_v(N),
+$$
+E(v,N) \;=\; T_e \;+\; G(v) \;+\; F_v(N),
+$$
 
 with
 
-.. math::
-    G(v) &= \omega_e\,(v+\tfrac12)\;-\;\omega_e x_e\,(v+\tfrac12)^2\;+\;\omega_e y_e\,(v+\tfrac12)^3, \\\\
-    B_v  &= B_e \;-\; \alpha_e\,(v+\tfrac12), \qquad
-    D_v  =  D_e \;-\; \beta_e \,(v+\tfrac12), \\\\
-    F_v(N) &= B_v\,N(N+1)\;-\;D_v\,\big[N(N+1)\big]^2 .
+$$
+G(v) &= \omega_e\,(v+\tfrac12)\;-\;\omega_e x_e\,(v+\tfrac12)^2\;+\;\omega_e y_e\,(v+\tfrac12)^3, \\\\
+B_v  &= B_e \;-\; \alpha_e\,(v+\tfrac12), \qquad
+D_v  =  D_e \;-\; \beta_e \,(v+\tfrac12), \\\\
+F_v(N) &= B_v\,N(N+1)\;-\;D_v\,\big[N(N+1)\big]^2 .
+$$
 
 Parameters
 ----------
 v : int
-    Vibrational quantum number :math:`v \ge 0`.
+    Vibrational quantum number $v \ge 0$.
 N : int
     Rotational quantum number (spinless). For singlet states,
-    :math:`J \approx N`; fine/Λ-doubling and spin-rotation are neglected here.
+    $J \approx N$; fine/Λ-doubling and spin-rotation are neglected here.
 c : MolecularConstants
     Parameter set for the electronic state (fields in cm⁻¹):
     `T_e, omega_e, omega_e_x_e, omega_e_y_e, B_e, alpha_e, D_e, beta_e`.
@@ -40,12 +42,12 @@ c : MolecularConstants
 Returns
 -------
 float
-    Rovibronic term value :math:`E(v,N)` in **cm⁻¹**.
+    Rovibronic term value $E(v,N)$ in **cm⁻¹**.
 
 Notes
 -----
-- Truncation: includes up to :math:`(v+\tfrac12)^3` in :math:`G(v)` and
-:math:`[N(N+1)]^2` in :math:`F_v(N)`. Higher-order terms (e.g. :math:`H_v`
+- Truncation: includes up to $(v+\tfrac12)^3$ in $G(v)$ and
+$[N(N+1)]^2$ in $F_v(N)$. Higher-order terms (e.g. $H_v$
 or additional Dunham coefficients) are omitted.
 - Parity/Λ-doubling, spin-rotation, hyperfine, and electronic spin are
 ignored (appropriate for a simplified ^1Π↔^1Σ^+ treatment in this codebase).
@@ -83,28 +85,31 @@ Notes
 The Doppler FWHM (in nm) is computed from a compact numerical form
 tailored to this model:
 
-.. math::
-    \Delta\lambda_D \approx 7.72 \times 10^{-5}\; \lambda\,
-    \sqrt{\frac{T\,K_{2\mathrm{eV}}}{M_{\mathrm{BH}}}}
+$$
+\Delta\lambda_D \approx 7.72 \times 10^{-5}\; \lambda\,
+\sqrt{\frac{T\,K_{2\mathrm{eV}}}{M_{\mathrm{BH}}}}
+$$
 
-where :math:`\lambda` is in nm, :math:`K_{2\mathrm{eV}} = 8.617\times10^{-5}\,\mathrm{eV\,K^{-1}}`,
-and :math:`M_{\mathrm{BH}}` is the BH molecular mass in amu. This is equivalent to the
+where $\lambda$ is in nm, $K_{2\mathrm{eV}} = 8.617\times10^{-5}\,\mathrm{eV\,K^{-1}}$,
+and $M_{\mathrm{BH}}$ is the BH molecular mass in amu. This is equivalent to the
 standard expression
 
-.. math::
-    \Delta\lambda_D = \lambda \sqrt{\frac{8\ln 2\,k_B T}{m c^2}}
+$$
+\Delta\lambda_D = \lambda \sqrt{\frac{8\ln 2\,k_B T}{m c^2}}
+$$
 
 after unit conversions (nm, eV, amu). The total Gaussian FWHM is
 
-.. math::
-    \Delta\lambda = \sqrt{\Delta\lambda_D^2 + \Delta\lambda_{\mathrm{inst}}^2},
+$$
+\Delta\lambda = \sqrt{\Delta\lambda_D^2 + \Delta\lambda_{\mathrm{inst}}^2},
+$$
 
-and the standard deviation is :math:`\sigma = \Delta\lambda / (2\sqrt{2\ln 2})`.
+and the standard deviation is $\sigma = \Delta\lambda / (2\sqrt{2\ln 2})$.
 The returned profile is
 
-.. math::
-    g(x) = \frac{1}{\sqrt{2\pi}\,\sigma}\;
-        \exp\!\left[-\frac{(x-\lambda)^2}{2\sigma^2}\right].
+$$
+g(x) = \frac{1}{\sqrt{2\pi}\,\sigma}\;\exp\!\left[-\frac{(x-\lambda)^2}{2\sigma^2}\right].
+$$
 
 Broadcasting: `wl`, `w_inst`, and `T` may be scalars or arrays
 broadcastable to the shape of `x`.
@@ -118,49 +123,48 @@ Examples
 
 ### A_coeff
 
-Einstein :math:`A_{ul}` for a single rovibronic line of the BH
-:math:`A\,^1\Pi \rightarrow X\,^1\Sigma^+` system.
+Einstein $A_{ul}$ for a single rovibronic line of the BH
+$A\,^1\Pi \rightarrow X\,^1\Sigma^+$ system.
 
 This uses band Einstein coefficients (per upper vibrational level) and
 Hönl–London factors to apportion intensity among P/Q/R rotational branches:
 
-.. math::
-
-    A_{ul}(v', N_2 \to N_1)
-    = \frac{A_{\mathrm{vib}}(v') \, H_{\mathrm{HL}}(N_2, \Delta N)}
-        {2N_2 + 1},
+$$
+A_{ul}(v', N_2 \to N_1)
+= \frac{A_{\mathrm{vib}}(v') \, H_{\mathrm{HL}}(N_2, \Delta N)}{2N_2 + 1},
+$$
 
 with
 
-.. math::
-
-    \Delta N = N_2 - N_1 \in \{-1,0,+1\}, \quad
-    H_{\mathrm{HL}} =
-    \begin{cases}
-        N_2/2, & \Delta N = -1 \quad (\text{P}) \\
-        (2N_2+1)/2, & \Delta N = 0 \quad (\text{Q}) \\
-        (N_2+1)/2, & \Delta N = +1 \quad (\text{R})
-    \end{cases}
+$$
+\Delta N = N_2 - N_1 \in \{-1,0,+1\}, \quad
+H_{\mathrm{HL}} =
+\begin{cases}
+    N_2/2, & \Delta N = -1 \quad (\text{P}) \\
+    (2N_2+1)/2, & \Delta N = 0 \quad (\text{Q}) \\
+    (N_2+1)/2, & \Delta N = +1 \quad (\text{R})
+\end{cases}
+$$
 
 Parameters
 ----------
 v : int
-    Upper-state vibrational quantum number :math:`v'`. Supported here: 0, 1, 2.
+    Upper-state vibrational quantum number $v'$. Supported here: 0, 1, 2.
 N2 : int
-    Upper-state rotational quantum number (A-state). For singlets, :math:`J = N`.
+    Upper-state rotational quantum number (A-state). For singlets, $J = N$.
 N1 : int
     Lower-state rotational quantum number (X-state).
 
 Returns
 -------
 float
-    Line Einstein :math:`A_{ul}` in s⁻¹.
+    Line Einstein $A_{ul}$ in s⁻¹.
 
 Notes
 -----
 - `A_vib[v]` are pre-tabulated band Einstein coefficients for
-:math:`A(v') \rightarrow X` (units s⁻¹), and the Hönl–London factors
-correspond to a :math:`^1\Pi \rightarrow {}^1\Sigma^+` transition in the
+$A(v') \rightarrow X$ (units s⁻¹), and the Hönl–London factors
+correspond to a $^1\Pi \rightarrow {}^1\Sigma^+$ transition in the
 Hund's case (a) limit.
 - This simplified partition neglects Λ-doubling, parity, and nuclear-spin
 substructure; any additional statistical weights should be applied
@@ -169,7 +173,7 @@ elsewhere (e.g. electronic degeneracy).
 Raises
 ------
 ValueError
-    If :math:`\Delta N \notin \{-1,0,+1\}` or `v` is out of the supported range.
+    If $\Delta N \notin \{-1,0,+1\}$ or `v` is out of the supported range.
 
 Examples
 --------
@@ -200,9 +204,9 @@ T_tra : float
 branch : Branch
     Which rotational branch to synthesize: `Branch.P`, `Branch.Q`, or `Branch.R`.
 v_max : int, default 2
-    Highest upper-state vibrational level :math:`v'` to include (inclusive).
+    Highest upper-state vibrational level $v'$ to include (inclusive).
 N2_max : int, default 22
-    Highest upper-state rotational quantum number :math:`N_2` to include (inclusive).
+    Highest upper-state rotational quantum number $N_2$ to include (inclusive).
 
 Returns
 -------
@@ -214,7 +218,7 @@ Notes
 - **A-state physics** (energies, populations) is evaluated from `BH_A` via `energy(...)`.
 - **X-state** enters only through the **tabulated line centers** for the chosen `branch`.
 - Per-line intensity is:
-:math:`(h\nu)/(4\pi)\,n'(v',N_2)\,A(v',N_2\!\to\!N_1)\,g_\lambda(x)`,
+$(h\nu)/(4\pi)\,n'(v',N_2)\,A(v',N_2\!\to\!N_1)\,g_\lambda(x)$,
 where `g_\lambda` is a Gaussian with Doppler+instrumental width.
 
 ### full_fit_model
@@ -243,9 +247,9 @@ w_inst : float
 base : float
     Constant background offset (a.u.).
 I_R7 : float
-    Amplitude for the auxiliary Gaussian at :math:`\lambda_{R7}=433.64776244\,\mathrm{nm}`.
+    Amplitude for the auxiliary Gaussian at $\lambda_{R7}=433.64776244\,\mathrm{nm}$.
 I_R8 : float
-    Amplitude for the auxiliary Gaussian at :math:`\lambda_{R8}=433.33500584\,\mathrm{nm}`.
+    Amplitude for the auxiliary Gaussian at $\lambda_{R8}=433.33500584\,\mathrm{nm}$.
 
 Returns
 -------
