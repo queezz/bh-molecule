@@ -8,7 +8,7 @@ Documentation extracted from docstrings in `bh_spectra.physics`.
 
 Core BH spectrum model; file I/O is done elsewhere (dataio).
 
-### energy
+### `energy`
 
 Rovibronic term value $E(v,N)$ (in cm⁻¹) for a given electronic state.
 
@@ -31,14 +31,14 @@ F_v(N) &= B_v\,N(N+1) - D_v\,\big[N(N+1)\big]^2 .
 $$
 
 #### Parameters
-v : int
+`v` : int
     Vibrational quantum number $v \ge 0$.
 
-N : int
+`N` : int
     Rotational quantum number (spinless). For singlet states,
     $J \approx N$; fine/Λ-doubling and spin-rotation are neglected here.
 
-c : MolecularConstants
+`c` : MolecularConstants
     Parameter set for the electronic state (fields in cm⁻¹):
     `T_e, omega_e, omega_e_x_e, omega_e_y_e, B_e, alpha_e, D_e, beta_e`.
 
@@ -61,21 +61,21 @@ E11 = BHModel.energy(v=1, N=1, c=BH_A)
 assert E11 > E01
 ```
 
-### line_profile
+### `line_profile`
 
 Gaussian line profile with Doppler + instrumental broadening (FWHMs added in quadrature).
 
 #### Parameters
-x : array_like
+`x` : array_like
     Wavelength axis in **nm**.
 
-wl : float
+`wl` : float
     Line center wavelength in **nm**.
 
-w_inst : float
+`w_inst` : float
     Instrumental full width at half maximum (FWHM) in **nm**, assumed Gaussian.
 
-T : float
+`T` : float
     Translational/kinetic temperature in **K** for Doppler broadening.
 
 #### Returns
@@ -122,7 +122,7 @@ g = model.line_profile(x, wl=433.5, w_inst=0.02, T=0.0)  # instrument-limited
 assert np.isfinite(g).all()
 ```
 
-### A_coeff
+### `A_coeff`
 
 Einstein $A_{ul}$ for a single rovibronic line of the BH
 $A\,^1\Pi \rightarrow X\,^1\Sigma^+$ system.
@@ -148,11 +148,13 @@ H_{\mathrm{HL}} =
 $$
 
 #### Parameters
-v : int
+`v` : int
     Upper-state vibrational quantum number $v'$. Supported here: 0, 1, 2.
-N2 : int
+
+`N2` : int
     Upper-state rotational quantum number (A-state). For singlets, $J = N$.
-N1 : int
+
+`N1` : int
     Lower-state rotational quantum number (X-state).
 
 #### Returns
@@ -177,7 +179,7 @@ ValueError
 A = BHModel.A_coeff(v=0, N2=8, N1=7)  # R branch (ΔN=+1)
 ```
 
-### spectrum
+### `spectrum`
 
 Compute the BH band spectrum on wavelength grid `x` for a single branch.
 
@@ -186,27 +188,28 @@ This model uses:
 - **Lower X-state** only for **line positions**, read from the **tabulated wavelengths**.
 
 #### Parameters
-x : ndarray
+`x` : ndarray
     Wavelength grid in **nm**.
 
-C : float
+`C` : float
     Population scale (absorbing other constants, path length, etc.).
 
-T_rot : float
+`T_rot` : float
     Rotational temperature (K) used in Boltzmann factor for A-state populations.
 
-w_inst : float
+`w_inst` : float
     Instrumental Gaussian FWHM (nm).
 
-T_tra : float
+`T_tra` : float
     Translational temperature (K) for Doppler broadening in `line_profile`.
 
-branch : Branch
+`branch` : Branch
     Which rotational branch to synthesize: `Branch.P`, `Branch.Q`, or `Branch.R`.
 
-v_max : int, default 2
+`v_max` : int, default 2
     Highest upper-state vibrational level $v'$ to include (inclusive).
-N2_max : int, default 22
+
+`N2_max` : int, default 22
     Highest upper-state rotational quantum number $N_2$ to include (inclusive).
 
 #### Returns
@@ -220,39 +223,40 @@ ndarray
   $(h\nu)/(4\pi)\,n'(v',N_2)\,A(v',N_2\!\to\!N_1)\,g_\lambda(x)$,
   where `g_\lambda` is a Gaussian with Doppler+instrumental width.
 
-### full_fit_model
+### `full_fit_model`
 
 Composite forward model for the 433 nm window:
 BH Q-branch (A→X) + two fixed auxiliary lines + constant baseline.
 
 The BH **A-state** populations/energies are computed from parametric constants
-
 via :meth:`spectrum` (branch fixed to Q), while **X-state** enters only through
 the tabulated line centers used inside :meth:`spectrum`. Two nearby isolated
 features at fixed wavelengths (``R7``, ``R8``) are modeled as Gaussians and
 added on top, plus a constant baseline.
 
 #### Parameters
-x : ndarray
+`x` : ndarray
     Wavelength grid in **nm**.
 
-C : float
+`C` : float
     Overall population/intensity scale for the BH Q-branch.
 
-T_rot : float
+`T_rot` : float
     Rotational temperature (K) for the A-state Boltzmann factor.
 
-dx : float
+`dx` : float
     Rigid wavelength shift in **nm** applied to `x` (accounts for calibration/tilt).
 
-w_inst : float
+`w_inst` : float
     Instrumental Gaussian FWHM in **nm** used for line broadening.
 
-base : float
+`base` : float
     Constant background offset (a.u.).
-I_R7 : float
+
+`I_R7` : float
     Amplitude for the auxiliary Gaussian at $\lambda_{R7}=433.64776244\,\mathrm{nm}$.
-I_R8 : float
+
+`I_R8` : float
     Amplitude for the auxiliary Gaussian at $\lambda_{R8}=433.33500584\,\mathrm{nm}$.
 
 #### Returns
