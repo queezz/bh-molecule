@@ -5,17 +5,20 @@ theme:
   features:
     - navigation.instant
     - navigation.tracking
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
     - content.code.copy
   palette:
     - scheme: slate
-      primary: indigo
-      accent: indigo
+      primary: blue
+      accent: deep orange
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode
     - scheme: default
-      primary: indigo
-      accent: indigo
+      primary: blue
+      accent: deep orange
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
@@ -35,6 +38,8 @@ markdown_extensions:
   - pymdownx.critic
   - pymdownx.details
   - pymdownx.inlinehilite
+extra_css:
+  - stylesheets/jupyter.css
 extra_javascript:
   - javascripts/mathjax.js
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
