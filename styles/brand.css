@@ -1,0 +1,73 @@
+/* Custom dark scheme: bh-dark */
+[data-md-color-scheme="bh-dark"] {
+  color-scheme: dark;
+
+  /* ===== Brand primary (top bar, links) ===== */
+  --md-primary-fg-color: #d98e04; /* warmer orange-yellow */
+  --md-primary-fg-color--light: #ffb84d;
+  --md-primary-fg-color--dark: #b37400;
+  --md-typeset-a-color: #66ffa8; /* warm yellow for links */
+
+  /* ===== Page + surface backgrounds ===== */
+  --md-default-bg-color: #0d1117;
+  --md-code-bg-color:    #1e2228;
+
+  /* ===== Text colors ===== */
+  --md-default-fg-color:            rgba(255,255,240,.92);
+  --md-default-fg-color--light:     rgba(255,255,240,.70);
+  --md-default-fg-color--lighter:   rgba(255,255,240,.50);
+  --md-default-fg-color--lightest:  rgba(255,255,240,.30);
+  --md-typeset-color:               var(--md-default-fg-color);
+
+  /* ===== Code colors ===== */
+  --md-code-fg-color: rgba(255,255,240,.95);
+  --md-typeset-code-color: var(--md-code-fg-color);
+  --md-typeset-code-bg: rgba(255,255,255,.08);
+  --md-code-hl-operator-color: #f0f0d0;
+  --md-code-hl-keyword-color:  #f4c542; /* golden yellow */
+  --md-code-hl-string-color:   #f9e076; /* soft warm yellow */
+  --md-code-hl-number-color:   #f2b56b; /* warm orange */
+  --md-code-hl-name-color:     #7acf42; /* soft green */
+  --md-code-hl-attr-color:     #9df0b2; /* light green */
+  --md-code-hl-builtin-color:  #a1ebea; /* warm yellow for builtins/commands like 'source' */
+  --md-code-hl-comment-color:  rgba(226, 196, 161, 0.718);
+  --md-code-hl-punctuation-color: rgba(255,255,240,.75); /* brighter punctuation like . and , */
+  --md-code-selection-bg-color: rgba(0, 0, 0, 0.359);
+
+  /* Subtle shadows */
+  --md-shadow-z1: 0 2px 4px rgba(0,0,0,.5);
+
+  /* Highlight color for active nav and TOC */
+  --md-accent-fg-color: #ffcc66; /* warm yellow for highlight */
+}
+
+[data-md-color-scheme="bh-dark"] .md-header,
+[data-md-color-scheme="bh-dark"] .md-tabs {
+  background-color: var(--md-primary-fg-color);
+}
+
+[data-md-color-scheme="bh-dark"] .md-typeset code {
+  background-color: var(--md-typeset-code-bg);
+  color: var(--md-typeset-code-color);
+}
+
+[data-md-color-scheme="bh-dark"] .md-typeset pre > code,
+[data-md-color-scheme="bh-dark"] pre code {
+  background-color: var(--md-code-bg-color);
+  color: var(--md-code-fg-color);
+}
+
+/* Target punctuation and special tokens in code blocks */
+[data-md-color-scheme="bh-dark"] .md-typeset pre .p, /* Pygments punctuation */
+[data-md-color-scheme="bh-dark"] .md-typeset pre .o { /* operators */
+  color: var(--md-code-hl-punctuation-color);
+}
+
+/* Target builtins/commands like 'source' */
+[data-md-color-scheme="bh-dark"] .md-typeset pre .nb {
+  color: var(--md-code-hl-builtin-color);
+}
+
+[data-md-color-scheme="bh-dark"] .md-search__form {
+  background-color: rgba(255,255,255,.06);
+}
