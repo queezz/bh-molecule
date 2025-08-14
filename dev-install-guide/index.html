@@ -18,7 +18,7 @@
     
     
       
-        <title>Docs how-to - BH Spectra</title>
+        <title>Dev Install Guide - BH Spectra</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#docs-build-preview-cheatsheet-mkdocs-venv" class="md-skip">
+        <a href="#dev-environment-mkdocs" class="md-skip">
           Skip to content
         </a>
       
@@ -108,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Docs how-to
+              Dev Install Guide
             
           </span>
         </div>
@@ -288,7 +288,7 @@
   
   
   <span class="md-ellipsis">
-    Docs how-to
+    Dev Install Guide
     
   </span>
   
@@ -301,7 +301,7 @@
   
   
   <span class="md-ellipsis">
-    Docs how-to
+    Dev Install Guide
     
   </span>
   
@@ -324,28 +324,55 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
+  <a href="#part-a-dev-environment" class="md-nav__link">
     <span class="md-ellipsis">
-      Quick start
+      Part A — Dev Environment
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Quick start">
+    <nav class="md-nav" aria-label="Part A — Dev Environment">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#first-time-setup-per-machine-per-project" class="md-nav__link">
+  <a href="#a1-prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
-      First-time setup (per machine / per project)
+      A1. Prerequisites
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#daily-use" class="md-nav__link">
+  <a href="#a2-create-activate-venv" class="md-nav__link">
     <span class="md-ellipsis">
-      Daily use
+      A2. Create &amp; activate venv
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a3-editable-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      A3. Editable install
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a4-jupyter-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      A4. Jupyter setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a5-git-ignore" class="md-nav__link">
+    <span class="md-ellipsis">
+      A5. Git ignore
     </span>
   </a>
   
@@ -357,45 +384,69 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#venv-basics" class="md-nav__link">
+  <a href="#part-b-mkdocs" class="md-nav__link">
     <span class="md-ellipsis">
-      venv basics
+      Part B — MkDocs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part B — MkDocs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#b1-install-mkdocs" class="md-nav__link">
+    <span class="md-ellipsis">
+      B1. Install MkDocs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b2-local-preview" class="md-nav__link">
+    <span class="md-ellipsis">
+      B2. Local preview
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b3-build-site" class="md-nav__link">
+    <span class="md-ellipsis">
+      B3. Build site
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b4-optional-pinned-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      B4. Optional pinned versions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#ci-what-the-workflow-does" class="md-nav__link">
+  <a href="#quick-daily-commands" class="md-nav__link">
     <span class="md-ellipsis">
-      CI (what the workflow does)
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reproducible-builds-optional-pinning" class="md-nav__link">
-    <span class="md-ellipsis">
-      Reproducible builds (optional pinning)
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-errors" class="md-nav__link">
-    <span class="md-ellipsis">
-      Common errors
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#git-hygiene" class="md-nav__link">
-    <span class="md-ellipsis">
-      Git hygiene
+      Quick daily commands
     </span>
   </a>
   
@@ -436,28 +487,55 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
+  <a href="#part-a-dev-environment" class="md-nav__link">
     <span class="md-ellipsis">
-      Quick start
+      Part A — Dev Environment
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Quick start">
+    <nav class="md-nav" aria-label="Part A — Dev Environment">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#first-time-setup-per-machine-per-project" class="md-nav__link">
+  <a href="#a1-prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
-      First-time setup (per machine / per project)
+      A1. Prerequisites
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#daily-use" class="md-nav__link">
+  <a href="#a2-create-activate-venv" class="md-nav__link">
     <span class="md-ellipsis">
-      Daily use
+      A2. Create &amp; activate venv
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a3-editable-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      A3. Editable install
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a4-jupyter-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      A4. Jupyter setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a5-git-ignore" class="md-nav__link">
+    <span class="md-ellipsis">
+      A5. Git ignore
     </span>
   </a>
   
@@ -469,45 +547,69 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#venv-basics" class="md-nav__link">
+  <a href="#part-b-mkdocs" class="md-nav__link">
     <span class="md-ellipsis">
-      venv basics
+      Part B — MkDocs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part B — MkDocs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#b1-install-mkdocs" class="md-nav__link">
+    <span class="md-ellipsis">
+      B1. Install MkDocs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b2-local-preview" class="md-nav__link">
+    <span class="md-ellipsis">
+      B2. Local preview
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b3-build-site" class="md-nav__link">
+    <span class="md-ellipsis">
+      B3. Build site
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b4-optional-pinned-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      B4. Optional pinned versions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#ci-what-the-workflow-does" class="md-nav__link">
+  <a href="#quick-daily-commands" class="md-nav__link">
     <span class="md-ellipsis">
-      CI (what the workflow does)
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reproducible-builds-optional-pinning" class="md-nav__link">
-    <span class="md-ellipsis">
-      Reproducible builds (optional pinning)
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-errors" class="md-nav__link">
-    <span class="md-ellipsis">
-      Common errors
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#git-hygiene" class="md-nav__link">
-    <span class="md-ellipsis">
-      Git hygiene
+      Quick daily commands
     </span>
   </a>
   
@@ -529,97 +631,93 @@
 
 
 
-<h1 id="docs-build-preview-cheatsheet-mkdocs-venv">Docs Build &amp; Preview Cheatsheet (MkDocs + venv)<a class="headerlink" href="#docs-build-preview-cheatsheet-mkdocs-venv" title="Permanent link">&para;</a></h1>
-<p>This project builds the website from the <code>docs/</code> folder in CI and deploys it via a GitHub Actions workflow (see <code>.github/workflows/</code> in the repo). This page is a quick reminder for local preview/build and common pitfalls.</p>
+<h1 id="dev-environment-mkdocs">Dev Environment &amp; MkDocs<a class="headerlink" href="#dev-environment-mkdocs" title="Permanent link">&para;</a></h1>
+<p>This page is the single source of truth for setting up a local development environment for <code>bh-spectra</code> and running the docs site.</p>
 <hr />
-<h2 id="quick-start">Quick start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
-<h3 id="first-time-setup-per-machine-per-project">First-time setup (per machine / per project)<a class="headerlink" href="#first-time-setup-per-machine-per-project" title="Permanent link">&para;</a></h3>
-<p><strong>Windows (PowerShell)</strong></p>
+<h2 id="part-a-dev-environment">Part A — Dev Environment<a class="headerlink" href="#part-a-dev-environment" title="Permanent link">&para;</a></h2>
+<p>How to prepare your venv, install the package in editable mode, and set up Jupyter.</p>
+<h3 id="a1-prerequisites">A1. Prerequisites<a class="headerlink" href="#a1-prerequisites" title="Permanent link">&para;</a></h3>
+<p>Python 3.10+, Git, and VS Code (recommended) or your preferred editor.  </p>
+<blockquote>
+<p>We isolate everything in <code>.venv/</code>.</p>
+</blockquote>
+<h3 id="a2-create-activate-venv">A2. Create &amp; activate venv<a class="headerlink" href="#a2-create-activate-venv" title="Permanent link">&para;</a></h3>
+<p><strong>Windows (PowerShell)</strong>
 <div class="highlight"><pre><span></span><code><span class="n">python</span> <span class="n">-m</span> <span class="n">venv</span> <span class="p">.</span><span class="n">venv</span>
-<span class="p">.\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Activate</span><span class="p">.</span><span class="n">ps1</span>
+<span class="p">.\\.</span><span class="n">venv</span><span class="p">\\</span><span class="n">Scripts</span><span class="p">\\</span><span class="n">Activate</span><span class="p">.</span><span class="n">ps1</span>
 <span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-U</span> <span class="n">pip</span>
-<span class="n">pip</span> <span class="n">install</span> <span class="n">mkdocs</span> <span class="n">mkdocs-material</span> <span class="n">pymdown-extensions</span>
-</code></pre></div>
+</code></pre></div></p>
 <p><strong>macOS / Linux (bash)</strong></p>
 <div class="highlight"><pre><span></span><code>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
 <span class="nb">source</span><span class="w"> </span>.venv/bin/activate
 python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>pip
-pip<span class="w"> </span>install<span class="w"> </span>mkdocs<span class="w"> </span>mkdocs-material<span class="w"> </span>pymdown-extensions
 </code></pre></div>
-<h3 id="daily-use">Daily use<a class="headerlink" href="#daily-use" title="Permanent link">&para;</a></h3>
-<p><strong>Windows (PowerShell)</strong></p>
-<div class="highlight"><pre><span></span><code><span class="p">.\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Activate</span><span class="p">.</span><span class="n">ps1</span>
-<span class="n">mkdocs</span> <span class="n">serve</span>    <span class="c"># local preview at http://127.0.0.1:8000</span>
-<span class="n">mkdocs</span> <span class="n">build</span>    <span class="c"># writes static site to ./site/</span>
-</code></pre></div>
-<p><strong>macOS / Linux (bash)</strong></p>
-<div class="highlight"><pre><span></span><code><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
-mkdocs<span class="w"> </span>serve
-mkdocs<span class="w"> </span>build
-</code></pre></div>
-<p><strong>Network preview (optional)</strong></p>
-<div class="highlight"><pre><span></span><code><span class="n">mkdocs</span> <span class="n">serve</span> <span class="n">-a</span> <span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">:</span><span class="n">8000</span>
-</code></pre></div>
-<p>Open from another device on the LAN as <code>http://&lt;your-pc-ip&gt;:8000</code>.</p>
-<hr />
-<h2 id="venv-basics">venv basics<a class="headerlink" href="#venv-basics" title="Permanent link">&para;</a></h2>
-<ul>
-<li>
-<p><strong>Activate</strong></p>
-</li>
-<li>
-<p>Windows (PowerShell):</p>
-<p><div class="highlight"><pre><span></span><code><span class="p">.\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Activate</span><span class="p">.</span><span class="n">ps1</span>
-</code></pre></div>
-  * macOS / Linux (bash):</p>
-<p><div class="highlight"><pre><span></span><code><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
-</code></pre></div>
-* <strong>Deactivate</strong></p>
-</li>
-</ul>
-<div class="highlight"><pre><span></span><code>deactivate
-</code></pre></div>
-<ul>
-<li><strong>If PowerShell blocks activation once</strong></li>
-</ul>
-<div class="highlight"><pre><span></span><code><span class="nb">Set-ExecutionPolicy</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span> <span class="n">RemoteSigned</span>
-</code></pre></div>
-<hr />
-<h2 id="ci-what-the-workflow-does">CI (what the workflow does)<a class="headerlink" href="#ci-what-the-workflow-does" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Spins up a clean Ubuntu VM.</li>
-<li>Checks out this repo.</li>
-<li>Installs MkDocs + plugins.</li>
-<li>Runs <code>mkdocs build</code> to produce <code>site/</code>.</li>
-<li>Commits <code>site/</code> to the <code>gh-pages</code> branch so GitHub Pages can serve it.</li>
-</ol>
 <blockquote>
-<p>You can view logs under the <strong>Actions</strong> tab on GitHub.</p>
+<p>If blocked on Windows: <code>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</code></p>
+<p><strong>Windows + VS Code note:</strong><br />
+If <code>.venv</code> is currently selected as your interpreter in VS Code, the editor will keep Python processes running in that environment.<br />
+On Windows, this will <strong>lock</strong> <code>.venv\Scripts\python.exe</code>, preventing deletion or recreation of the venv.<br />
+Before rebuilding <code>.venv</code>:
+1. Switch VS Code to a different interpreter (e.g., Conda base).
+2. Reload VS Code or close it.
+3. Delete/recreate <code>.venv</code> as needed.
+4. Switch back to <code>.venv</code> as the interpreter.</p>
 </blockquote>
-<hr />
-<h2 id="reproducible-builds-optional-pinning">Reproducible builds (optional pinning)<a class="headerlink" href="#reproducible-builds-optional-pinning" title="Permanent link">&para;</a></h2>
-<p>To reduce surprises from upstream updates, pin versions:</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="nv">mkdocs</span><span class="o">==</span><span class="m">1</span>.6.1<span class="w"> </span>mkdocs-material<span class="o">==</span><span class="m">9</span>.6.16<span class="w"> </span>pymdown-extensions<span class="o">==</span><span class="m">10</span>.16.1
+<h3 id="a3-editable-install">A3. Editable install<a class="headerlink" href="#a3-editable-install" title="Permanent link">&para;</a></h3>
+<p>From repo root:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
 </code></pre></div>
-<p>In CI, install the same pinned versions before <code>mkdocs build</code>.</p>
-<hr />
-<h2 id="common-errors">Common errors<a class="headerlink" href="#common-errors" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong><code>mkdocs: command not found</code> / <code>mkdocs is not recognized</code></strong> → venv not active. Activate the venv, or run <code>python -m mkdocs serve</code>.</li>
-<li><strong>Port already in use</strong> → <code>mkdocs serve -a 127.0.0.1:8001</code>.</li>
-<li><strong>Plugin not found</strong> → <code>pip install &lt;missing-plugin&gt;</code> in the venv and ensure it’s spelled correctly in <code>mkdocs.yml</code>.</li>
-<li><strong>YAML error</strong> → check indentation and list syntax in <code>mkdocs.yml</code>.</li>
-<li><strong>Pages don’t update</strong> → ensure repo Settings → Pages serves the <code>gh-pages</code> branch.</li>
-</ul>
-<hr />
-<h2 id="git-hygiene">Git hygiene<a class="headerlink" href="#git-hygiene" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Add to <code>.gitignore</code>:</li>
-</ul>
+<p>Imports will work anywhere, and file edits are picked up automatically.</p>
+<h3 id="a4-jupyter-setup">A4. Jupyter setup<a class="headerlink" href="#a4-jupyter-setup" title="Permanent link">&para;</a></h3>
+<p>Optional, for running notebooks in <code>examples/</code>:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>ipykernel
+python<span class="w"> </span>-m<span class="w"> </span>ipykernel<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>--name<span class="o">=</span>bh-molecule<span class="w"> </span>--display-name<span class="o">=</span><span class="s2">&quot;bh-molecule (venv)&quot;</span>
+</code></pre></div>
+<p>In VS Code, pick the <strong>bh-molecule (venv)</strong> kernel.</p>
+<h3 id="a5-git-ignore">A5. Git ignore<a class="headerlink" href="#a5-git-ignore" title="Permanent link">&para;</a></h3>
+<p>Add to <code>.gitignore</code> if missing:</p>
 <div class="highlight"><pre><span></span><code>.venv/
 site/
+.ipynb_checkpoints/
 </code></pre></div>
-<p>The CI runs <code>mkdocs build</code> for deployment; you don’t need to commit <code>site/</code> locally.</p>
+<hr />
+<h2 id="part-b-mkdocs">Part B — MkDocs<a class="headerlink" href="#part-b-mkdocs" title="Permanent link">&para;</a></h2>
+<p>Steps to serve or build the docs site locally.</p>
+<h3 id="b1-install-mkdocs">B1. Install MkDocs<a class="headerlink" href="#b1-install-mkdocs" title="Permanent link">&para;</a></h3>
+<p>If <code>.[dev]</code> already installed docs deps, skip this. Otherwise:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>mkdocs<span class="w"> </span>mkdocs-material<span class="w"> </span>pymdown-extensions
+</code></pre></div>
+<h3 id="b2-local-preview">B2. Local preview<a class="headerlink" href="#b2-local-preview" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>mkdocs<span class="w"> </span>serve
+<span class="c1"># or preview on LAN:</span>
+mkdocs<span class="w"> </span>serve<span class="w"> </span>-a<span class="w"> </span><span class="m">0</span>.0.0.0:8000
+</code></pre></div>
+<h3 id="b3-build-site">B3. Build site<a class="headerlink" href="#b3-build-site" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>mkdocs<span class="w"> </span>build
+</code></pre></div>
+<p>Outputs to <code>./site/</code> — do <strong>not</strong> commit this.</p>
+<h3 id="b4-optional-pinned-versions">B4. Optional pinned versions<a class="headerlink" href="#b4-optional-pinned-versions" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="nv">mkdocs</span><span class="o">==</span><span class="m">1</span>.6.1<span class="w"> </span>mkdocs-material<span class="o">==</span><span class="m">9</span>.6.16<span class="w"> </span>pymdown-extensions<span class="o">==</span><span class="m">10</span>.16.1
+</code></pre></div>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>MkDocs not found</strong> → Activate <code>venv</code>, or use <code>python -m mkdocs serve</code></li>
+<li><strong>ImportError</strong> → Check <code>pip install -e .</code> was run in this <code>venv</code>, and correct kernel selected.</li>
+<li><strong>Plugin missing</strong> → Install in <code>venv</code> and update <code>mkdocs.yml</code>.</li>
+<li><strong>Port in use</strong> → Change port: <code>mkdocs serve -a 127.0.0.1:8001</code>.</li>
+</ul>
+<hr />
+<h2 id="quick-daily-commands">Quick daily commands<a class="headerlink" href="#quick-daily-commands" title="Permanent link">&para;</a></h2>
+<p><strong>Windows</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">.\\.</span><span class="n">venv</span><span class="p">\\</span><span class="n">Scripts</span><span class="p">\\</span><span class="n">Activate</span><span class="p">.</span><span class="n">ps1</span>
+<span class="n">mkdocs</span> <span class="n">serve</span>
+</code></pre></div>
+<p><strong>macOS / Linux</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+mkdocs<span class="w"> </span>serve
+</code></pre></div>
 
 
 
