@@ -29,14 +29,3 @@ x = np.linspace(432.8, 434.2, 4000)
 y = model.full_fit_model(x, C=1.0, T_rot=2000, dx=0.0, w_inst=0.02,
                          base=0.0, I_R7=0.5, I_R8=0.3)
 ```
-
-## Documentation
-
-These files are prepared for use with [MkDocs](https://www.mkdocs.org/). To build the site locally:
-
-```bash
-pip install mkdocs
-mkdocs build
-```
-
-The resulting HTML can be published with GitHub Pages.

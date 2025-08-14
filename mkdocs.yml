@@ -41,3 +41,4 @@ extra_javascript:
 nav:
   - Home: index.md
   - Physics: physics.md
+  - Docs how-to: docshowto.md
