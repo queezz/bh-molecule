@@ -72,3 +72,11 @@
 [data-md-color-scheme="bh-dark"] .md-search__form {
   background-color: rgba(255,255,255,.06);
 }
+
+[data-md-color-scheme="bh-dark"] .md-typeset blockquote {
+  background-color: #282d35;
+  border-left: 0.25rem solid #d7ae3b;
+  color: var(--md-default-fg-color);
+  padding: .8em 1em .8em 1.2em;
+  border-radius: 6px;
+}

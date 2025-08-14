@@ -441,6 +441,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#venv-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      venv update
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -604,6 +619,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#venv-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      venv update
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -654,14 +684,6 @@ python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </sp
 </code></pre></div>
 <blockquote>
 <p>If blocked on Windows: <code>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</code></p>
-<p><strong>Windows + VS Code note:</strong><br />
-If <code>.venv</code> is currently selected as your interpreter in VS Code, the editor will keep Python processes running in that environment.<br />
-On Windows, this will <strong>lock</strong> <code>.venv\Scripts\python.exe</code>, preventing deletion or recreation of the venv.<br />
-Before rebuilding <code>.venv</code>:
-1. Switch VS Code to a different interpreter (e.g., Conda base).
-2. Reload VS Code or close it.
-3. Delete/recreate <code>.venv</code> as needed.
-4. Switch back to <code>.venv</code> as the interpreter.</p>
 </blockquote>
 <h3 id="a3-editable-install">A3. Editable install<a class="headerlink" href="#a3-editable-install" title="Permanent link">&para;</a></h3>
 <p>From repo root:</p>
@@ -708,6 +730,19 @@ mkdocs<span class="w"> </span>serve<span class="w"> </span>-a<span class="w"> </
 <li><strong>Plugin missing</strong> → Install in <code>venv</code> and update <code>mkdocs.yml</code>.</li>
 <li><strong>Port in use</strong> → Change port: <code>mkdocs serve -a 127.0.0.1:8001</code>.</li>
 </ul>
+<hr />
+<h3 id="venv-update"><code>venv</code> update<a class="headerlink" href="#venv-update" title="Permanent link">&para;</a></h3>
+<p>If you need to re-install venv, VS Code might block the folder. I just close the VS Code, and close the project folder. Then I can delete <code>.vev</code>.</p>
+<blockquote>
+<p><strong>Windows + VS Code note:</strong><br />
+If <code>.venv</code> is currently selected as your interpreter in VS Code, the editor will keep Python processes running in that environment.<br />
+On Windows, this will <strong>lock</strong> <code>.venv\Scripts\python.exe</code>, preventing deletion or recreation of the venv.<br />
+Before rebuilding <code>.venv</code>:
+1. Switch VS Code to a different interpreter (e.g., Conda base).
+2. Reload VS Code or close it.
+3. Delete/recreate <code>.venv</code> as needed.
+4. Switch back to <code>.venv</code> as the interpreter.</p>
+</blockquote>
 <hr />
 <h2 id="quick-daily-commands">Quick daily commands<a class="headerlink" href="#quick-daily-commands" title="Permanent link">&para;</a></h2>
 <p><strong>Windows</strong></p>
