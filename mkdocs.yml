@@ -43,4 +43,4 @@ extra_css:
 nav:
   - Home: index.md
   - Physics: physics.md
-  - Docs how-to: docshowto.md
+  - Dev Install Guide: dev-install-guide.md

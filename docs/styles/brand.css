@@ -6,7 +6,7 @@
   --md-primary-fg-color: #d98e04; /* warmer orange-yellow */
   --md-primary-fg-color--light: #ffb84d;
   --md-primary-fg-color--dark: #b37400;
-  --md-typeset-a-color: #66ffa8; /* warm yellow for links */
+  --md-typeset-a-color: #ffcc66; /* warm yellow for links */
 
   /* ===== Page + surface backgrounds ===== */
   --md-default-bg-color: #0d1117;
@@ -30,6 +30,7 @@
   --md-code-hl-name-color:     #7acf42; /* soft green */
   --md-code-hl-attr-color:     #9df0b2; /* light green */
   --md-code-hl-builtin-color:  #a1ebea; /* warm yellow for builtins/commands like 'source' */
+  --md-code-hl-variable-color: #ffcc66;
   --md-code-hl-comment-color:  rgba(226, 196, 161, 0.718);
   --md-code-hl-punctuation-color: rgba(255,255,240,.75); /* brighter punctuation like . and , */
   --md-code-selection-bg-color: rgba(0, 0, 0, 0.359);
@@ -38,7 +39,7 @@
   --md-shadow-z1: 0 2px 4px rgba(0,0,0,.5);
 
   /* Highlight color for active nav and TOC */
-  --md-accent-fg-color: #ffcc66; /* warm yellow for highlight */
+  --md-accent-fg-color: #66ffa8; /* warm yellow for highlight */
 }
 
 [data-md-color-scheme="bh-dark"] .md-header,

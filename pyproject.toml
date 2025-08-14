@@ -14,6 +14,14 @@ dependencies = [
   "matplotlib>=3.8"
 ]
 
+[project.optional-dependencies]
+dev = [
+  "mkdocs>=1.6",
+  "mkdocs-material>=9.6",
+  "pymdown-extensions>=10.0",
+  "ipykernel>=6.0"
+]
+
 [tool.setuptools.package-data]
 "bh_spectra._resources" = ["*.csv"]
 
