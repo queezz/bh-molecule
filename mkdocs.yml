@@ -7,15 +7,15 @@ theme:
     - navigation.tracking
     - content.code.copy
   palette:
-    - scheme: slate
-      primary: indigo
-      accent: indigo
+    - scheme: bh-dark
+      primary: custom
+      accent: yellow
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode
     - scheme: default
-      primary: indigo
-      accent: indigo
+      primary: amber
+      accent: red
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
@@ -38,6 +38,8 @@ markdown_extensions:
 extra_javascript:
   - javascripts/mathjax.js
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+extra_css:
+  - styles/brand.css
 nav:
   - Home: index.md
   - Physics: physics.md
