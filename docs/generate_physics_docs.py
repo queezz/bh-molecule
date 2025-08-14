@@ -29,14 +29,17 @@ def _format_docstring(doc: str) -> str:
     text = textwrap.dedent(doc).strip("\n")
     lines = text.splitlines()
     out: list[str] = []
+    in_params = False
     for line in lines:
-        if (
-            re.match(r"^[A-Za-z_]+\s*:\s*", line)
-            and out
-            and out[-1].strip()
-            and not out[-1].startswith("####")
-        ):
-            out.append("")
+        heading = line.startswith("####")
+        if heading:
+            in_params = line.strip().lower().startswith("#### parameters")
+        param_match = re.match(r"^([A-Za-z_][A-Za-z0-9_]*)\s*:\s*(.*)", line) if in_params else None
+        if param_match:
+            name, rest = param_match.groups()
+            line = f"`{name}` : {rest}"
+            if out and out[-1].strip() and not out[-1].startswith("####"):
+                out.append("")
         out.append(line)
     return "\n".join(out)
 
@@ -52,7 +55,7 @@ def build_markdown(docs: dict) -> str:
     if class_doc:
         lines.append(_format_docstring(class_doc) + "\n\n")
     for name, doc in docs.items():
-        lines.append(f"### {name}\n\n")
+        lines.append(f"### `{name}`\n\n")
         lines.append(_format_docstring(doc) + "\n\n")
     return "".join(lines)
 
