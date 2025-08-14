@@ -29,16 +29,7 @@ python -m pip install -U pip
 ```
 
 > If blocked on Windows: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`
-
-> **Windows + VS Code note:**  
-> If `.venv` is currently selected as your interpreter in VS Code, the editor will keep Python processes running in that environment.  
-> On Windows, this will **lock** `.venv\Scripts\python.exe`, preventing deletion or recreation of the venv.  
-> Before rebuilding `.venv`:
-> 1. Switch VS Code to a different interpreter (e.g., Conda base).
-> 2. Reload VS Code or close it.
-> 3. Delete/recreate `.venv` as needed.
-> 4. Switch back to `.venv` as the interpreter.
-
+ 
 
 ### A3. Editable install
 
@@ -116,6 +107,20 @@ python -m pip install \
 - **ImportError** → Check `pip install -e .` was run in this `venv`, and correct kernel selected.
 - **Plugin missing** → Install in `venv` and update `mkdocs.yml`.
 - **Port in use** → Change port: `mkdocs serve -a 127.0.0.1:8001`.
+
+---
+
+### `venv` update
+If you need to re-install venv, VS Code might block the folder. I just close the VS Code, and close the project folder. Then I can delete `.vev`.
+
+> **Windows + VS Code note:**  
+> If `.venv` is currently selected as your interpreter in VS Code, the editor will keep Python processes running in that environment.  
+> On Windows, this will **lock** `.venv\Scripts\python.exe`, preventing deletion or recreation of the venv.  
+> Before rebuilding `.venv`:
+> 1. Switch VS Code to a different interpreter (e.g., Conda base).
+> 2. Reload VS Code or close it.
+> 3. Delete/recreate `.venv` as needed.
+> 4. Switch back to `.venv` as the interpreter.
 
 ---
 
