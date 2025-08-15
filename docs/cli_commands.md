@@ -31,7 +31,7 @@ All three commands share a set of parameters controlling the generated spectrum:
 
 ---
 
-## 1. Generate Spectrum Data
+## Generate Spectrum Data
 ### `bh-spectra`
 
 Generates model spectrum and saves it as a compressed NumPy file (`.npz`).
@@ -71,7 +71,7 @@ The resulting CSV will have columns:
 
 ---
 
-## 3. Plot Spectrum
+## Plot Spectrum
 
 Generates and displays a spectrum plot using Matplotlib.
 
@@ -85,31 +85,22 @@ bh-spectra-plot --C 5.0 --T_rot 3500
 * `--dpi`: Resolution when saving (default: 100)
 * `--figsize`: Width and height in inches (default: `10 6`)
 
-**Examples:**
-
-```bash
-# Display interactive plot
-bh-spectra-plot --C 5.0 --T_rot 3500
-
-# Save plot to PNG at 300 dpi
-bh-spectra-plot --C 5.0 --T_rot 3500 --save spectrum.png --dpi 300
-
-# Custom wavelength range and resolution
-bh-spectra-plot --xmin 433.0 --xmax 434.0 --points 2000 --C 2.0 --T_rot 2500
-```
-
 ---
 
 ## Example Workflow
 
+1. Generate spectrum data
 ```bash
-# 1. Generate spectrum data
 bh-spectra --C 4.0 --T_rot 3200 --out data.npz
+```
 
-# 2. Export same parameters to CSV
+2. Export same parameters to CSV
+```bash
 bh-spectra-csv --C 4.0 --T_rot 3200 --out data.csv
+```
 
-# 3. Visualize spectrum
+3. Visualize spectrum
+```bash
 bh-spectra-plot --C 4.0 --T_rot 3200 --save plot.png --dpi 200
 ```
 

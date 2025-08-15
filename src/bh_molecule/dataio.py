@@ -2,7 +2,7 @@ from __future__ import annotations
 import hashlib, json
 import numpy as np, pandas as pd
 from importlib import resources
-from pathlib import Path
+from typing import cast
 
 
 def n_air(wl_nm: float | np.ndarray) -> float | np.ndarray:
@@ -30,26 +30,19 @@ def load_v00_wavelengths() -> pd.DataFrame:
         .joinpath("11BH_v00.csv")
         .open("rb") as f
     ):
-        v00_wn = pd.read_csv(
-            f, comment="#"
-        )  # expects columns P,Q,R in wavenumbers (cm^-1)
-    # Convert only spectral branch columns (P,Q,R) from wavenumber (cm^-1) to air wavelengths (nm).
+        v00_wn = pd.read_csv(f, comment="#")
+
     branch_cols = ["P", "Q", "R"]
     missing = [c for c in branch_cols if c not in v00_wn.columns]
     if missing:
         raise ValueError(f"Missing expected columns in 11BH_v00.csv: {missing}")
 
-    wl_vac_nm = 1e7 / v00_wn[branch_cols]  # vacuum wavelengths (nm)
-    wl_air_nm = wl_vac_nm / n_air(wl_vac_nm)  # convert to air wavelengths
+    wl_vac_nm = 1e7 / v00_wn[branch_cols]
+    wl_air_nm = wl_vac_nm / n_air(wl_vac_nm)
 
-    # Preserve J as-is; return DataFrame with columns [J, P, Q, R]
-    if "J" in v00_wn.columns:
-        out = v00_wn[["J"]].copy()
-        out[branch_cols] = wl_air_nm
-        return out
-    else:
-        wl_air_nm.columns = branch_cols
-        return wl_air_nm
+    out = v00_wn[["J"]].copy()
+    out[branch_cols] = wl_air_nm
+    return out  # type: ignore[reportReturnType]
 
 
 def hash_params(d: dict) -> str:
