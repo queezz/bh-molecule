@@ -12,6 +12,8 @@
         <link rel="prev" href="../cli_commands/">
       
       
+        <link rel="next" href="../venv-outside-synced-folders/">
+      
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
@@ -475,15 +477,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#dropbox-and-venv" class="md-nav__link">
-    <span class="md-ellipsis">
-      Dropbox and .venv
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -502,6 +495,28 @@
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../venv-outside-synced-folders/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Venv
+    
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -662,15 +677,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#dropbox-and-venv" class="md-nav__link">
-    <span class="md-ellipsis">
-      Dropbox and .venv
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -772,61 +778,17 @@ mkdocs<span class="w"> </span>serve<span class="w"> </span>-a<span class="w"> </
 </ul>
 <hr />
 <h3 id="venv-update"><code>venv</code> update<a class="headerlink" href="#venv-update" title="Permanent link">&para;</a></h3>
-<p>If you need to re-install venv, VS Code might block the folder. I just close the VS Code, and close the project folder. Then I can delete <code>.vev</code>.</p>
+<p>If you need to recreate the venv and Windows/VS Code won’t let you delete it:
+1) Switch VS Code to a different interpreter (e.g., Conda base).<br />
+2) Reload or close VS Code.<br />
+3) Delete/recreate <code>.venv</code>.<br />
+4) Switch back to the project interpreter.</p>
 <blockquote>
-<p><strong>Windows + VS Code note:</strong><br />
-If <code>.venv</code> is currently selected as your interpreter in VS Code, the editor will keep Python processes running in that environment.<br />
-On Windows, this will <strong>lock</strong> <code>.venv\Scripts\python.exe</code>, preventing deletion or recreation of the venv.<br />
-Before rebuilding <code>.venv</code>:
-1. Switch VS Code to a different interpreter (e.g., Conda base).
-2. Reload VS Code or close it.
-3. Delete/recreate <code>.venv</code> as needed.
-4. Switch back to <code>.venv</code> as the interpreter.</p>
+<p><strong>Heads-up for synced folders (Dropbox/OneDrive/Drive):</strong><br />
+If your repo lives in a synced folder and you use multiple machines, avoid putting <code>.venv/</code> inside the repo. Keep the venv <strong>outside</strong> the synced tree and point Cursor/VS Code to it.<br />
+See: <a href="../venv-outside-synced-folders/">Using a venv outside a synced folder</a></p>
 </blockquote>
-<h3 id="dropbox-and-venv">Dropbox and <code>.venv</code><a class="headerlink" href="#dropbox-and-venv" title="Permanent link">&para;</a></h3>
-<p>Dropbox will try to sync <code>.venv</code> across devices, causing “sync conflict” folders if each machine has its own environment.
-To keep <code>.venv</code> local only, set Dropbox’s <em>ignore</em> attribute:</p>
-<ol>
-<li>
-<p><strong>Remove any existing cloud copy</strong></p>
-<ul>
-<li>Pause Dropbox sync.</li>
-<li>Delete <code>.venv</code> from the Dropbox web interface.</li>
-<li>Resume sync.</li>
-</ul>
-</li>
-<li>
-<p><strong>Create or keep your local <code>.venv</code> folder</strong>
-    Example:</p>
-<div class="highlight"><pre><span></span><code><span class="n">python</span> <span class="n">-m</span> <span class="n">venv</span> <span class="p">.</span><span class="n">venv</span>
-</code></pre></div>
-</li>
-<li>
-<p><strong>Set the ignore attribute (PowerShell)</strong>
-    From your project folder:</p>
-<div class="highlight"><pre><span></span><code><span class="n">cmd</span> <span class="p">/</span><span class="n">c</span> <span class="s2">&quot;echo 1 &gt; .venv:com.dropbox.ignored&quot;</span>
-</code></pre></div>
-</li>
-<li>
-<p><strong>Verify</strong></p>
-<div class="highlight"><pre><span></span><code><span class="n">cmd</span> <span class="p">/</span><span class="n">c</span> <span class="s2">&quot;dir /r .&quot;</span>
-</code></pre></div>
-<p>You should see:</p>
-<div class="highlight"><pre><span></span><code>.venv:com.dropbox.ignored:$DATA
-</code></pre></div>
-</li>
-<li>
-<p><strong>Result</strong></p>
-<ul>
-<li><code>.venv</code> stays on this machine only.</li>
-<li>No cloud upload or download to other devices.</li>
-<li>Icon in Explorer will have a gray minus badge.</li>
-</ul>
-</li>
-</ol>
-<blockquote>
-<p><strong>Note:</strong> If you delete and recreate <code>.venv</code>, reapply the attribute. It’s stored on the folder itself, not just the name.</p>
-</blockquote>
+<p>(Add <code>.venv/</code> to <code>.gitignore</code> so a local in-repo venv won’t be committed.)</p>
 <hr />
 <h2 id="quick-daily-commands">Quick daily commands<a class="headerlink" href="#quick-daily-commands" title="Permanent link">&para;</a></h2>
 <p><strong>Windows</strong></p>

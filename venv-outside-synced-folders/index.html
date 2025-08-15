@@ -9,10 +9,8 @@
       
       
       
-        <link rel="prev" href="../physics/">
+        <link rel="prev" href="../dev-install-guide/">
       
-      
-        <link rel="next" href="../dev-install-guide/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -20,7 +18,7 @@
     
     
       
-        <title>CLI - BH Molecule</title>
+        <title>Venv - BH Molecule</title>
       
     
     
@@ -74,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#bh-molecule-cli-commands" class="md-skip">
+        <a href="#using-a-venv-outside-a-synced-folder-dropboxonedrivegoogle-drive" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              CLI
+              Venv
             
           </span>
         </div>
@@ -273,32 +271,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    CLI
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../cli_commands/" class="md-nav__link">
         
   
   
@@ -309,104 +285,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Common Parameters
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#generate-spectrum-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      Generate Spectrum Data
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Generate Spectrum Data">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#bh-spectra" class="md-nav__link">
-    <span class="md-ellipsis">
-      bh-spectra
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bh-spectra-csv" class="md-nav__link">
-    <span class="md-ellipsis">
-      bh-spectra-csv
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#plot-spectrum" class="md-nav__link">
-    <span class="md-ellipsis">
-      Plot Spectrum
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example Workflow
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Notes
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -437,10 +315,32 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../venv-outside-synced-folders/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Venv
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -451,6 +351,113 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      TL;DR
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-activate-the-venv" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create &amp; activate the venv
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Create &amp; activate the venv">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#windows-powershell" class="md-nav__link">
+    <span class="md-ellipsis">
+      Windows (PowerShell)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#macos-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      macOS / Linux
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#point-ide-to-the-external-venv" class="md-nav__link">
+    <span class="md-ellipsis">
+      Point IDE to the external venv
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jupyter-notebooks-in-cursor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Jupyter notebooks in Cursor
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common tasks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recreate-the-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recreate the environment
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes-gotchas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notes &amp; gotchas
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -482,46 +489,37 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#tldr" class="md-nav__link">
     <span class="md-ellipsis">
-      Installation
+      TL;DR
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-parameters" class="md-nav__link">
+  <a href="#create-activate-the-venv" class="md-nav__link">
     <span class="md-ellipsis">
-      Common Parameters
+      Create &amp; activate the venv
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#generate-spectrum-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      Generate Spectrum Data
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Generate Spectrum Data">
+    <nav class="md-nav" aria-label="Create &amp; activate the venv">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#bh-spectra" class="md-nav__link">
+  <a href="#windows-powershell" class="md-nav__link">
     <span class="md-ellipsis">
-      bh-spectra
+      Windows (PowerShell)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#bh-spectra-csv" class="md-nav__link">
+  <a href="#macos-linux" class="md-nav__link">
     <span class="md-ellipsis">
-      bh-spectra-csv
+      macOS / Linux
     </span>
   </a>
   
@@ -533,27 +531,45 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#plot-spectrum" class="md-nav__link">
+  <a href="#point-ide-to-the-external-venv" class="md-nav__link">
     <span class="md-ellipsis">
-      Plot Spectrum
+      Point IDE to the external venv
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#example-workflow" class="md-nav__link">
+  <a href="#jupyter-notebooks-in-cursor" class="md-nav__link">
     <span class="md-ellipsis">
-      Example Workflow
+      Jupyter notebooks in Cursor
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#common-tasks" class="md-nav__link">
     <span class="md-ellipsis">
-      Notes
+      Common tasks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recreate-the-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recreate the environment
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes-gotchas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notes &amp; gotchas
     </span>
   </a>
   
@@ -575,153 +591,138 @@
 
 
 
-<h1 id="bh-molecule-cli-commands">BH-Molecule CLI Commands<a class="headerlink" href="#bh-molecule-cli-commands" title="Permanent link">&para;</a></h1>
-<p>The <strong>BH-Molecule</strong> package provides three main command-line tools for generating, exporting, and plotting model spectra of the boron hydride (BH) A–X band.</p>
-<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<p>To use the commands, you need to install the package. See the <a href="../#installation">Installation</a> section.</p>
+<h1 id="using-a-venv-outside-a-synced-folder-dropboxonedrivegoogle-drive">Using a venv <strong>outside</strong> a synced folder (Dropbox/OneDrive/Google Drive)<a class="headerlink" href="#using-a-venv-outside-a-synced-folder-dropboxonedrivegoogle-drive" title="Permanent link">&para;</a></h1>
+<p>If you keep your repo inside a synced folder, excluding <code>.venv/</code> can be unreliable or annoying. Easiest fix: <strong>create the virtual environment outside the synced tree</strong> and point your tools to it.</p>
+<p>This page shows how.</p>
+<hr />
+<h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
 <ul>
-<li><code>bh-spectra</code></li>
-<li><code>bh-spectra-csv</code></li>
-<li><code>bh-spectra-plot</code></li>
+<li>Put venvs in a local directory (e.g. <code>~/.venvs</code> or <code>C:\Users\&lt;you&gt;\.venvs</code>).</li>
+<li>Create/activate the venv there.</li>
+<li>Tell Cursor/VS Code to use that interpreter.</li>
+<li>Keep <code>.venv/</code> in <code>.gitignore</code> in case someone creates one inside the repo.</li>
 </ul>
 <hr />
-<h2 id="common-parameters">Common Parameters<a class="headerlink" href="#common-parameters" title="Permanent link">&para;</a></h2>
-<p>All three commands share a set of parameters controlling the generated spectrum:</p>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--xmin</code></td>
-<td>float</td>
-<td>432.8</td>
-<td>Minimum wavelength in nm</td>
-</tr>
-<tr>
-<td><code>--xmax</code></td>
-<td>float</td>
-<td>434.2</td>
-<td>Maximum wavelength in nm</td>
-</tr>
-<tr>
-<td><code>--points</code></td>
-<td>int</td>
-<td>4000</td>
-<td>Number of wavelength points</td>
-</tr>
-<tr>
-<td><code>--C</code></td>
-<td>float</td>
-<td>1.0</td>
-<td>Concentration factor</td>
-</tr>
-<tr>
-<td><code>--T_rot</code></td>
-<td>float</td>
-<td>2000.0</td>
-<td>Rotational temperature in K</td>
-</tr>
-<tr>
-<td><code>--dx</code></td>
-<td>float</td>
-<td>0.0</td>
-<td>Wavelength shift in nm</td>
-</tr>
-<tr>
-<td><code>--w_inst</code></td>
-<td>float</td>
-<td>0.02</td>
-<td>Instrumental FWHM in nm</td>
-</tr>
-<tr>
-<td><code>--base</code></td>
-<td>float</td>
-<td>0.0</td>
-<td>Baseline offset</td>
-</tr>
-<tr>
-<td><code>--I_R7</code></td>
-<td>float</td>
-<td>0.5</td>
-<td>Intensity of R₇ branch line</td>
-</tr>
-<tr>
-<td><code>--I_R8</code></td>
-<td>float</td>
-<td>0.3</td>
-<td>Intensity of R₈ branch line</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="generate-spectrum-data">Generate Spectrum Data<a class="headerlink" href="#generate-spectrum-data" title="Permanent link">&para;</a></h2>
-<h3 id="bh-spectra"><code>bh-spectra</code><a class="headerlink" href="#bh-spectra" title="Permanent link">&para;</a></h3>
-<p>Generates model spectrum and saves it as a compressed NumPy file (<code>.npz</code>).</p>
-<div class="highlight"><pre><span></span><code>bh-spectra<span class="w"> </span>--C<span class="w"> </span><span class="m">5</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3500</span><span class="w"> </span>--out<span class="w"> </span>spectrum.npz
+<h2 id="create-activate-the-venv">Create &amp; activate the venv<a class="headerlink" href="#create-activate-the-venv" title="Permanent link">&para;</a></h2>
+<h3 id="windows-powershell">Windows (PowerShell)<a class="headerlink" href="#windows-powershell" title="Permanent link">&para;</a></h3>
+<p><strong>1) Pick a home for all your venvs</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nv">$ENV_DIR</span> <span class="p">=</span> <span class="s2">&quot;$env:USERPROFILE\.venvs&quot;</span>
+<span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Force</span> <span class="nv">$ENV_DIR</span> <span class="p">|</span> <span class="nb">Out-Null</span>
 </code></pre></div>
-<p><strong>Options:</strong></p>
-<ul>
-<li><code>--out</code>: Output file name (default: <code>spectrum.npz</code>)</li>
-</ul>
-<p><strong>Example:</strong></p>
-<div class="highlight"><pre><span></span><code>bh-spectra<span class="w"> </span>--xmin<span class="w"> </span><span class="m">433</span>.0<span class="w"> </span>--xmax<span class="w"> </span><span class="m">434</span>.0<span class="w"> </span>--points<span class="w"> </span><span class="m">2000</span><span class="w"> </span>--C<span class="w"> </span><span class="m">2</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">2500</span><span class="w"> </span>--out<span class="w"> </span>my_spectrum.npz
+<p><strong>2) Create the venv (choose ONE of these)</strong></p>
+<p>Option A — with the Python launcher:</p>
+<div class="highlight"><pre><span></span><code><span class="n">py</span> <span class="p">-</span><span class="n">3</span><span class="p">.</span><span class="n">12</span> <span class="n">-m</span> <span class="n">venv</span> <span class="s2">&quot;$ENV_DIR\bh-molecule&quot;</span>
+</code></pre></div>
+<p>Option B — with <code>python</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">python</span> <span class="n">-m</span> <span class="n">venv</span> <span class="s2">&quot;$ENV_DIR\bh-molecule&quot;</span>
+</code></pre></div>
+<p><strong>3) Activate</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">&amp;</span> <span class="s2">&quot;$ENV_DIR\bh-molecule\Scripts\Activate.ps1&quot;</span>
+</code></pre></div>
+<p><strong>4) Upgrade pip</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-U</span> <span class="n">pip</span>
+</code></pre></div>
+<p><strong>5) Install this project (dev extras)</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-e</span> <span class="s2">&quot;.[dev]&quot;</span>
+</code></pre></div>
+<blockquote>
+<p>If activation is blocked on Windows, run once:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Set-ExecutionPolicy</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span> <span class="n">RemoteSigned</span>
+</code></pre></div>
+</blockquote>
+<h3 id="macos-linux">macOS / Linux<a class="headerlink" href="#macos-linux" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nv">ENV_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.venvs&quot;</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ENV_DIR</span><span class="s2">&quot;</span>
+
+python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ENV_DIR</span><span class="s2">/bh-molecule&quot;</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ENV_DIR</span><span class="s2">/bh-molecule/bin/activate&quot;</span>
+
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>pip
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+</code></pre></div>
+<p>Deactivate any time:</p>
+<div class="highlight"><pre><span></span><code>deactivate
 </code></pre></div>
 <hr />
-<h3 id="bh-spectra-csv"><code>bh-spectra-csv</code><a class="headerlink" href="#bh-spectra-csv" title="Permanent link">&para;</a></h3>
-<p>Same as <code>bh-spectra</code> but outputs a CSV file instead of NumPy.</p>
-<div class="highlight"><pre><span></span><code>bh-spectra-csv<span class="w"> </span>--C<span class="w"> </span><span class="m">5</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3500</span><span class="w"> </span>--out<span class="w"> </span>spectrum.csv
-</code></pre></div>
-<p><strong>Options:</strong></p>
-<ul>
-<li><code>--out</code>: Output CSV filename (default: <code>spectrum.csv</code>)</li>
-</ul>
-<p>The resulting CSV will have columns:</p>
-<ul>
-<li><code>x</code> — Wavelength (nm)</li>
-<li><code>y</code> — Intensity (a.u.)</li>
-</ul>
-<hr />
-<h2 id="plot-spectrum">Plot Spectrum<a class="headerlink" href="#plot-spectrum" title="Permanent link">&para;</a></h2>
-<p>Generates and displays a spectrum plot using Matplotlib.</p>
-<div class="highlight"><pre><span></span><code>bh-spectra-plot<span class="w"> </span>--C<span class="w"> </span><span class="m">5</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3500</span>
-</code></pre></div>
-<p><strong>Additional options:</strong></p>
-<ul>
-<li><code>--save</code>: Save plot to file (e.g. <code>plot.png</code>)</li>
-<li><code>--dpi</code>: Resolution when saving (default: 100)</li>
-<li><code>--figsize</code>: Width and height in inches (default: <code>10 6</code>)</li>
-</ul>
-<hr />
-<h2 id="example-workflow">Example Workflow<a class="headerlink" href="#example-workflow" title="Permanent link">&para;</a></h2>
+<h2 id="point-ide-to-the-external-venv">Point IDE to the external venv<a class="headerlink" href="#point-ide-to-the-external-venv" title="Permanent link">&para;</a></h2>
 <ol>
-<li>
-<p>Generate spectrum data
-<div class="highlight"><pre><span></span><code>bh-spectra<span class="w"> </span>--C<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3200</span><span class="w"> </span>--out<span class="w"> </span>data.npz
-</code></pre></div></p>
-</li>
-<li>
-<p>Export same parameters to CSV
-<div class="highlight"><pre><span></span><code>bh-spectra-csv<span class="w"> </span>--C<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3200</span><span class="w"> </span>--out<span class="w"> </span>data.csv
-</code></pre></div></p>
-</li>
-<li>
-<p>Visualize spectrum
-<div class="highlight"><pre><span></span><code>bh-spectra-plot<span class="w"> </span>--C<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3200</span><span class="w"> </span>--save<span class="w"> </span>plot.png<span class="w"> </span>--dpi<span class="w"> </span><span class="m">200</span>
-</code></pre></div></p>
-</li>
+<li><strong>Ctrl+Shift+P → “Python: Select Interpreter” → “Enter interpreter path”</strong></li>
 </ol>
-<hr />
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
 <ul>
-<li>The BH-Spectra CLI tools are based on the <strong>BHModel</strong> class and use molecular constants loaded via <code>load_v00_wavelengths()</code>.</li>
-<li>Adjusting <code>C</code>, <code>T_rot</code>, and <code>w_inst</code> has the most visible effect on spectrum shape.</li>
+<li>Windows:
+     <code>C:\Users\&lt;you&gt;\.venvs\bh-molecule\Scripts\python.exe</code></li>
+<li>macOS/Linux:
+     <code>/Users/&lt;you&gt;/.venvs/bh-molecule/bin/python</code></li>
 </ul>
+<ol>
+<li><strong>Persist for this workspace</strong> (recommended):</li>
+</ol>
+<p>Create <code>.vscode/settings.json</code>:</p>
+<p><strong>Windows</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;python.defaultInterpreterPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${env:USERPROFILE}\\.venvs\\bh-molecule\\Scripts\\python.exe&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;python.terminal.activateEnvironment&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>macOS/Linux</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;python.defaultInterpreterPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${env:HOME}/.venvs/bh-molecule/bin/python&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;python.terminal.activateEnvironment&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>(Optional) Make external venvs auto-discoverable in the picker:</p>
+<ul>
+<li>Windows (User Settings): <code>"python.venvPath": "C:\\Users\\&lt;you&gt;\\.venvs"</code></li>
+<li>macOS/Linux (User Settings): <code>"python.venvPath": "~/.venvs"</code></li>
+</ul>
+<hr />
+<h2 id="jupyter-notebooks-in-cursor">Jupyter notebooks in Cursor<a class="headerlink" href="#jupyter-notebooks-in-cursor" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Kernel picker → <strong>Select Another Kernel</strong> → <strong>Python Environments</strong> → choose the same venv,
+  or run <strong>“Python: Select Interpreter to start Jupyter server”</strong> and pick it.</li>
+</ul>
+<hr />
+<h2 id="common-tasks">Common tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
+<p>Install/upgrade project deps:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>pip
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+</code></pre></div>
+<p>Add a package:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>&lt;package&gt;
+<span class="c1"># Then record it in pyproject (e.g., optional-dependencies.dev) if needed.</span>
+</code></pre></div>
+<p>Freeze (for debugging):</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>freeze<span class="w"> </span>&gt;<span class="w"> </span>freeze.txt
+</code></pre></div>
+<hr />
+<h2 id="recreate-the-environment">Recreate the environment<a class="headerlink" href="#recreate-the-environment" title="Permanent link">&para;</a></h2>
+<p>If things drift, rebuild quickly:</p>
+<p><strong>Windows</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nb">Remove-Item</span> <span class="n">-Recurse</span> <span class="n">-Force</span> <span class="s2">&quot;$env:USERPROFILE\.venvs\bh-molecule&quot;</span>
+<span class="n">python</span> <span class="n">-m</span> <span class="n">venv</span> <span class="s2">&quot;$env:USERPROFILE\.venvs\bh-molecule&quot;</span>
+<span class="p">&amp;</span> <span class="s2">&quot;$env:USERPROFILE\.venvs\bh-molecule\Scripts\Activate.ps1&quot;</span>
+<span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-U</span> <span class="n">pip</span>
+<span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-e</span> <span class="s2">&quot;.[dev]&quot;</span>
+</code></pre></div>
+<p><strong>macOS / Linux</strong></p>
+<div class="highlight"><pre><span></span><code>rm<span class="w"> </span>-rf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.venvs/bh-molecule&quot;</span>
+python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.venvs/bh-molecule&quot;</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.venvs/bh-molecule/bin/activate&quot;</span>
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>pip
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="notes-gotchas">Notes &amp; gotchas<a class="headerlink" href="#notes-gotchas" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Synced folders:</strong> keeping venvs outside avoids sync noise and conflicts (Dropbox/OneDrive/Drive).</li>
+<li><strong>.gitignore:</strong> add <code>.venv/</code> so a local in-repo venv never gets committed:</li>
+</ul>
+<p><div class="highlight"><pre><span></span><code>.venv/
+</code></pre></div>
+* <strong>Windows execution policy:</strong> if activation is blocked, run once:</p>
+<p><div class="highlight"><pre><span></span><code><span class="nb">Set-ExecutionPolicy</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span> <span class="n">RemoteSigned</span>
+</code></pre></div>
+* <strong>Multiple machines:</strong> each machine should have its own venv; reinstall with <code>-e ".[dev]"</code>.</p>
 
 
 
