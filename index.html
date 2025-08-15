@@ -398,8 +398,11 @@
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </code></pre></div>
 <p>Then run the command line tool:</p>
-<div class="highlight"><pre><span></span><code>bh-spectra<span class="w"> </span>--xmin<span class="w"> </span><span class="m">432</span>.8<span class="w"> </span>--xmax<span class="w"> </span><span class="m">434</span>.2<span class="w"> </span>--points<span class="w"> </span><span class="m">4000</span><span class="w"> </span>--out<span class="w"> </span>spectrum.npz
+<p><div class="highlight"><pre><span></span><code>bh-spectra<span class="w"> </span>--xmin<span class="w"> </span><span class="m">432</span>.8<span class="w"> </span>--xmax<span class="w"> </span><span class="m">434</span>.2<span class="w"> </span>--points<span class="w"> </span><span class="m">4000</span><span class="w"> </span>--out<span class="w"> </span>spectrum.npz
 </code></pre></div>
+Or save as <code>csv</code>:
+<div class="highlight"><pre><span></span><code>bh-spectra-csv<span class="w"> </span>--xmin<span class="w"> </span><span class="m">432</span>.8<span class="w"> </span>--xmax<span class="w"> </span><span class="m">434</span>.2<span class="w"> </span>--points<span class="w"> </span><span class="m">4000</span><span class="w"> </span>--out<span class="w"> </span>spectrum.csv
+</code></pre></div></p>
 <p>Or use the Python API:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">bh_spectra.dataio</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_v00_wavelengths</span>
