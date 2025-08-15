@@ -18,7 +18,7 @@
     
     
       
-        <title>BH Spectra</title>
+        <title>BH Molecule</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#bh-spectra" class="md-skip">
+        <a href="#bh-molecule" class="md-skip">
           Skip to content
         </a>
       
@@ -88,7 +88,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="BH Spectra" class="md-header__button md-logo" aria-label="BH Spectra" data-md-component="logo">
+    <a href="." title="BH Molecule" class="md-header__button md-logo" aria-label="BH Molecule" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -102,7 +102,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            BH Spectra
+            BH Molecule
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -212,13 +212,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="BH Spectra" class="md-nav__button md-logo" aria-label="BH Spectra" data-md-component="logo">
+    <a href="." title="BH Molecule" class="md-nav__button md-logo" aria-label="BH Molecule" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    BH Spectra
+    BH Molecule
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -280,6 +280,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       Quick start
@@ -309,6 +318,28 @@
   
   <span class="md-ellipsis">
     Physics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="cli_commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CLI
     
   </span>
   
@@ -367,6 +398,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       Quick start
@@ -391,28 +431,33 @@
 
 
 
-<h1 id="bh-spectra">BH Spectra<a class="headerlink" href="#bh-spectra" title="Permanent link">&para;</a></h1>
+<h1 id="bh-molecule">BH Molecule<a class="headerlink" href="#bh-molecule" title="Permanent link">&para;</a></h1>
 <p>This project provides tools to model and fit the A–X band spectra of boron hydride (BH). It began life as a set of Jupyter notebooks and has since been refactored into a Python package.</p>
-<h2 id="quick-start">Quick start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
-<p>Install the package in editable mode:</p>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<p>You can install <strong>BH Molecule</strong> locally or directly from GitHub. Both methods will make the CLI commands (<code>bh-spectra</code>, <code>bh-spectra-csv</code>, <code>bh-spectra-plot</code>) available in your terminal.</p>
+<p><strong>From a cloned repository</strong>:</p>
+<p><div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>.
+</code></pre></div>
+Or, fordevelopment:
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
-</code></pre></div>
-<p>Then run the command line tool:</p>
-<p><div class="highlight"><pre><span></span><code>bh-spectra<span class="w"> </span>--xmin<span class="w"> </span><span class="m">432</span>.8<span class="w"> </span>--xmax<span class="w"> </span><span class="m">434</span>.2<span class="w"> </span>--points<span class="w"> </span><span class="m">4000</span><span class="w"> </span>--out<span class="w"> </span>spectrum.npz
-</code></pre></div>
-Or save as <code>csv</code>:
-<div class="highlight"><pre><span></span><code>bh-spectra-csv<span class="w"> </span>--xmin<span class="w"> </span><span class="m">432</span>.8<span class="w"> </span>--xmax<span class="w"> </span><span class="m">434</span>.2<span class="w"> </span>--points<span class="w"> </span><span class="m">4000</span><span class="w"> </span>--out<span class="w"> </span>spectrum.csv
 </code></pre></div></p>
-<p>Or use the Python API:</p>
+<p>See the <a href="dev-install-guide/">Dev Install Guide</a> for more details.</p>
+<p><strong>Directly from GitHub</strong>:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/queezz/bh-molecule.git
+</code></pre></div>
+<p>After installation, try:</p>
+<div class="highlight"><pre><span></span><code>bh-spectra<span class="w"> </span>--xmin<span class="w"> </span><span class="m">432</span>.8<span class="w"> </span>--xmax<span class="w"> </span><span class="m">434</span>.2<span class="w"> </span>--points<span class="w"> </span><span class="m">4000</span><span class="w"> </span>--out<span class="w"> </span>spectrum.npz
+</code></pre></div>
+<h2 id="quick-start">Quick start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
+<p>Use the Python API:</p>
+<p><strong>Python example:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">bh_spectra.dataio</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_v00_wavelengths</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">bh_spectra.physics</span><span class="w"> </span><span class="kn">import</span> <span class="n">BHModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bh_molecule.dataio</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_v00_wavelengths</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bh_molecule.physics</span><span class="w"> </span><span class="kn">import</span> <span class="n">BHModel</span>
 
-<span class="n">v00</span> <span class="o">=</span> <span class="n">load_v00_wavelengths</span><span class="p">()</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">BHModel</span><span class="p">(</span><span class="n">v00</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">BHModel</span><span class="p">(</span><span class="n">load_v00_wavelengths</span><span class="p">())</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">432.8</span><span class="p">,</span> <span class="mf">434.2</span><span class="p">,</span> <span class="mi">4000</span><span class="p">)</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">full_fit_model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">T_rot</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">w_inst</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>
-                         <span class="n">base</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">I_R7</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">I_R8</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">full_fit_model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">T_rot</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">w_inst</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
 </code></pre></div>
 
 
