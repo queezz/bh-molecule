@@ -2,6 +2,7 @@ from __future__ import annotations
 import hashlib, json
 import numpy as np, pandas as pd
 from importlib import resources
+from pathlib import Path
 
 
 def n_air(wl_nm: float | np.ndarray) -> float | np.ndarray:
@@ -25,7 +26,7 @@ def n_air(wl_nm: float | np.ndarray) -> float | np.ndarray:
 def load_v00_wavelengths() -> pd.DataFrame:
     """Load 11BH_v00.csv from package resources and convert to wavelengths (nm)."""
     with (
-        resources.files("bh_spectra._resources")
+        resources.files("bh_molecule._resources")
         .joinpath("11BH_v00.csv")
         .open("rb") as f
     ):

@@ -7,5 +7,3 @@ site/
 .ipynb_checkpoints/
 
 __pycache__/
-
-.dropboxignore

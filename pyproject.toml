@@ -1,5 +1,5 @@
 [project]
-name = "bh-spectra"
+name = "bh-molecule"
 version = "0.1.0"
 description = "BH (boron hydride) A–X band spectrum model and fitting tools"
 readme = "README.md"
@@ -19,16 +19,18 @@ dev = [
   "mkdocs>=1.6",
   "mkdocs-material>=9.6",
   "pymdown-extensions>=10.0",
-  "ipykernel>=6.0"
+  "ipykernel>=6.0",
+  "mdx_truly_sane_lists>=1.0"
 ]
 
 [tool.setuptools.package-data]
-"bh_spectra._resources" = ["*.csv"]
+"bh_molecule._resources" = ["*.csv"]
 
 [build-system]
 requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project.scripts]
-bh-spectra = "bh_spectra.cli:main"
-bh-spectra-csv = "bh_spectra.cli:main_csv"
+bh-spectra = "bh_molecule.cli:main"
+bh-spectra-csv = "bh_molecule.cli:main_csv"
+bh-spectra-plot = "bh_molecule.cli:main_plot"

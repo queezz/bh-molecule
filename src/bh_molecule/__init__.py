@@ -13,4 +13,4 @@ __all__ = [
     "FitResult",
 ]
 
-__version__ = __import__("importlib.metadata").metadata.version("bh-spectra")
+__version__ = __import__("importlib.metadata").metadata.version("bh-molecule")

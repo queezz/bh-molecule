@@ -71,7 +71,7 @@ class BHModel:
 
         #### Examples
         ```python
-        from bh_spectra.constants import BH_A
+        from bh_molecule.constants import BH_A
         E01 = BHModel.energy(v=0, N=1, c=BH_A)
         E11 = BHModel.energy(v=1, N=1, c=BH_A)
         assert E11 > E01

@@ -11,7 +11,7 @@ Notes
 -----
 - All values are in wavenumbers (cm^-1).
 - These parameters are intended for rovibronic term-value calculations as used
-  by `bh_spectra.physics.BHModel`.
+  by `bh_molecule.physics.BHModel`.
 """
 
 from __future__ import annotations

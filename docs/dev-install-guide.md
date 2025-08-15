@@ -1,6 +1,6 @@
 # Dev Environment & MkDocs
 
-This page is the single source of truth for setting up a local development environment for `bh-spectra` and running the docs site.
+This page is the single source of truth for setting up a local development environment for `bh-molecule` and running the docs site.
 
 ---
 
@@ -121,6 +121,53 @@ If you need to re-install venv, VS Code might block the folder. I just close the
 > 2. Reload VS Code or close it.
 > 3. Delete/recreate `.venv` as needed.
 > 4. Switch back to `.venv` as the interpreter.
+
+
+### Dropbox and `.venv`
+
+Dropbox will try to sync `.venv` across devices, causing “sync conflict” folders if each machine has its own environment.
+To keep `.venv` local only, set Dropbox’s *ignore* attribute:
+
+1. **Remove any existing cloud copy**
+
+    * Pause Dropbox sync.
+    * Delete `.venv` from the Dropbox web interface.
+    * Resume sync.
+
+2. **Create or keep your local `.venv` folder**
+    Example:
+
+    ```powershell
+    python -m venv .venv
+    ```
+
+3. **Set the ignore attribute (PowerShell)**
+    From your project folder:
+
+    ```powershell
+    cmd /c "echo 1 > .venv:com.dropbox.ignored"
+    ```
+
+4. **Verify**
+
+    ```powershell
+    cmd /c "dir /r ."
+    ```
+
+    You should see:
+
+    ```
+    .venv:com.dropbox.ignored:$DATA
+    ```
+
+5. **Result**
+
+    * `.venv` stays on this machine only.
+    * No cloud upload or download to other devices.
+    * Icon in Explorer will have a gray minus badge.
+
+> **Note:** If you delete and recreate `.venv`, reapply the attribute. It’s stored on the folder itself, not just the name.
+
 
 ---
 

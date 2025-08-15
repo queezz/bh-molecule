@@ -1,4 +1,4 @@
-site_name: BH Spectra
+site_name: BH Molecule
 docs_dir: docs
 theme:
   name: material
@@ -26,6 +26,10 @@ markdown_extensions:
   - attr_list
   - def_list
   - footnotes
+  - pymdownx.details
+  - pymdownx.superfences
+  - mdx_truly_sane_lists:
+      nested_indent: 4
   - toc:
       permalink: true
   - pymdownx.arithmatex:
@@ -43,4 +47,5 @@ extra_css:
 nav:
   - Home: index.md
   - Physics: physics.md
+  - CLI: cli_commands.md
   - Dev Install Guide: dev-install-guide.md

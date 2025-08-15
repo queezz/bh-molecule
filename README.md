@@ -1,40 +1,27 @@
-# bh-spectra
 
-BH (boron hydride) A–X band spectrum model and fitting tools.
 
-## Install (editable)
+This project provides tools to model and fit the **A–X band spectra** of boron hydride (BH).
+The A–X band arises from electronic transitions between the A ¹Π excited state and the X ¹Σ⁺ ground state, producing a distinct band system near 432–434 nm. These spectra are widely used for determining rotational temperature and species concentration in plasmas, as well as for laboratory and astrophysical molecular spectroscopy.
 
-```bash
-pip install -e .
-```
+Originally developed as a set of Jupyter notebooks, this codebase is now a Python package with both an API and CLI tools.
 
-## Quick start
+📄[**Full documentation**](https://queezz.github.io/bh-molecule/)
+
+**Python example:**
 
 ```python
 import numpy as np
-from bh_spectra.dataio import load_v00_wavelengths
-from bh_spectra.physics import BHModel
-from bh_spectra.fit import FrameDataset, BHFitter
+from bh_molecule.dataio import load_v00_wavelengths
+from bh_molecule.physics import BHModel
 
-v00 = load_v00_wavelengths()
-model = BHModel(v00)
-
-x = np.linspace(432.8, 434.2, 4000)  # nm
-y = model.full_fit_model(x, C=1.0, T_rot=2000, dx=0.0, w_inst=0.02, base=0.0, I_R7=0.5, I_R8=0.3)
+model = BHModel(load_v00_wavelengths())
+x = np.linspace(432.8, 434.2, 4000)
+y = model.full_fit_model(x, C=1.0, T_rot=2000, dx=0.0, w_inst=0.02)
 ```
 
-See `examples/01_quickstart.py`.
+**CLI example:**
 
-## Mini User Guide
-| Module / Function                | Role                                                              |
-| -------------------------------- | ----------------------------------------------------------------- |
-| `dataio.n_air`                   | Refractive index of air formula for wavelength conversion         |
-| `dataio.load_v00_wavelengths`    | Load CSV of line wavenumbers and convert to air wavelengths       |
-| `physics.MolecularConstants`     | Container for vibrational/rotational constants of BH              |
-| `physics.BHModel.energy`         | Compute molecular energy for given vibrational & rotational state |
-| `physics.BHModel.line_profile`   | Gaussian profile combining Doppler and instrumental FWHM          |
-| `physics.BHModel.A_coeff`        | Einstein A coefficient with Hönl–London factors                   |
-| `physics.BHModel.spectrum`       | Sum line contributions for a chosen branch (P/Q/R)                |
-| `physics.BHModel.full_fit_model` | Adds Q‑branch spectrum + independent R₇/R₈ lines & baseline       |
-| `fit.FrameDataset`               | Iterator over frames and selected channels of an image stack      |
-| `fit.BHFitter.fit_dataset`       | Channel-wise fitting with optional caching                        |
+```bash
+# Generate a spectrum and save as CSV
+bh-spectra-csv --C 5.0 --T_rot 3500 --out spectrum.csv
+```
