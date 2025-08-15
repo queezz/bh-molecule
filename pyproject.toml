@@ -31,3 +31,4 @@ build-backend = "setuptools.build_meta"
 
 [project.scripts]
 bh-spectra = "bh_spectra.cli:main"
+bh-spectra-csv = "bh_spectra.cli:main_csv"

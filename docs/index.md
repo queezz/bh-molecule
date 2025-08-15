@@ -15,6 +15,10 @@ Then run the command line tool:
 ```bash
 bh-spectra --xmin 432.8 --xmax 434.2 --points 4000 --out spectrum.npz
 ```
+Or save as `csv`:
+```bash
+bh-spectra-csv --xmin 432.8 --xmax 434.2 --points 4000 --out spectrum.csv
+```
 
 Or use the Python API:
 
