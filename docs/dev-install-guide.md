@@ -109,64 +109,20 @@ python -m pip install \
 - **Port in use** → Change port: `mkdocs serve -a 127.0.0.1:8001`.
 
 ---
-
 ### `venv` update
-If you need to re-install venv, VS Code might block the folder. I just close the VS Code, and close the project folder. Then I can delete `.vev`.
 
-> **Windows + VS Code note:**  
-> If `.venv` is currently selected as your interpreter in VS Code, the editor will keep Python processes running in that environment.  
-> On Windows, this will **lock** `.venv\Scripts\python.exe`, preventing deletion or recreation of the venv.  
-> Before rebuilding `.venv`:
-> 1. Switch VS Code to a different interpreter (e.g., Conda base).
-> 2. Reload VS Code or close it.
-> 3. Delete/recreate `.venv` as needed.
-> 4. Switch back to `.venv` as the interpreter.
+If you need to recreate the venv and Windows/VS Code won’t let you delete it:
+1) Switch VS Code to a different interpreter (e.g., Conda base).  
+2) Reload or close VS Code.  
+3) Delete/recreate `.venv`.  
+4) Switch back to the project interpreter.
 
+> **Heads-up for synced folders (Dropbox/OneDrive/Drive):**  
+> If your repo lives in a synced folder and you use multiple machines, avoid putting `.venv/` inside the repo. Keep the venv **outside** the synced tree and point Cursor/VS Code to it.  
+> See: [Using a venv outside a synced folder](./venv-outside-synced-folders.md)
 
-### Dropbox and `.venv`
+(Add `.venv/` to `.gitignore` so a local in-repo venv won’t be committed.)
 
-Dropbox will try to sync `.venv` across devices, causing “sync conflict” folders if each machine has its own environment.
-To keep `.venv` local only, set Dropbox’s *ignore* attribute:
-
-1. **Remove any existing cloud copy**
-
-    * Pause Dropbox sync.
-    * Delete `.venv` from the Dropbox web interface.
-    * Resume sync.
-
-2. **Create or keep your local `.venv` folder**
-    Example:
-
-    ```powershell
-    python -m venv .venv
-    ```
-
-3. **Set the ignore attribute (PowerShell)**
-    From your project folder:
-
-    ```powershell
-    cmd /c "echo 1 > .venv:com.dropbox.ignored"
-    ```
-
-4. **Verify**
-
-    ```powershell
-    cmd /c "dir /r ."
-    ```
-
-    You should see:
-
-    ```
-    .venv:com.dropbox.ignored:$DATA
-    ```
-
-5. **Result**
-
-    * `.venv` stays on this machine only.
-    * No cloud upload or download to other devices.
-    * Icon in Explorer will have a gray minus badge.
-
-> **Note:** If you delete and recreate `.venv`, reapply the attribute. It’s stored on the folder itself, not just the name.
 
 
 ---

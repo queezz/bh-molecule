@@ -49,3 +49,4 @@ nav:
   - Physics: physics.md
   - CLI: cli_commands.md
   - Dev Install Guide: dev-install-guide.md
+  - Venv: venv-outside-synced-folders.md

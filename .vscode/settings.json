@@ -4,5 +4,8 @@
         "editor.tabSize": 4,
         "editor.insertSpaces": true,
         "editor.detectIndentation": false
-    }
+    },
+    "python.defaultInterpreterPath": "${env:HOME}/.venvs/bh-molecule/bin/python",
+    "python.terminal.activateEnvironment": true
+        
 }
