@@ -344,13 +344,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1-generate-spectrum-data" class="md-nav__link">
+  <a href="#generate-spectrum-data" class="md-nav__link">
     <span class="md-ellipsis">
-      1. Generate Spectrum Data
+      Generate Spectrum Data
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="1. Generate Spectrum Data">
+    <nav class="md-nav" aria-label="Generate Spectrum Data">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -377,9 +377,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-plot-spectrum" class="md-nav__link">
+  <a href="#plot-spectrum" class="md-nav__link">
     <span class="md-ellipsis">
-      3. Plot Spectrum
+      Plot Spectrum
     </span>
   </a>
   
@@ -478,13 +478,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1-generate-spectrum-data" class="md-nav__link">
+  <a href="#generate-spectrum-data" class="md-nav__link">
     <span class="md-ellipsis">
-      1. Generate Spectrum Data
+      Generate Spectrum Data
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="1. Generate Spectrum Data">
+    <nav class="md-nav" aria-label="Generate Spectrum Data">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -511,9 +511,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-plot-spectrum" class="md-nav__link">
+  <a href="#plot-spectrum" class="md-nav__link">
     <span class="md-ellipsis">
-      3. Plot Spectrum
+      Plot Spectrum
     </span>
   </a>
   
@@ -638,7 +638,7 @@
 </tbody>
 </table>
 <hr />
-<h2 id="1-generate-spectrum-data">1. Generate Spectrum Data<a class="headerlink" href="#1-generate-spectrum-data" title="Permanent link">&para;</a></h2>
+<h2 id="generate-spectrum-data">Generate Spectrum Data<a class="headerlink" href="#generate-spectrum-data" title="Permanent link">&para;</a></h2>
 <h3 id="bh-spectra"><code>bh-spectra</code><a class="headerlink" href="#bh-spectra" title="Permanent link">&para;</a></h3>
 <p>Generates model spectrum and saves it as a compressed NumPy file (<code>.npz</code>).</p>
 <div class="highlight"><pre><span></span><code>bh-spectra<span class="w"> </span>--C<span class="w"> </span><span class="m">5</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3500</span><span class="w"> </span>--out<span class="w"> </span>spectrum.npz
@@ -665,7 +665,7 @@
 <li><code>y</code> — Intensity (a.u.)</li>
 </ul>
 <hr />
-<h2 id="3-plot-spectrum">3. Plot Spectrum<a class="headerlink" href="#3-plot-spectrum" title="Permanent link">&para;</a></h2>
+<h2 id="plot-spectrum">Plot Spectrum<a class="headerlink" href="#plot-spectrum" title="Permanent link">&para;</a></h2>
 <p>Generates and displays a spectrum plot using Matplotlib.</p>
 <div class="highlight"><pre><span></span><code>bh-spectra-plot<span class="w"> </span>--C<span class="w"> </span><span class="m">5</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3500</span>
 </code></pre></div>
@@ -675,27 +675,25 @@
 <li><code>--dpi</code>: Resolution when saving (default: 100)</li>
 <li><code>--figsize</code>: Width and height in inches (default: <code>10 6</code>)</li>
 </ul>
-<p><strong>Examples:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Display interactive plot</span>
-bh-spectra-plot<span class="w"> </span>--C<span class="w"> </span><span class="m">5</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3500</span>
-
-<span class="c1"># Save plot to PNG at 300 dpi</span>
-bh-spectra-plot<span class="w"> </span>--C<span class="w"> </span><span class="m">5</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3500</span><span class="w"> </span>--save<span class="w"> </span>spectrum.png<span class="w"> </span>--dpi<span class="w"> </span><span class="m">300</span>
-
-<span class="c1"># Custom wavelength range and resolution</span>
-bh-spectra-plot<span class="w"> </span>--xmin<span class="w"> </span><span class="m">433</span>.0<span class="w"> </span>--xmax<span class="w"> </span><span class="m">434</span>.0<span class="w"> </span>--points<span class="w"> </span><span class="m">2000</span><span class="w"> </span>--C<span class="w"> </span><span class="m">2</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">2500</span>
-</code></pre></div>
 <hr />
 <h2 id="example-workflow">Example Workflow<a class="headerlink" href="#example-workflow" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># 1. Generate spectrum data</span>
-bh-spectra<span class="w"> </span>--C<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3200</span><span class="w"> </span>--out<span class="w"> </span>data.npz
-
-<span class="c1"># 2. Export same parameters to CSV</span>
-bh-spectra-csv<span class="w"> </span>--C<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3200</span><span class="w"> </span>--out<span class="w"> </span>data.csv
-
-<span class="c1"># 3. Visualize spectrum</span>
-bh-spectra-plot<span class="w"> </span>--C<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3200</span><span class="w"> </span>--save<span class="w"> </span>plot.png<span class="w"> </span>--dpi<span class="w"> </span><span class="m">200</span>
-</code></pre></div>
+<ol>
+<li>
+<p>Generate spectrum data
+<div class="highlight"><pre><span></span><code>bh-spectra<span class="w"> </span>--C<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3200</span><span class="w"> </span>--out<span class="w"> </span>data.npz
+</code></pre></div></p>
+</li>
+<li>
+<p>Export same parameters to CSV
+<div class="highlight"><pre><span></span><code>bh-spectra-csv<span class="w"> </span>--C<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3200</span><span class="w"> </span>--out<span class="w"> </span>data.csv
+</code></pre></div></p>
+</li>
+<li>
+<p>Visualize spectrum
+<div class="highlight"><pre><span></span><code>bh-spectra-plot<span class="w"> </span>--C<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3200</span><span class="w"> </span>--save<span class="w"> </span>plot.png<span class="w"> </span>--dpi<span class="w"> </span><span class="m">200</span>
+</code></pre></div></p>
+</li>
+</ol>
 <hr />
 <h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
 <ul>
