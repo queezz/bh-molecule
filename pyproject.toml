@@ -20,7 +20,9 @@ dev = [
   "mkdocs-material>=9.6",
   "pymdown-extensions>=10.0",
   "ipykernel>=6.0",
-  "mdx_truly_sane_lists>=1.0"
+  "mdx_truly_sane_lists>=1.0",
+  "mkdocstrings[python]>=0.25",
+  "griffe>=0.45"  
 ]
 
 [tool.setuptools.package-data]

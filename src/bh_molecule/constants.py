@@ -7,11 +7,9 @@ parameter sets `BH_X` (X^1Σ^+) and `BH_A` (A^1Π).
 The field names are explicit for learners (e.g., `omega_e_x_e`) and come with
 spectroscopy-friendly aliases (`we`, `wexe`, `Be`, etc.) so both camps are happy.
 
-Notes
------
-- All values are in wavenumbers (cm^-1).
-- These parameters are intended for rovibronic term-value calculations as used
-  by `bh_molecule.physics.BHModel`.
+
+All values are in wavenumbers (cm^-1).
+These parameters are intended for rovibronic term-value calculations as used by `bh_molecule.physics.BHModel`.
 """
 
 from __future__ import annotations
@@ -43,17 +41,9 @@ class MolecularConstants:
     beta_e : float
         Vibration dependence of D_e (β_e).
 
-    Attributes (aliases)
-    --------------------
+    Aliases
     Te, we, wexe, weye, Be, De, alphae, betae
         Spectroscopy-friendly read-only aliases to the fields above.
-
-    Methods
-    -------
-    as_dict()
-        Return a plain dict of field -> value.
-    as_table()
-        Return a human-readable multiline table with units and descriptions.
     """
 
     T_e: float = field(

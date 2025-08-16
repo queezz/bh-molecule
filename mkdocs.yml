@@ -24,6 +24,21 @@ theme:
     repo: fontawesome/brands/github
 plugins:
   - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: ["src"]
+          options:
+            docstring_style: numpy      # or "google"
+            show_source: false
+            docstring_section_style: table
+            show_signature_annotations: true
+            show_if_no_docstring: true
+            filters: ["!^_"]            # hide private members 
+            show_category_heading: true      # adds “Attributes”, “Classes”, “Functions”, …
+            show_symbol_type_heading: true   # colored badges as section headings
+            show_symbol_type_toc: true       # those section headings appear in the ToC
+            show_root_heading: true          # show the module/class name as a heading             
 markdown_extensions:
   - admonition
   - attr_list
@@ -31,6 +46,8 @@ markdown_extensions:
   - footnotes
   - pymdownx.details
   - pymdownx.superfences
+  - pymdownx.arithmatex:   # for LaTeX
+      generic: true  
   - mdx_truly_sane_lists:
       nested_indent: 4
   - toc:
@@ -54,7 +71,10 @@ repo_name: queezz/bh-molecule
 
 nav:
   - Home: index.md
-  - Physics: physics.md
+  - Physics: phys.md
+  - API:
+      - physics.py: api/physics.md
+      - constants.py: api/constants.md
   - Command Line: cli_commands.md
   - Setup Guide:
       - Dev Install: dev-install-guide.md
