@@ -41,9 +41,24 @@ class MolecularConstants:
     beta_e : float
         Vibration dependence of D_e (β_e).
 
-    Aliases
-    Te, we, wexe, weye, Be, De, alphae, betae
-        Spectroscopy-friendly read-only aliases to the fields above.
+    Attributes
+    ----------
+    Te : float
+        Alias of T_e.
+    we : float
+        Alias of omega_e.
+    wexe : float
+        Alias of omega_e_x_e.
+    weye : float
+        Alias of omega_e_y_e.
+    Be : float
+        Alias of B_e.
+    De : float
+        Alias of D_e.
+    alphae : float
+        Alias of alpha_e.
+    betae : float
+        Alias of beta_e.
     """
 
     T_e: float = field(
