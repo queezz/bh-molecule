@@ -19,7 +19,8 @@ jobs:
 
       - name: Install MkDocs + plugins
         run: |
-          pip install mkdocs mkdocs-material pymdown-extensions mdx_truly_sane_lists
+          pip install mkdocs mkdocs-material pymdown-extensions mdx_truly_sane_lists \
+          "mkdocstrings[python]>=0.25"
 
       - name: Build site
         run: mkdocs build --strict
