@@ -11,7 +11,9 @@ dependencies = [
   "pandas>=2.0",
   "scipy>=1.11",
   "matplotlib>=3.8",
-  "astropy>=6.0"
+  "astropy>=6.0",
+  "plotly>=5.0",
+  "nbformat>=5.10"
 ]
 
 [project.optional-dependencies]
