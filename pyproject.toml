@@ -10,8 +10,8 @@ dependencies = [
   "numpy>=1.26",
   "pandas>=2.0",
   "scipy>=1.11",
-  "pillow>=10.0",
-  "matplotlib>=3.8"
+  "matplotlib>=3.8",
+  "astropy>=6.0"
 ]
 
 [project.optional-dependencies]
@@ -29,6 +29,7 @@ dev = [
 [build-system]
 requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
+
 
 [project.scripts]
 bh-spectra = "bh_molecule.cli:main"
