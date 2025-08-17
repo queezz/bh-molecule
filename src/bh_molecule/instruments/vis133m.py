@@ -14,7 +14,40 @@ class FCPShape(NamedTuple):
 
 
 class Vis133M:
-    """Minimal loader/processor for VIS-1.33 m data with per-channel wavecal."""
+    r"""Minimal loader/processor for VIS-1.33 m data with per-channel wavecal.
+
+    This class wraps a FITS data cube produced by the VIS-1.33 m instrument and
+    a per-channel wavelength calibration CSV. It provides convenient accessors
+    and plotting helpers for frames, channels and pixels, plus simple dark
+    subtraction and time-axis helpers.
+
+    Parameters
+    ----------
+    fits_path : str
+        Path to a FITS file containing a 3D data cube with shape ``(F, C, P)``
+        (frames, channels, pixels).
+    wavecal_csv : str
+        Path to a CSV file containing per-channel wavelength calibration. The
+        first column must contain channel indices (0-based preferred, 1-based
+        accepted). Remaining columns are interpreted as wavelength values [nm]
+        for each pixel.
+    scale : float, optional
+        Multiplicative scale factor applied to the cube data (default 1.0).
+
+    Attributes
+    ----------
+    cube : ndarray
+        The data cube of shape ``(F, C, P)``.
+    wl_nm : ndarray
+        Per-channel wavelength array with shape ``(C, P)`` in nanometres.
+    header : dict
+        FITS header converted to a dict.
+    exptime : float | None
+        Exposure time read from the FITS header when available.
+    time_s : ndarray | None
+        Optional time vector in seconds of length ``F``. If unset, frame
+        indices are used for plotting/time axes.
+    """
 
     def __init__(self, fits_path: str, wavecal_csv: str, scale: float = 1.0):
         hdu = fits.open(fits_path)[0]
@@ -51,9 +84,24 @@ class Vis133M:
 
     @property
     def shape(self):
+        """Return the shape of the internal data cube.
+
+        Returns
+        -------
+        tuple
+            Shape ``(F, C, P)`` where ``F`` is frames, ``C`` is channels and
+            ``P`` is pixels (wavelength samples).
+        """
         return self.cube.shape  # (F, C, P)
 
     def set_scale(self, scale: float):
+        """Set the global multiplicative scale applied to the cube.
+
+        Parameters
+        ----------
+        scale : float
+            New scale factor.
+        """
         self.scale = float(scale)
 
     def set_dark(
@@ -64,6 +112,27 @@ class Vis133M:
         vector=None,
         value: float | None = None,
     ):
+        """Configure dark subtraction behaviour.
+
+        Dark can be specified in several ways:
+        - ``vector``: an array-like that will be used directly as the dark
+          correction (broadcasting rules apply).
+        - ``value``: a scalar dark value subtracted from all pixels.
+        - ``frame`` and ``channel``: record a reference index; subtraction will
+          subtract the value found at that (frame, channel) location when
+          applied.
+
+        Parameters
+        ----------
+        frame : int | None
+            Frame index used for index-based dark (with ``channel``).
+        channel : int | None
+            Channel index used for index-based dark (with ``frame``).
+        vector : array-like | None
+            Direct dark vector/array to use for subtraction.
+        value : float | None
+            Scalar dark value to subtract.
+        """
         if vector is not None:
             self._dark = np.asarray(vector, dtype=float)
         elif value is not None:
@@ -76,6 +145,23 @@ class Vis133M:
     def band(
         self, nm_range: tuple[float, float], subtract_dark: bool = True
     ) -> np.ndarray:
+        """Sum signal within a wavelength band (per-channel) returning an
+        image of shape ``(F, C)``.
+
+        Parameters
+        ----------
+        nm_range : tuple of float
+            ``(lo, hi)`` wavelength range in nanometres (inclusive).
+        subtract_dark : bool, optional
+            If True and a dark is configured via ``set_dark``, subtract the
+            dark from the resulting image (default True).
+
+        Returns
+        -------
+        ndarray
+            Summed image of shape ``(F, C)`` in the same units as the cube
+            multiplied by the current ``scale``.
+        """
         lo, hi = float(nm_range[0]), float(nm_range[1])
         m = (self.wl_nm >= lo) & (self.wl_nm <= hi)  # (C, P)
         img = (self.cube * self.scale * m[None, ...]).sum(axis=2)  # (F, C)
@@ -84,28 +170,75 @@ class Vis133M:
         return img  # (F, C)
 
     def spectrum(self, frame: int, channel: int) -> tuple[np.ndarray, np.ndarray]:
+        """Return wavelength and signal arrays for a given ``(frame, channel)``.
+
+        Parameters
+        ----------
+        frame : int
+            Frame index (0-based).
+        channel : int
+            Channel index (0-based).
+
+        Returns
+        -------
+        tuple of ndarray
+            ``(wavelengths, signal)`` where both arrays have shape ``(P,)`` and
+            wavelengths are in nanometres. ``signal`` is scaled by the current
+            ``scale`` attribute.
+
+        Raises
+        ------
+        IndexError
+            If ``frame`` or ``channel`` are out of range.
+        """
         F, C, P = self.shape
         if not (0 <= frame < F and 0 <= channel < C):
             raise IndexError("frame/channel out of range")
         return self.wl_nm[channel], self.cube[frame, channel] * self.scale  # (P,), (P,)
 
     def _apply_dark(self, img_fc: np.ndarray) -> np.ndarray:
+        """Apply the configured dark subtraction to an ``(F, C)`` image.
+
+        Parameters
+        ----------
+        img_fc : ndarray
+            Image of shape ``(F, C)`` to subtract the dark from.
+
+        Returns
+        -------
+        ndarray
+            Dark-subtracted image.
+        """
         d = self._dark
         if isinstance(d, tuple) and d and d[0] == "idx":
             _, f, c = d
             return img_fc - float(img_fc[f, c])
         return img_fc - d  # relies on NumPy broadcasting (scalar, (F,), (C,), or (F,C))
 
+    # MARK: Nice
     # --- nice introspection ---
     @property
     def shape_fcp(self) -> FCPShape:
-        """Named shape with axis meanings."""
+        """Named shape with axis meanings.
+
+        Returns
+        -------
+        FCPShape
+            Named tuple containing ``F``, ``C`` and ``P`` describing the
+            number of frames, channels and pixels respectively.
+        """
         F, C, P = self.cube.shape
         return FCPShape(F, C, P)
 
     @property
     def axis_legend(self) -> dict[str, str]:
-        """Short legend you can print in REPL."""
+        """Mapping of axis short names to human-readable descriptions.
+
+        Returns
+        -------
+        dict
+            Mapping with keys ``'F'``, ``'C'``, ``'P'`` describing the axes.
+        """
         return {
             "F": "frame (time)",
             "C": "channel (position)",
@@ -113,26 +246,77 @@ class Vis133M:
         }
 
     def explain(self) -> None:
-        """Print a one-liner about axes (handy in notebooks)."""
+        """Print a short human-readable description of the data axes.
+
+        This helper is convenient in interactive sessions or notebooks.
+        """
         print(self.shape_fcp)
         print("Axes:", self.axis_legend)
 
     # --- quick views (zero copy) ---
     def frame_image(self, frame: int) -> np.ndarray:
-        """Return (C,P) image for a frame."""
+        """Return the channel×pixel image for a single frame.
+
+        Parameters
+        ----------
+        frame : int
+            Frame index (0-based).
+
+        Returns
+        -------
+        ndarray
+            Array of shape ``(C, P)`` corresponding to the requested frame.
+        """
         return self.cube[frame]
 
     def channel_stack(self, channel: int) -> np.ndarray:
-        """Return (F,P) stack for a channel."""
+        """Return the time×pixel stack for a single channel.
+
+        Parameters
+        ----------
+        channel : int
+            Channel index (0-based).
+
+        Returns
+        -------
+        ndarray
+            Array of shape ``(F, P)`` containing the stack for the channel.
+        """
         return self.cube[:, channel, :]
 
     def pixel_map(self, pixel: int) -> np.ndarray:
-        """Return (F,C) map at a fixed detector pixel."""
+        """Return the frame×channel map at a fixed detector pixel.
+
+        Parameters
+        ----------
+        pixel : int
+            Pixel index (0-based).
+
+        Returns
+        -------
+        ndarray
+            Array of shape ``(F, C)`` containing values at the given pixel.
+        """
         return self.cube[:, :, pixel]
 
     # --- plotting convenience ---
     def plot_spectrum(self, frame: int, channel: int, ax=None):
-        """Plot spectrum at (frame, channel) with labels."""
+        """Plot the spectrum at a given frame and channel using Matplotlib.
+
+        Parameters
+        ----------
+        frame : int
+            Frame index (0-based).
+        channel : int
+            Channel index (0-based).
+        ax : matplotlib.axes.Axes | None, optional
+            Axes to plot into. If None the current axes are used.
+
+        Returns
+        -------
+        matplotlib.axes.Axes
+            The axes containing the plot.
+        """
         import matplotlib.pyplot as plt
 
         x = self.wl_nm[channel]  # (P,)
@@ -146,9 +330,24 @@ class Vis133M:
 
     # MARK: Time
     def _time_axis(self, *, require_time: bool = False):
-        """Return x-axis vector and label.
-        If time_s is set -> ('time (s)'), else frame index -> ('frame').
-        If require_time=True and no time_s -> error.
+        """Return an x-axis vector and label for plotting time-like data.
+
+        Parameters
+        ----------
+        require_time : bool, optional
+            If True and no explicit time vector is set, raise an error. If
+            False, fallback to frame indices (default False).
+
+        Returns
+        -------
+        tuple
+            ``(x_vector, xlabel)`` where ``x_vector`` is either ``time_s`` or a
+            frame index vector and ``xlabel`` is a human-readable label.
+
+        Raises
+        ------
+        RuntimeError
+            If ``require_time`` is True but no time vector has been set.
         """
         F, _, _ = self.cube.shape
         if self.time_s is not None:
@@ -161,6 +360,21 @@ class Vis133M:
         return np.arange(F, dtype=float), "frame"
 
     def set_time(self, t):
+        """Set an explicit time vector for the frames.
+
+        Parameters
+        ----------
+        t : array-like
+            Time vector (seconds) of length ``F`` where ``F`` is the number of
+            frames in the cube. Must be non-decreasing and contain finite
+            values.
+
+        Raises
+        ------
+        ValueError
+            If the vector length does not match ``F``, contains non-finite
+            values, or is not non-decreasing.
+        """
         t = np.asarray(t, dtype=float)
         F = self.cube.shape[0]
         if t.shape != (F,):
@@ -172,10 +386,28 @@ class Vis133M:
         self.time_s = t
 
     def set_time_linspace(self, start_s: float, stop_s: float):
+        """Set ``time_s`` to a linearly spaced vector between two times.
+
+        Parameters
+        ----------
+        start_s : float
+            Start time in seconds.
+        stop_s : float
+            Stop time in seconds.
+        """
         F = self.cube.shape[0]
         self.time_s = np.linspace(float(start_s), float(stop_s), F)
 
     def set_time_period(self, period_s: float, start_s: float = 0.0):
+        """Set ``time_s`` assuming a constant frame period.
+
+        Parameters
+        ----------
+        period_s : float
+            Time between successive frames in seconds.
+        start_s : float, optional
+            Time of the first frame (default 0.0 s).
+        """
         F = self.cube.shape[0]
         self.time_s = float(start_s) + np.arange(F) * float(period_s)
 
@@ -190,6 +422,29 @@ class Vis133M:
         time_line: float | None = None,
         require_time: bool = False,
     ):
+        """Plot a channel stack (time × wavelength) as an image.
+
+        Parameters
+        ----------
+        channel : int
+            Channel index (0-based) to plot.
+        ax : matplotlib.axes.Axes | None, optional
+            Axes to plot into. If None the current axes are used.
+        cmap : str | Colormap | None, optional
+            Colormap to use for the image.
+        cbar_label : str, optional
+            Label for the colorbar (default "intensity").
+        time_line : float | None, optional
+            Optional vertical line (x coordinate in time units) to indicate a
+            time-of-interest.
+        require_time : bool, optional
+            If True require an explicit time vector (raise if unset).
+
+        Returns
+        -------
+        matplotlib.axes.Axes
+            The axes containing the image.
+        """
         import matplotlib.pyplot as plt
 
         stack = self.channel_stack(channel)  # (F,P)
@@ -223,6 +478,28 @@ class Vis133M:
         channel_line: int | None = None,
         require_time: bool = False,
     ):
+        """Plot a frame×channel image for a fixed pixel index.
+
+        Parameters
+        ----------
+        pixel : int
+            Pixel index (0-based).
+        ax : matplotlib.axes.Axes | None, optional
+            Axes to plot into. If None the current axes are used.
+        cmap : str | Colormap | None, optional
+            Colormap to use for the image.
+        cbar_label : str, optional
+            Label for the colorbar (default "intensity").
+        channel_line : int | None, optional
+            Optional horizontal line indicating a channel of interest.
+        require_time : bool, optional
+            If True require an explicit time vector (raise if unset).
+
+        Returns
+        -------
+        matplotlib.axes.Axes
+            The axes containing the image.
+        """
         import matplotlib.pyplot as plt
 
         arr = self.pixel_map(pixel).T  # (C,F)
@@ -247,7 +524,22 @@ class Vis133M:
     def map_pixel_range(
         self, start: int, stop: int, *, subtract_dark: bool = True
     ) -> np.ndarray:
-        """Sum pixels [start:stop) → (F,C). 'stop' is exclusive (Python slicing)."""
+        """Sum over a pixel window returning an (F, C) image.
+
+        Parameters
+        ----------
+        start : int
+            Start pixel index (inclusive).
+        stop : int
+            Stop pixel index (exclusive).
+        subtract_dark : bool, optional
+            If True subtract a configured dark (default True).
+
+        Returns
+        -------
+        ndarray
+            Summed image of shape ``(F, C)``.
+        """
         F, C, P = self.cube.shape
         if not (0 <= start < stop <= P):
             raise ValueError(f"pixel window [{start}:{stop}) out of 0..{P-1}")
@@ -259,7 +551,20 @@ class Vis133M:
     def map_band(
         self, nm_range: tuple[float, float], *, subtract_dark: bool = True
     ) -> np.ndarray:
-        """Sum wavelengths within [lo, hi] nm (per-channel mask) → (F,C)."""
+        """Sum signal within a wavelength band (per-channel) returning (F, C).
+
+        Parameters
+        ----------
+        nm_range : tuple of float
+            ``(lo, hi)`` wavelength range in nanometres (inclusive).
+        subtract_dark : bool, optional
+            If True subtract a configured dark (default True).
+
+        Returns
+        -------
+        ndarray
+            Summed image of shape ``(F, C)``.
+        """
         lo, hi = map(float, nm_range)
         m = (self.wl_nm >= lo) & (self.wl_nm <= hi)  # (C,P)
         img = (self.cube * m[None, ...]).sum(axis=2) * self.scale  # (F,C)
@@ -278,6 +583,28 @@ class Vis133M:
         channel_line: int | None = None,
         require_time: bool = False,
     ):
+        """Internal helper: plot an (F, C) image with time on x and channel on y.
+
+        Parameters
+        ----------
+        img_fc : ndarray
+            Image of shape ``(F, C)`` to plot.
+        ax : matplotlib.axes.Axes | None, optional
+            Axes to plot into. If None the current axes are used.
+        cmap : str | Colormap | None, optional
+            Colormap to use.
+        cbar_label : str, optional
+            Label for the colorbar (default "intensity").
+        channel_line : int | None, optional
+            Optional horizontal line indicating a channel of interest.
+        require_time : bool, optional
+            If True require an explicit time vector (raise if unset).
+
+        Returns
+        -------
+        matplotlib.axes.Axes
+            The axes containing the image.
+        """
         import matplotlib.pyplot as plt
 
         arr = img_fc.T  # (C,F)
@@ -307,7 +634,19 @@ class Vis133M:
         require_time: bool = False,
         subtract_dark: bool = True,
     ):
-        """Visualize map_pixel_range(start, stop)."""
+        """Plot the result of ``map_pixel_range(start, stop)``.
+
+        Parameters
+        ----------
+        start : int
+            Start pixel index (inclusive).
+        stop : int
+            Stop pixel index (exclusive).
+        Returns
+        -------
+        matplotlib.axes.Axes
+            The axes containing the image.
+        """
         img = self.map_pixel_range(start, stop, subtract_dark=subtract_dark)
         return self._plot_fc(
             img,
@@ -329,7 +668,22 @@ class Vis133M:
         require_time: bool = False,
         subtract_dark: bool = True,
     ):
-        """Visualize map_band(nm_range)."""
+        """Plot the result of ``map_band(nm_range)``.
+
+        Parameters
+        ----------
+        nm_range : tuple of float
+            ``(lo, hi)`` wavelength range in nanometres.
+
+
+        Returns
+        -------
+        matplotlib.axes.Axes
+            The axes containing the image.
+
+
+        See Also map_band, _plot_fc
+        """
         img = self.map_band(nm_range, subtract_dark=subtract_dark)
         return self._plot_fc(
             img,
@@ -349,10 +703,34 @@ class Vis133M:
         sort_wavelength: bool = True,
         line_shape: str = "linear",
     ):
-        """Plot spectrum at (frame, channel) with Plotly (interactive).
-        Example:
-        >>>fig = s26.plot_spectrum_plotly(38, 36)
-        >>>fig.show()
+        """Return an interactive Plotly figure for a spectrum.
+
+        Parameters
+        ----------
+        frame : int
+            Frame index (0-based).
+        channel : int
+            Channel index (0-based).
+        sort_wavelength : bool, optional
+            If True, sort the wavelength vector to be monotonic for better
+            interactive behaviour (default True).
+        line_shape : str, optional
+            Plotly line shape (e.g. 'linear', 'spline').
+
+        Returns
+        -------
+        plotly.graph_objects.Figure
+            Interactive figure containing the spectrum.
+
+        Raises
+        ------
+        ImportError
+            If Plotly is not available.
+
+        Example
+        -------
+        > fig = s26.plot_spectrum_plotly(38, 36)
+        > fig.show()
         """
         import numpy as np
 

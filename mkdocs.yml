@@ -75,6 +75,7 @@ nav:
   - API:
       - physics.py: api/physics.md
       - constants.py: api/constants.md
+      - instruments.py: api/vis133m.md
   - Command Line: cli_commands.md
   - Setup Guide:
       - Dev Install: dev-install-guide.md
