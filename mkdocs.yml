@@ -75,7 +75,12 @@ nav:
   - API:
       - physics.py: api/physics.md
       - constants.py: api/constants.md
+      - fit.py: api/fit.md
       - instruments.py: api/vis133m.md
+  - Examples:
+      - Quickstart: examples/02_quickstart.md
+      - Load spectral data: examples/03_load_spectral_data.md
+      - BH fit example: examples/04_bh_fit.md
   - Command Line: cli_commands.md
   - Setup Guide:
       - Dev Install: dev-install-guide.md
