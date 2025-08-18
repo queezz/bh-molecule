@@ -203,21 +203,66 @@ class BHFitter:
         return fig, axes
 
     def plot_overlay(
-        self, curves, frame, channels=None, xlim=None, ylim=None, title=None
+        self,
+        curves,
+        frame,
+        channels=None,
+        xlim=None,
+        ylim=None,
+        title=None,
+        *,
+        cmap: str = "tab10",
+        line_width: float = 1.0,
+        line_alpha: float = 0.95,
+        scatter_size: float = 8.0,
+        scatter_alpha: float = 0.35,
+        legend_cols: int | None = None,
     ):
         fig, ax = plt.subplots(figsize=(7, 4))
+
+        # Determine which channels to draw and assign distinct colors
+        keys = [
+            (f, ch)
+            for (f, ch) in curves.keys()
+            if f == frame and (channels is None or ch in channels)
+        ]
+        ch_list = sorted({ch for (_, ch) in keys})
+        n = max(len(ch_list), 1)
+        cm = plt.cm.get_cmap(cmap, max(n, 10))
+        color_for = {ch: cm(i % cm.N) for i, ch in enumerate(ch_list)}
+
         for (f, ch), (x, y, yfit) in sorted(curves.items()):
             if f != frame or (channels is not None and ch not in channels):
                 continue
-            ax.plot(x, yfit, lw=2, label=f"ch{ch}", color="#7397de")
-            ax.scatter(x, y, s=4, alpha=0.6, color="k")
+            color = color_for.get(ch, "#555555")
+            if yfit is not None:
+                ax.plot(
+                    x,
+                    yfit,
+                    lw=line_width,
+                    alpha=line_alpha,
+                    color=color,
+                    label=f"ch{ch}",
+                    zorder=3,
+                )
+            ax.scatter(
+                x,
+                y,
+                s=scatter_size,
+                alpha=scatter_alpha,
+                color=color,
+                edgecolors="none",
+                zorder=2,
+            )
+
         ax.set_xlabel("wavelength [nm]")
         ax.set_ylabel("intensity [arb]")
         ax.set_xlim(*(xlim or self.nm_window))
         if ylim:
             ax.set_ylim(*ylim)
         ax.minorticks_on()
-        ax.legend(ncols=2, fontsize=8)
+        ncols = legend_cols if legend_cols is not None else min(4, max(1, n))
+        ax.legend(ncols=ncols, fontsize=8)
         if title:
             ax.set_title(title)
         fig.tight_layout()
