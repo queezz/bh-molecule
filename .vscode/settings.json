@@ -1,5 +1,6 @@
 {
-    "python.defaultInterpreterPath": "${env:HOME}/.venvs/bh-molecule/bin/python",
+    "python.defaultInterpreterPath": "${env:USERPROFILE}/.venvs/bh-molecule/Scripts/python.exe",
+
     "python.terminal.activateEnvironment": true,
 
     "[markdown]": {
