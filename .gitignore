@@ -7,3 +7,5 @@ site/
 .ipynb_checkpoints/
 
 __pycache__/
+
+desktop.ini
