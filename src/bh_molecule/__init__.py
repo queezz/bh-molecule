@@ -1,7 +1,6 @@
 from .physics import BHModel, Branch, MolecularConstants
 from .dataio import load_v00_wavelengths
-
-# from .fit import FrameDataset, BHFitter, FitResult
+from .fit import BHFitter
 
 
 __all__ = [
@@ -9,9 +8,7 @@ __all__ = [
     "Branch",
     "MolecularConstants",
     "load_v00_wavelengths",
-    # "FrameDataset",
-    # "BHFitter",
-    # "FitResult",
+    "BHFitter",
 ]
 
 __version__ = __import__("importlib.metadata").metadata.version("bh-molecule")
