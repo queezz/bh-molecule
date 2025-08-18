@@ -81,6 +81,7 @@ class Vis133M:
         self.wl_nm = wl  # (C, P)
 
         self._dark = None  # None | scalar | (F,) | (C,) | (F,C) | ("idx", f, c)
+        self._baseline_zero = False  # If True, subtract per-row minima for spectra
 
     @property
     def shape(self):
@@ -103,6 +104,31 @@ class Vis133M:
             New scale factor.
         """
         self.scale = float(scale)
+
+    def set_baseline_zero(self, enable: bool = True) -> None:
+        """Enable/disable per-spectrum minimum subtraction.
+
+        When enabled, each spectrum row (across pixels) will be shifted so its
+        minimum is zero in methods that return spectra-like arrays.
+
+        Parameters
+        ----------
+        enable : bool
+            If True, subtract per-row minima from spectra results. If False,
+            disable this behaviour.
+        """
+        self._baseline_zero = bool(enable)
+
+    def _rowmin_stack_fp(self, stack_fp: np.ndarray) -> np.ndarray:
+        """Return stack with row-wise minima (over pixels) subtracted.
+
+        Expects shape (F, P) and subtracts min over axis=1.
+        """
+        return stack_fp - stack_fp.min(axis=1, keepdims=True)
+
+    def _rowmin_row_p(self, row_p: np.ndarray) -> np.ndarray:
+        """Return a 1D spectrum with its minimum subtracted."""
+        return row_p - float(np.min(row_p))
 
     def set_dark(
         self,
@@ -169,7 +195,9 @@ class Vis133M:
             img = self._apply_dark(img)
         return img  # (F, C)
 
-    def spectrum(self, frame: int, channel: int) -> tuple[np.ndarray, np.ndarray]:
+    def spectrum(
+        self, frame: int, channel: int, *, zero_min: bool | None = None
+    ) -> tuple[np.ndarray, np.ndarray]:
         """Return wavelength and signal arrays for a given ``(frame, channel)``.
 
         Parameters
@@ -194,7 +222,12 @@ class Vis133M:
         F, C, P = self.shape
         if not (0 <= frame < F and 0 <= channel < C):
             raise IndexError("frame/channel out of range")
-        return self.wl_nm[channel], self.cube[frame, channel] * self.scale  # (P,), (P,)
+        x = self.wl_nm[channel]
+        row = self.cube[frame, channel]
+        use_zero = self._baseline_zero if zero_min is None else bool(zero_min)
+        if use_zero:
+            row = self._rowmin_row_p(row)
+        return x, row * self.scale  # (P,), (P,)
 
     def _apply_dark(self, img_fc: np.ndarray) -> np.ndarray:
         """Apply the configured dark subtraction to an ``(F, C)`` image.
@@ -254,7 +287,7 @@ class Vis133M:
         print("Axes:", self.axis_legend)
 
     # --- quick views (zero copy) ---
-    def frame_image(self, frame: int) -> np.ndarray:
+    def frame_image(self, frame: int, *, zero_min: bool | None = None) -> np.ndarray:
         """Return the channel×pixel image for a single frame.
 
         Parameters
@@ -267,9 +300,15 @@ class Vis133M:
         ndarray
             Array of shape ``(C, P)`` corresponding to the requested frame.
         """
-        return self.cube[frame]
+        img = self.cube[frame]
+        use_zero = self._baseline_zero if zero_min is None else bool(zero_min)
+        if use_zero:
+            img = img - img.min(axis=1, keepdims=True)
+        return img
 
-    def channel_stack(self, channel: int) -> np.ndarray:
+    def channel_stack(
+        self, channel: int, *, zero_min: bool | None = None
+    ) -> np.ndarray:
         """Return the time×pixel stack for a single channel.
 
         Parameters
@@ -282,7 +321,11 @@ class Vis133M:
         ndarray
             Array of shape ``(F, P)`` containing the stack for the channel.
         """
-        return self.cube[:, channel, :]
+        stack = self.cube[:, channel, :]
+        use_zero = self._baseline_zero if zero_min is None else bool(zero_min)
+        if use_zero:
+            stack = self._rowmin_stack_fp(stack)
+        return stack
 
     def pixel_map(self, pixel: int) -> np.ndarray:
         """Return the frame×channel map at a fixed detector pixel.
@@ -300,7 +343,9 @@ class Vis133M:
         return self.cube[:, :, pixel]
 
     # --- plotting convenience ---
-    def plot_spectrum(self, frame: int, channel: int, ax=None):
+    def plot_spectrum(
+        self, frame: int, channel: int, ax=None, *, zero_min: bool | None = None
+    ):
         """Plot the spectrum at a given frame and channel using Matplotlib.
 
         Parameters
@@ -319,8 +364,7 @@ class Vis133M:
         """
         import matplotlib.pyplot as plt
 
-        x = self.wl_nm[channel]  # (P,)
-        y = self.cube[frame, channel] * self.scale
+        x, y = self.spectrum(frame, channel, zero_min=zero_min)
         ax = ax or plt.gca()
         ax.plot(x, y)
         ax.set_xlabel("Wavelength [nm]")
@@ -702,6 +746,7 @@ class Vis133M:
         *,
         sort_wavelength: bool = True,
         line_shape: str = "linear",
+        zero_min: bool | None = None,
     ):
         """Return an interactive Plotly figure for a spectrum.
 
@@ -740,7 +785,11 @@ class Vis133M:
             raise ImportError("plotly is required for plot_spectrum_plotly()") from e
 
         x = np.asarray(self.wl_nm[channel], dtype=float)  # (P,)
-        y = np.asarray(self.cube[frame, channel] * self.scale, dtype=float)
+        row = self.cube[frame, channel]
+        use_zero = self._baseline_zero if zero_min is None else bool(zero_min)
+        if use_zero:
+            row = self._rowmin_row_p(row)
+        y = np.asarray(row * self.scale, dtype=float)
 
         # Make wavelength monotonic for nicer interaction (optional)
         if sort_wavelength and (x.size > 1) and np.any(np.diff(x) < 0):
