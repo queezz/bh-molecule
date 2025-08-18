@@ -9,21 +9,25 @@
       
       
       
+        <link rel="prev" href="../03_load_spectral_data/">
       
       
-      <link rel="icon" href="/assets/images/favicon.png">
+        <link rel="next" href="../../cli_commands/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
     
     
       
-        <title>BH Molecule</title>
+        <title>BH fit example - BH Molecule</title>
       
     
     
-      <link rel="stylesheet" href="/assets/stylesheets/main.7e37652d.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e37652d.min.css">
       
         
-        <link rel="stylesheet" href="/assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -42,11 +46,11 @@
       
     
     
-      <link rel="stylesheet" href="/assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="/styles/brand.css">
+      <link rel="stylesheet" href="../../styles/brand.css">
     
-    <script>__md_scope=new URL("/",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -71,6 +75,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#04_bh_fit-from-examples04_bh_fitipynb" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -83,7 +92,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="/." title="BH Molecule" class="md-header__button md-logo" aria-label="BH Molecule" data-md-component="logo">
+    <a href="../.." title="BH Molecule" class="md-header__button md-logo" aria-label="BH Molecule" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -103,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              
+              BH fit example
             
           </span>
         </div>
@@ -219,7 +228,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="/." title="BH Molecule" class="md-nav__button md-logo" aria-label="BH Molecule" data-md-component="logo">
+    <a href="../.." title="BH Molecule" class="md-nav__button md-logo" aria-label="BH Molecule" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -249,7 +258,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -271,7 +280,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/phys/" class="md-nav__link">
+      <a href="../../phys/" class="md-nav__link">
         
   
   
@@ -331,7 +340,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/api/physics/" class="md-nav__link">
+      <a href="../../api/physics/" class="md-nav__link">
         
   
   
@@ -354,7 +363,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/api/constants/" class="md-nav__link">
+      <a href="../../api/constants/" class="md-nav__link">
         
   
   
@@ -377,7 +386,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/api/fit/" class="md-nav__link">
+      <a href="../../api/fit/" class="md-nav__link">
         
   
   
@@ -400,7 +409,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/api/vis133m/" class="md-nav__link">
+      <a href="../../api/vis133m/" class="md-nav__link">
         
   
   
@@ -427,18 +436,20 @@
       
   
   
+    
   
   
+  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
           <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
@@ -454,7 +465,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             Examples
@@ -468,7 +479,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/examples/02_quickstart/" class="md-nav__link">
+      <a href="../02_quickstart/" class="md-nav__link">
         
   
   
@@ -491,7 +502,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/examples/03_load_spectral_data/" class="md-nav__link">
+      <a href="../03_load_spectral_data/" class="md-nav__link">
         
   
   
@@ -511,10 +522,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="/examples/04_bh_fit/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    BH fit example
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -525,6 +556,33 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#04_bh_fit-from-examples04_bh_fitipynb" class="md-nav__link">
+    <span class="md-ellipsis">
+      04_bh_fit (from examples/04_bh_fit.ipynb)
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -544,7 +602,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/cli_commands/" class="md-nav__link">
+      <a href="../../cli_commands/" class="md-nav__link">
         
   
   
@@ -604,7 +662,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/dev-install-guide/" class="md-nav__link">
+      <a href="../../dev-install-guide/" class="md-nav__link">
         
   
   
@@ -627,7 +685,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/venv-outside-synced-folders/" class="md-nav__link">
+      <a href="../../venv-outside-synced-folders/" class="md-nav__link">
         
   
   
@@ -668,6 +726,23 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#04_bh_fit-from-examples04_bh_fitipynb" class="md-nav__link">
+    <span class="md-ellipsis">
+      04_bh_fit (from examples/04_bh_fit.ipynb)
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -678,8 +753,66 @@
             <div class="md-content" data-md-component="content">
               <article class="md-content__inner md-typeset">
                 
-  <h1>404 - Not found</h1>
+                  
 
+
+  
+  
+
+
+  <h1>BH fit example</h1>
+
+<h3 id="04_bh_fit-from-examples04_bh_fitipynb">04_bh_fit (from examples/04_bh_fit.ipynb)<a class="headerlink" href="#04_bh_fit-from-examples04_bh_fitipynb" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">bh_molecule.instruments.vis133m</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vis133M</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bh_molecule.dataio</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_v00_wavelengths</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bh_molecule.physics</span><span class="w"> </span><span class="kn">import</span> <span class="n">BHModel</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bh_molecule.fit</span><span class="w"> </span><span class="kn">import</span> <span class="n">BHFitter</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">FITS</span> <span class="o">=</span> <span class="s1">&#39;./133mVis_169626.fits&#39;</span>
+<span class="n">wavecal_csv</span> <span class="o">=</span> <span class="s1">&#39;./133mVis_wavcal.csv&#39;</span>
+<span class="n">s26</span> <span class="o">=</span> <span class="n">Vis133M</span><span class="p">(</span><span class="n">FITS</span><span class="p">,</span><span class="n">wavecal_csv</span><span class="p">)</span>
+<span class="n">s26</span><span class="o">.</span><span class="n">set_scale</span><span class="p">(</span><span class="mf">0.0001837</span><span class="p">)</span>
+<span class="n">s26</span><span class="o">.</span><span class="n">set_dark</span><span class="p">(</span><span class="n">frame</span><span class="o">=</span><span class="mi">49</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="mi">43</span><span class="p">)</span>
+<span class="n">s26</span><span class="o">.</span><span class="n">set_baseline_zero</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">s26</span><span class="o">.</span><span class="n">set_time_linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="c1">#s26.plot_band_map((432.5,433.85))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">BHModel</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">fitr</span> <span class="o">=</span> <span class="n">BHFitter</span><span class="p">(</span><span class="n">s26</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">fitr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">frame</span><span class="o">=</span><span class="mi">38</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="mi">31</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s2">&quot;summary&quot;</span><span class="p">])</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">fitr</span><span class="o">.</span><span class="n">plot_single</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Example&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><img alt="output image" src="../04_bh_fit_out_0.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span><span class="mi">31</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">resb</span><span class="p">,</span><span class="n">curves</span> <span class="o">=</span> <span class="n">fitr</span><span class="o">.</span><span class="n">batch</span><span class="p">((</span><span class="mi">25</span><span class="p">,</span><span class="mi">26</span><span class="p">,</span><span class="mi">31</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span><span class="mi">31</span><span class="p">),</span><span class="n">return_curves</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">_</span> <span class="o">=</span> <span class="n">fitr</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">(</span><span class="n">curves</span><span class="p">)</span>
+</code></pre></div>
+<p><img alt="output image" src="../04_bh_fit_out_1.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="n">fitr</span><span class="o">.</span><span class="n">plot_overlay</span><span class="p">(</span><span class="n">curves</span><span class="p">,</span><span class="n">frame</span><span class="o">=</span><span class="mi">31</span><span class="p">,</span><span class="n">channels</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span><span class="mi">31</span><span class="p">),</span><span class="n">line_width</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+</code></pre></div>
+<p><img alt="output image" src="../04_bh_fit_out_2.png" /></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
               </article>
             </div>
           
@@ -715,12 +848,12 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "/", "features": ["navigation.instant", "navigation.tracking", "content.code.copy"], "search": "/assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "content.code.copy"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="/assets/javascripts/bundle.92b07e13.min.js"></script>
+      <script src="../../assets/javascripts/bundle.92b07e13.min.js"></script>
       
-        <script src="/javascripts/mathjax.js"></script>
+        <script src="../../javascripts/mathjax.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       
