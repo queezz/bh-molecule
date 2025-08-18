@@ -16,8 +16,14 @@ class BHModel:
     See Also [Physics explainer](../phys.md)
     """
 
-    def __init__(self, v00_wl_df):
-        # DataFrame with columns P,Q,R (wavelengths in nm)
+    def __init__(self, v00_wl_df=None):
+        # DataFrame with columns P,Q,R (wavelengths in nm). If not provided,
+        # load the default v00 table from package resources.
+        if v00_wl_df is None:
+            from .dataio import load_v00_wavelengths
+
+            v00_wl_df = load_v00_wavelengths()
+
         self.v00_wl = v00_wl_df
         # Conversion constants
         self.K2wn = spc.Boltzmann / (spc.h * spc.c * 100)  # cm⁻¹ per K

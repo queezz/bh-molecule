@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 from bh_molecule.dataio import load_v00_wavelengths
 from bh_molecule.physics import BHModel
 
-v00 = load_v00_wavelengths()
-model = BHModel(v00)
+
+model = BHModel()
 
 x = np.linspace(432.8, 434.2, 4000)  # nm
 y = model.full_fit_model(
