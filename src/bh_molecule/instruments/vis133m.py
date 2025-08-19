@@ -496,6 +496,10 @@ class Vis133M:
 
         stack = self.channel_stack(channel)  # (F,P)
         wl = self.wl_nm[channel]  # (P,)
+        # If wavelength vector is decreasing, flip both wavelength and stack
+        if wl.size >= 2 and wl[1] < wl[0]:
+            wl = wl[::-1]
+            stack = stack[:, ::-1]
         arr = stack  # keep shape (F,P) for _plot_fc
         t, xlabel = self._time_axis(require_time=require_time)
         extent = (t[0], t[-1] if t.size > 1 else 0.0, wl[0], wl[-1])
@@ -512,6 +516,7 @@ class Vis133M:
             log_scale=log_scale,
             vmin=vmin,
             vmax=vmax,
+            extent=extent,
         )
         ax.set_xlabel(xlabel)
         ax.set_ylabel("wavelength (nm)")
@@ -572,6 +577,7 @@ class Vis133M:
             log_scale=log_scale,
             vmin=vmin,
             vmax=vmax,
+            extent=extent,
         )
 
     # MARK: Maps
@@ -640,6 +646,7 @@ class Vis133M:
         log_scale: bool = False,
         vmin: float | None = None,
         vmax: float | None = None,
+        extent: tuple | None = None,
     ):
         """Internal helper: plot an (F, C) image with time on x and channel on y.
 
@@ -668,7 +675,9 @@ class Vis133M:
         arr = img_fc.T  # (C,F)
         C = arr.shape[0]
         t, xlabel = self._time_axis(require_time=require_time)
-        extent = (t[0], t[-1] if t.size > 1 else 0.0, 1, C)
+        # Allow caller to override extent (useful when vertical axis is wavelength)
+        if extent is None:
+            extent = (t[0], t[-1] if t.size > 1 else 0.0, 1, C)
 
         ax = ax or plt.gca()
         if log_scale:
