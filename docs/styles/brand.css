@@ -80,7 +80,6 @@
   padding: .8em 1em .8em 1.2em;
   border-radius: 6px;
 }
-
 /* --- Make Jupyter cells obey the Material dark palette --- */
 [data-md-color-scheme="bh-dark"] .jp-Notebook {
   /* ignore whatever inline theme says */
@@ -91,7 +90,7 @@
   /* Jupyter Lab CSS vars (fallbacks if present) */
   --jp-layout-color0: var(--md-default-bg-color);
   --jp-content-font-color0: var(--md-default-fg-color);
-  --jp-border-color0: rgba(239, 3, 3, 0.12);
+  --jp-border-color0: rgba(255,255,255,.14);
   --jp-cell-editor-background: var(--md-code-bg-color);
   --jp-cell-editor-border-color: rgba(255,255,255,.14);
 }
@@ -118,34 +117,37 @@
   color: var(--md-code-fg-color);
   border-radius: 6px;
 }
-[data-md-color-scheme="bh-dark"] .cm-content, 
+[data-md-color-scheme="bh-dark"] .cm-content,
 [data-md-color-scheme="bh-dark"] .cm-line { color: var(--md-code-fg-color); }
+
 [data-md-color-scheme="bh-dark"] .cm-gutters {
   background: var(--md-code-bg-color);
   color: var(--md-default-fg-color--lighter);
   border-right: 1px solid rgba(255,255,255,.10);
 }
+[data-md-color-scheme="bh-dark"] .cm-gutterElement { color: var(--md-default-fg-color--lighter); }
+
 [data-md-color-scheme="bh-dark"] .cm-selectionBackground,
 [data-md-color-scheme="bh-dark"] .cm-selectionLayer .cm-selectionBackground {
   background: var(--md-code-selection-bg-color) !important;
 }
 
 /* CM6 token colors */
-[data-md-color-scheme="bh-dark"] .cm-keyword    { color: var(--md-code-hl-keyword-color); }
-[data-md-color-scheme="bh-dark"] .cm-string     { color: var(--md-code-hl-string-color); }
-[data-md-color-scheme="bh-dark"] .cm-number     { color: var(--md-code-hl-number-color); }
-[data-md-color-scheme="bh-dark"] .cm-builtin    { color: var(--md-code-hl-builtin-color); }
-[data-md-color-scheme="bh-dark"] .cm-variableName { color: var(--md-code-hl-variable-color); }
-[data-md-color-scheme="bh-dark"] .cm-operator   { color: var(--md-code-hl-operator-color); }
-[data-md-color-scheme="bh-dark"] .cm-comment    { color: var(--md-code-hl-comment-color); }
+[data-md-color-scheme="bh-dark"] .cm-keyword       { color: var(--md-code-hl-keyword-color); }
+[data-md-color-scheme="bh-dark"] .cm-string        { color: var(--md-code-hl-string-color); }
+[data-md-color-scheme="bh-dark"] .cm-number        { color: var(--md-code-hl-number-color); }
+[data-md-color-scheme="bh-dark"] .cm-builtin       { color: var(--md-code-hl-builtin-color); }
+[data-md-color-scheme="bh-dark"] .cm-variableName  { color: var(--md-code-hl-variable-color); }
+[data-md-color-scheme="bh-dark"] .cm-operator      { color: var(--md-code-hl-operator-color); }
+[data-md-color-scheme="bh-dark"] .cm-comment       { color: var(--md-code-hl-comment-color); }
 
 /* ----- CodeMirror 5 (fallback) ----- */
-[data-md-color-scheme="bh-dark"] .CodeMirror { 
-  background: var(--md-code-bg-color); 
-  color: var(--md-code-fg-color); 
+[data-md-color-scheme="bh-dark"] .CodeMirror {
+  background: var(--md-code-bg-color);
+  color: var(--md-code-fg-color);
 }
 [data-md-color-scheme="bh-dark"] .CodeMirror-gutters {
-  background: var(--md-code-bg-color); 
+  background: var(--md-code-bg-color);
   border-right: 1px solid rgba(255,255,255,.10);
   color: var(--md-default-fg-color--lighter);
 }
@@ -156,7 +158,6 @@
 [data-md-color-scheme="bh-dark"] .cm-s-default .cm-variable { color: var(--md-code-hl-variable-color); }
 [data-md-color-scheme="bh-dark"] .cm-s-default .cm-operator { color: var(--md-code-hl-operator-color); }
 [data-md-color-scheme="bh-dark"] .cm-s-default .cm-comment  { color: var(--md-code-hl-comment-color); }
-
 
 /* (Optional) hyperlinks inside output */
 [data-md-color-scheme="bh-dark"] .jp-RenderedHTMLCommon a {
@@ -173,12 +174,6 @@
 [data-md-color-scheme="bh-dark"] .jp-RenderedHTMLCommon.jp-RenderedMarkdown {
   background: var(--md-default-bg-color);
   color: var(--md-default-fg-color);
-}
-
-/* (Bonus) CodeMirror gutter/readability for line numbers if shown */
-[data-md-color-scheme="bh-dark"] .cm-gutters,
-[data-md-color-scheme="bh-dark"] .cm-gutterElement {
-  color: var(--md-default-fg-color--lighter);
 }
 
 /* ===== Jupyter prompts & output text – force dark theme colors ===== */
@@ -256,7 +251,6 @@
   color: var(--md-typeset-a-color) !important;
 }
 
-
 /* ===== Pandas table refinements ===== */
 
 /* Remove vertical inner borders → only horizontal */
@@ -289,4 +283,30 @@
 }
 [data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe tbody tr:nth-child(even):not(.row_selected):not(:hover) {
   background: transparent !important;
+}
+
+/* ===== Fix: restore code line highlight visibility in dark ===== */
+[data-md-color-scheme="bh-dark"] .md-typeset .highlight .hll,
+[data-md-color-scheme="bh-dark"] .md-typeset .codehilite .hll,
+[data-md-color-scheme="bh-dark"] .md-typeset pre code .hll {
+  background-color: rgba(255,255,255,.08) !important;
+  box-shadow: inset 2px 0 0 rgba(255,255,255,.12); /* subtle left bar like Material */
+}
+
+/* Safer default for any hard-coded black inside outputs (common in matplotlib) */
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-OutputArea [style*="color:black"],
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-OutputArea [style*="color: black"] {
+  color: var(--md-default-fg-color) !important;
+}
+
+/* Hover highlight only on data rows (not header) */
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon table.dataframe tbody tr:hover,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe tbody tr:hover {
+  background: rgba(56, 139, 253, 0.25) !important;
+}
+
+/* Keep header background stable even on hover */
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon table.dataframe thead tr:hover,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe thead tr:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
 }
