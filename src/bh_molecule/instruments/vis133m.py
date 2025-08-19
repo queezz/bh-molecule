@@ -825,6 +825,9 @@ class Vis133M:
         sort_wavelength: bool = True,
         line_shape: str = "linear",
         zero_min: bool | None = None,
+        theme: str | None = None,  # "dark" | "light" | None (inherit)
+        bg: str = "#44423e",
+        fg: str = "#eaeaea",
     ):
         """Return an interactive Plotly figure for a spectrum.
 
@@ -839,6 +842,12 @@ class Vis133M:
             interactive behaviour (default True).
         line_shape : str, optional
             Plotly line shape (e.g. 'linear', 'spline').
+        theme : {"dark","light",None}, optional
+            If "dark", apply a dark layout to the figure. If None, inherit Plotly's default.
+        bg : str, optional
+            Background color for dark theme.
+        fg : str, optional
+            Foreground color for dark theme.
 
         Returns
         -------
@@ -862,14 +871,13 @@ class Vis133M:
         except Exception as e:
             raise ImportError("plotly is required for plot_spectrum_plotly()") from e
 
-        x = np.asarray(self.wl_nm[channel], dtype=float)  # (P,)
+        x = np.asarray(self.wl_nm[channel], dtype=float)
         row = self.cube[frame, channel]
         use_zero = self._baseline_zero if zero_min is None else bool(zero_min)
         if use_zero:
             row = self._rowmin_row_p(row)
         y = np.asarray(row * self.scale, dtype=float)
 
-        # Make wavelength monotonic for nicer interaction (optional)
         if sort_wavelength and (x.size > 1) and np.any(np.diff(x) < 0):
             idx = np.argsort(x)
             x, y = x[idx], y[idx]
@@ -891,4 +899,28 @@ class Vis133M:
             legend_title_text=None,
             hovermode="x unified",
         )
+
+        if theme == "dark":
+            fig.update_layout(
+                template="plotly_dark",
+                paper_bgcolor=bg,
+                plot_bgcolor=bg,
+                font=dict(color=fg),
+                xaxis=dict(
+                    showline=True,
+                    linecolor=fg,
+                    tickcolor=fg,
+                    gridcolor="rgba(255,255,255,0.15)",
+                    zerolinecolor="rgba(255,255,255,0.25)",
+                ),
+                yaxis=dict(
+                    showline=True,
+                    linecolor=fg,
+                    tickcolor=fg,
+                    gridcolor="rgba(255,255,255,0.15)",
+                    zerolinecolor="rgba(255,255,255,0.25)",
+                ),
+                hoverlabel=dict(font_color=fg),
+            )
+
         return fig
