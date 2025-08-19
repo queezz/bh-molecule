@@ -25,6 +25,7 @@ dev = [
   "mdx_truly_sane_lists>=1.0",
   "mkdocstrings[python]>=0.25",
   "griffe>=0.45",
+  "mkdocs-jupyter>=0.25",
 ]
 
 [tool.setuptools.package-data]
