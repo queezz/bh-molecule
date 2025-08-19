@@ -80,3 +80,233 @@
   padding: .8em 1em .8em 1.2em;
   border-radius: 6px;
 }
+/* --- Make Jupyter cells obey the Material dark palette --- */
+[data-md-color-scheme="bh-dark"] .jp-Notebook {
+  /* ignore whatever inline theme says */
+  color-scheme: dark;
+  background: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
+
+  /* Jupyter Lab CSS vars (fallbacks if present) */
+  --jp-layout-color0: var(--md-default-bg-color);
+  --jp-content-font-color0: var(--md-default-fg-color);
+  --jp-border-color0: rgba(255,255,255,.14);
+  --jp-cell-editor-background: var(--md-code-bg-color);
+  --jp-cell-editor-border-color: rgba(255,255,255,.14);
+}
+
+/* Input cell background + border */
+[data-md-color-scheme="bh-dark"] .jp-CodeCell .jp-Cell-inputWrapper {
+  background: var(--md-code-bg-color);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 6px;
+}
+
+/* Output area */
+[data-md-color-scheme="bh-dark"] .jp-OutputArea-output,
+[data-md-color-scheme="bh-dark"] .jp-RenderedText pre,
+[data-md-color-scheme="bh-dark"] .jp-RenderedHTMLCommon {
+  background: var(--md-code-bg-color);
+  color: var(--md-default-fg-color);
+  border-color: rgba(255,255,255,.10);
+}
+
+/* ----- CodeMirror 6 (cm-*) ----- */
+[data-md-color-scheme="bh-dark"] .cm-editor {
+  background: var(--md-code-bg-color);
+  color: var(--md-code-fg-color);
+  border-radius: 6px;
+}
+[data-md-color-scheme="bh-dark"] .cm-content,
+[data-md-color-scheme="bh-dark"] .cm-line { color: var(--md-code-fg-color); }
+
+[data-md-color-scheme="bh-dark"] .cm-gutters {
+  background: var(--md-code-bg-color);
+  color: var(--md-default-fg-color--lighter);
+  border-right: 1px solid rgba(255,255,255,.10);
+}
+[data-md-color-scheme="bh-dark"] .cm-gutterElement { color: var(--md-default-fg-color--lighter); }
+
+[data-md-color-scheme="bh-dark"] .cm-selectionBackground,
+[data-md-color-scheme="bh-dark"] .cm-selectionLayer .cm-selectionBackground {
+  background: var(--md-code-selection-bg-color) !important;
+}
+
+/* CM6 token colors */
+[data-md-color-scheme="bh-dark"] .cm-keyword       { color: var(--md-code-hl-keyword-color); }
+[data-md-color-scheme="bh-dark"] .cm-string        { color: var(--md-code-hl-string-color); }
+[data-md-color-scheme="bh-dark"] .cm-number        { color: var(--md-code-hl-number-color); }
+[data-md-color-scheme="bh-dark"] .cm-builtin       { color: var(--md-code-hl-builtin-color); }
+[data-md-color-scheme="bh-dark"] .cm-variableName  { color: var(--md-code-hl-variable-color); }
+[data-md-color-scheme="bh-dark"] .cm-operator      { color: var(--md-code-hl-operator-color); }
+[data-md-color-scheme="bh-dark"] .cm-comment       { color: var(--md-code-hl-comment-color); }
+
+/* ----- CodeMirror 5 (fallback) ----- */
+[data-md-color-scheme="bh-dark"] .CodeMirror {
+  background: var(--md-code-bg-color);
+  color: var(--md-code-fg-color);
+}
+[data-md-color-scheme="bh-dark"] .CodeMirror-gutters {
+  background: var(--md-code-bg-color);
+  border-right: 1px solid rgba(255,255,255,.10);
+  color: var(--md-default-fg-color--lighter);
+}
+[data-md-color-scheme="bh-dark"] .cm-s-default .cm-keyword  { color: var(--md-code-hl-keyword-color); }
+[data-md-color-scheme="bh-dark"] .cm-s-default .cm-string   { color: var(--md-code-hl-string-color); }
+[data-md-color-scheme="bh-dark"] .cm-s-default .cm-number   { color: var(--md-code-hl-number-color); }
+[data-md-color-scheme="bh-dark"] .cm-s-default .cm-builtin  { color: var(--md-code-hl-builtin-color); }
+[data-md-color-scheme="bh-dark"] .cm-s-default .cm-variable { color: var(--md-code-hl-variable-color); }
+[data-md-color-scheme="bh-dark"] .cm-s-default .cm-operator { color: var(--md-code-hl-operator-color); }
+[data-md-color-scheme="bh-dark"] .cm-s-default .cm-comment  { color: var(--md-code-hl-comment-color); }
+
+/* (Optional) hyperlinks inside output */
+[data-md-color-scheme="bh-dark"] .jp-RenderedHTMLCommon a {
+  color: var(--md-typeset-a-color);
+}
+
+/* Markdown cell background = page background (not code bg) */
+[data-md-color-scheme="bh-dark"] .jp-MarkdownCell .jp-Cell-inputWrapper {
+  background: var(--md-default-bg-color);
+  border: none;
+}
+
+/* If the plugin wraps rendered markdown differently, cover that too */
+[data-md-color-scheme="bh-dark"] .jp-RenderedHTMLCommon.jp-RenderedMarkdown {
+  background: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
+}
+
+/* ===== Jupyter prompts & output text – force dark theme colors ===== */
+
+/* In[ ] / Out[ ] prompts */
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-InputPrompt.jp-InputArea-prompt,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-OutputPrompt.jp-OutputArea-prompt {
+  color: var(--md-default-fg-color) !important;
+  opacity: 1 !important;
+  font-weight: 500;
+}
+
+/* Plain/printed output text (repr, print, <Axes: ...>, etc.) */
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-OutputArea .jp-OutputArea-output,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-OutputArea .jp-OutputArea-output pre,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedText,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedText pre {
+  color: var(--md-default-fg-color) !important;
+  background: transparent !important;
+}
+
+/* Safety net: kill any inline 'color: black' inside notebook outputs */
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-OutputArea [style*="color: black"] {
+  color: var(--md-default-fg-color) !important;
+}
+
+/* ===== Pandas tables (repr + Styler) in dark ===== */
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon table,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon table.dataframe,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe {
+  background: var(--md-default-bg-color) !important;
+  color: var(--md-default-fg-color) !important;
+  border-collapse: collapse !important;
+  width: auto;
+}
+
+/* Borders */
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon table.dataframe,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon table.dataframe th,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon table.dataframe td,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe th,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe td {
+  border: 1px solid rgba(255,255,255,.2) !important;
+}
+
+/* Header background + bold */
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon table.dataframe thead th,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe thead th {
+  background: rgba(255,255,255,.06) !important;
+  color: var(--md-default-fg-color) !important;
+  font-weight: 600;
+}
+
+/* Row index / column index cells (Styler) */
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe .row_heading,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe .col_heading,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe .blank,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe .index_name {
+  background: rgba(255,255,255,.06) !important;
+  color: var(--md-default-fg-color) !important;
+}
+
+/* Zebra stripes for readability */
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon table.dataframe tbody tr:nth-child(odd),
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe tbody tr:nth-child(odd) {
+  background: rgba(255,255,255,.04) !important;
+}
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon table.dataframe tbody tr:nth-child(even),
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe tbody tr:nth-child(even) {
+  background: transparent !important;
+}
+
+/* Links inside tables */
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe a {
+  color: var(--md-typeset-a-color) !important;
+}
+
+/* ===== Pandas table refinements ===== */
+
+/* Remove vertical inner borders → only horizontal */
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon table.dataframe,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe {
+  border-collapse: collapse !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon table.dataframe td,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon table.dataframe th,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe td,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe th {
+  border-left: none !important;
+  border-right: none !important;
+  border-top: 1px solid rgba(255,255,255,.15) !important;
+  border-bottom: 1px solid rgba(255,255,255,.15) !important;
+}
+
+/* Row highlight (e.g. Styler .row_selected) */
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe tr:hover,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe .row_selected {
+  background: rgba(56, 139, 253, 0.25) !important; /* GitHub-like blue tint */
+  color: var(--md-default-fg-color) !important;
+}
+
+/* Keep zebra stripes subtle */
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe tbody tr:nth-child(odd):not(.row_selected):not(:hover) {
+  background: rgba(255,255,255,.04) !important;
+}
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe tbody tr:nth-child(even):not(.row_selected):not(:hover) {
+  background: transparent !important;
+}
+
+/* ===== Fix: restore code line highlight visibility in dark ===== */
+[data-md-color-scheme="bh-dark"] .md-typeset .highlight .hll,
+[data-md-color-scheme="bh-dark"] .md-typeset .codehilite .hll,
+[data-md-color-scheme="bh-dark"] .md-typeset pre code .hll {
+  background-color: rgba(255,255,255,.08) !important;
+  box-shadow: inset 2px 0 0 rgba(255,255,255,.12); /* subtle left bar like Material */
+}
+
+/* Safer default for any hard-coded black inside outputs (common in matplotlib) */
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-OutputArea [style*="color:black"],
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-OutputArea [style*="color: black"] {
+  color: var(--md-default-fg-color) !important;
+}
+
+/* Hover highlight only on data rows (not header) */
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon table.dataframe tbody tr:hover,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe tbody tr:hover {
+  background: rgba(56, 139, 253, 0.25) !important;
+}
+
+/* Keep header background stable even on hover */
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon table.dataframe thead tr:hover,
+[data-md-color-scheme="bh-dark"] .md-typeset .jp-RenderedHTMLCommon .dataframe thead tr:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
