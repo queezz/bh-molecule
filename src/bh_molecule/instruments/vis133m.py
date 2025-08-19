@@ -465,6 +465,9 @@ class Vis133M:
         cbar_label="intensity",
         time_line: float | None = None,
         require_time: bool = False,
+        log_scale: bool = False,
+        vmin: float | None = None,
+        vmax: float | None = None,
     ):
         """Plot a channel stack (time × wavelength) as an image.
 
@@ -493,21 +496,25 @@ class Vis133M:
 
         stack = self.channel_stack(channel)  # (F,P)
         wl = self.wl_nm[channel]  # (P,)
-        arr = stack.T  # -> (P,F)
-        if wl.size >= 2 and wl[1] < wl[0]:
-            wl, arr = wl[::-1], arr[::-1, :]
-
+        arr = stack  # keep shape (F,P) for _plot_fc
         t, xlabel = self._time_axis(require_time=require_time)
         extent = (t[0], t[-1] if t.size > 1 else 0.0, wl[0], wl[-1])
 
         ax = ax or plt.gca()
-        im = ax.imshow(
-            arr * self.scale, origin="lower", aspect="auto", extent=extent, cmap=cmap
+        # Route through the common plotting helper to enable safe log scaling
+        ax = self._plot_fc(
+            img_fc=stack * self.scale,
+            ax=ax,
+            cmap=cmap,
+            cbar_label=cbar_label,
+            channel_line=None,
+            require_time=require_time,
+            log_scale=log_scale,
+            vmin=vmin,
+            vmax=vmax,
         )
         ax.set_xlabel(xlabel)
         ax.set_ylabel("wavelength (nm)")
-        cb = plt.colorbar(im, ax=ax)
-        cb.set_label(cbar_label)
         if time_line is not None:
             ax.axvline(float(time_line), ls="--", lw=1.5, color="w", alpha=0.8)
         return ax
@@ -521,6 +528,9 @@ class Vis133M:
         cbar_label="intensity",
         channel_line: int | None = None,
         require_time: bool = False,
+        log_scale: bool = False,
+        vmin: float | None = None,
+        vmax: float | None = None,
     ):
         """Plot a frame×channel image for a fixed pixel index.
 
@@ -551,17 +561,18 @@ class Vis133M:
         t, xlabel = self._time_axis(require_time=require_time)
         extent = (t[0], t[-1] if t.size > 1 else 0.0, 1, C)
 
-        ax = ax or plt.gca()
-        im = ax.imshow(
-            arr * self.scale, origin="lower", aspect="auto", extent=extent, cmap=cmap
+        # Use the shared plotting helper so vmin/vmax/log_scale behave consistently
+        return self._plot_fc(
+            img_fc=self.pixel_map(pixel) * self.scale,
+            ax=ax,
+            cmap=cmap,
+            cbar_label=cbar_label,
+            channel_line=channel_line,
+            require_time=require_time,
+            log_scale=log_scale,
+            vmin=vmin,
+            vmax=vmax,
         )
-        ax.set_xlabel(xlabel)
-        ax.set_ylabel("channel")
-        cb = plt.colorbar(im, ax=ax)
-        cb.set_label(cbar_label)
-        if channel_line is not None:
-            ax.axhline(float(channel_line), ls="--", lw=1.5, color="w", alpha=0.8)
-        return ax
 
     # MARK: Maps
     # ----- maps (F,C) -----
@@ -626,6 +637,9 @@ class Vis133M:
         cbar_label="intensity",
         channel_line: int | None = None,
         require_time: bool = False,
+        log_scale: bool = False,
+        vmin: float | None = None,
+        vmax: float | None = None,
     ):
         """Internal helper: plot an (F, C) image with time on x and channel on y.
 
@@ -657,7 +671,59 @@ class Vis133M:
         extent = (t[0], t[-1] if t.size > 1 else 0.0, 1, C)
 
         ax = ax or plt.gca()
-        im = ax.imshow(arr, origin="lower", aspect="auto", extent=extent, cmap=cmap)
+        if log_scale:
+            from matplotlib import colors
+
+            vmax_eff = (
+                vmax
+                if vmax is not None
+                else (float(np.max(arr)) if arr.size > 0 else 1.0)
+            )
+            if vmax_eff <= 0:
+                # Fallback to linear if no positive values
+                im = ax.imshow(
+                    arr,
+                    origin="lower",
+                    aspect="auto",
+                    extent=extent,
+                    cmap=cmap,
+                    vmin=vmin,
+                    vmax=vmax,
+                )
+            else:
+                if vmin is None:
+                    positives = arr[arr > 0]
+                    vmin_eff = (
+                        float(positives.min())
+                        if positives.size > 0
+                        else np.finfo(float).eps
+                    )
+                else:
+                    vmin_eff = vmin
+                norm = colors.LogNorm(vmin=vmin_eff, vmax=vmax_eff)
+                arr_display = np.where(
+                    arr > 0,
+                    arr,
+                    vmin_eff if vmin_eff is not None else np.finfo(float).eps,
+                )
+                im = ax.imshow(
+                    arr_display,
+                    origin="lower",
+                    aspect="auto",
+                    extent=extent,
+                    cmap=cmap,
+                    norm=norm,
+                )
+        else:
+            im = ax.imshow(
+                arr,
+                origin="lower",
+                aspect="auto",
+                extent=extent,
+                cmap=cmap,
+                vmin=vmin,
+                vmax=vmax,
+            )
         ax.set_xlabel(xlabel)
         ax.set_ylabel("channel")
         cb = plt.colorbar(im, ax=ax)
@@ -677,6 +743,9 @@ class Vis133M:
         channel_line: int | None = None,
         require_time: bool = False,
         subtract_dark: bool = True,
+        log_scale: bool = False,
+        vmin: float | None = None,
+        vmax: float | None = None,
     ):
         """Plot the result of ``map_pixel_range(start, stop)``.
 
@@ -699,6 +768,9 @@ class Vis133M:
             cbar_label=cbar_label,
             channel_line=channel_line,
             require_time=require_time,
+            log_scale=log_scale,
+            vmin=vmin,
+            vmax=vmax,
         )
 
     def plot_band_map(
@@ -711,6 +783,9 @@ class Vis133M:
         channel_line: int | None = None,
         require_time: bool = False,
         subtract_dark: bool = True,
+        log_scale: bool = False,
+        vmin: float | None = None,
+        vmax: float | None = None,
     ):
         """Plot the result of ``map_band(nm_range)``.
 
@@ -736,6 +811,9 @@ class Vis133M:
             cbar_label=cbar_label,
             channel_line=channel_line,
             require_time=require_time,
+            log_scale=log_scale,
+            vmin=vmin,
+            vmax=vmax,
         )
 
     # MARK: Plotly
