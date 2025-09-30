@@ -201,19 +201,54 @@ class FitsViewer(QtWidgets.QMainWindow):
         print(f"Saved {out}")
 
     def _show_keybindings(self):
-        text = (
-            "Left / Right or [ / ] : prev/next frame\n"
-            "A : recompute percentiles (auto-rescale)\n"
-            ", / . : low percentile -1 / +1\n"
-            "; / ' : high percentile -1 / +1\n"
-            "H : toggle histogram panel\n"
-            "E : toggle aspect ('equal' / 'auto')\n"
-            "S : save current frame as PNG\n"
-            "Q or Esc : quit\n"
-        )
-        dlg = QtWidgets.QMessageBox(self)
+        html = """
+        <html>
+          <head>
+            <style>
+              body { font-family: sans-serif; }
+              table { border-collapse: collapse; width: 100%; }
+              th, td { text-align: left; padding: 8px; }
+              tr:nth-child(even){ background-color: #f2f2f2 }
+              th { background-color: #4CAF50; color: white; }
+            </style>
+          </head>
+          <body>
+            <h2>FITS Viewer — Key bindings</h2>
+            <table>
+              <tr><th>Key</th><th>Action</th></tr>
+              <tr><td>Left / Right or [ / ]</td><td>Previous / Next frame</td></tr>
+              <tr><td>A</td><td>Recompute percentiles (auto-rescale)</td></tr>
+              <tr><td>, / .</td><td>Low percentile -1 / +1</td></tr>
+              <tr><td>; / '</td><td>High percentile -1 / +1</td></tr>
+              <tr><td>H</td><td>Toggle histogram panel</td></tr>
+              <tr><td>E</td><td>Toggle aspect (equal / auto)</td></tr>
+              <tr><td>S</td><td>Save current frame as PNG</td></tr>
+              <tr><td>Q or Esc</td><td>Quit</td></tr>
+            </table>
+            <p>Tip: drag in the histogram panel to adjust levels interactively.</p>
+          </body>
+        </html>
+        """
+
+        dlg = QtWidgets.QDialog(self)
         dlg.setWindowTitle("Key bindings")
-        dlg.setText(text)
+        layout = QtWidgets.QVBoxLayout(dlg)
+        browser = QtWidgets.QTextBrowser()
+        browser.setHtml(html)
+        browser.setOpenExternalLinks(True)
+        layout.addWidget(browser)
+        # Use a plain Close button for maximum compatibility across Qt bindings
+        close_btn = QtWidgets.QPushButton("Close")
+        close_btn.clicked.connect(dlg.reject)
+        btn_container = QtWidgets.QWidget()
+        btn_layout = QtWidgets.QHBoxLayout(btn_container)
+        btn_layout.setContentsMargins(0, 0, 0, 0)
+        btn_layout.addStretch()
+        btn_layout.addWidget(close_btn)
+        layout.addWidget(btn_container)
+        # Increase minimum height so the keybindings page doesn't need scrolling
+        browser.setMinimumHeight(380)
+        dlg.resize(500, 400)
         dlg.exec()
     # Ensure base close behavior
     def closeEvent(self, event):
