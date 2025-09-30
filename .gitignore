@@ -9,3 +9,4 @@ site/
 __pycache__/
 
 desktop.ini
+local/
