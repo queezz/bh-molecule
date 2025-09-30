@@ -80,6 +80,20 @@ class FitsViewer(QtWidgets.QMainWindow):
         self.view_box = self.plot.getViewBox()
         self.view_box.invertY(True)  # origin at lower-left like matplotlib origin="lower"
         self.view_box.setAspectLocked(self.aspect_equal)
+        # Disable automatic range updates by default so overlays don't trigger zoom
+        try:
+            self.view_box.enableAutoRange(False)
+        except Exception:
+            pass
+        # Track whether the user has manually changed the view (pan/zoom).
+        # We avoid overriding a user-set view when updating the image.
+        self.user_set_view = False
+        self._programmatic_range = False
+        try:
+            # sigRangeChanged exists on ViewBox and is emitted when the view is panned/zoomed
+            self.view_box.sigRangeChanged.connect(lambda *args: self._on_range_changed())
+        except Exception:
+            pass
 
         self.image_item = pg.ImageItem()
         self.plot.addItem(self.image_item)
@@ -94,6 +108,23 @@ class FitsViewer(QtWidgets.QMainWindow):
         self.splitter.addWidget(self.hist_widget)
         self.splitter.setStretchFactor(0, 4)
         self.splitter.setStretchFactor(1, 1)
+
+        # Crosshair and value overlay
+        self.vline = pg.InfiniteLine(angle=90, movable=False, pen=pg.mkPen('y'))
+        self.hline = pg.InfiniteLine(angle=0, movable=False, pen=pg.mkPen('y'))
+        self.plot.addItem(self.vline, ignoreBounds=True)
+        self.plot.addItem(self.hline, ignoreBounds=True)
+        self.text_item = pg.TextItem('', anchor=(0,1), border='w', fill=pg.mkBrush(0,0,0,150))
+        self.text_item.setZValue(2)
+        # Add text overlay without affecting view bounds to prevent auto-zoom
+        self.plot.addItem(self.text_item, ignoreBounds=True)
+
+        # Connect mouse move on the ViewBox scene to update crosshair
+        try:
+            self.view_box.scene().sigMouseMoved.connect(self._on_mouse_move)
+        except Exception:
+            # Some bindings may expose different signal names; ignore if unavailable
+            pass
 
         # Grayscale colormap
         try:
@@ -142,10 +173,71 @@ class FitsViewer(QtWidgets.QMainWindow):
         self.image_item.setImage(img, autoLevels=False)
         self.image_item.setLevels((vmin, vmax))
         self.view_box.setAspectLocked(self.aspect_equal)
-        self.plot.enableAutoRange(axis=pg.ViewBox.XYAxes, enable=True)
+        # Set the view range to image pixel extents explicitly unless the user has
+        # manually changed the view (panned/zoomed). Use a small programmatic guard
+        # so the sigRangeChanged handler doesn't mark programmatic changes as user changes.
+        if not getattr(self, 'user_set_view', False):
+            try:
+                self._programmatic_range = True
+                self.view_box.setRange(xRange=(0, self.width), yRange=(0, self.height), padding=0)
+                try:
+                    # ensure auto-range remains disabled after programmatic set
+                    self.view_box.enableAutoRange(False)
+                except Exception:
+                    pass
+            except Exception:
+                try:
+                    self.plot.enableAutoRange(axis=pg.ViewBox.XYAxes, enable=True)
+                except Exception:
+                    pass
+            finally:
+                self._programmatic_range = False
         self._update_title()
         # HistogramLUTWidget updates itself when image levels change
         # Nothing else needed here
+
+    def _on_mouse_move(self, pos):
+        """Update crosshair and show pixel value under cursor.
+
+        `pos` is a QPointF in scene coordinates from sigMouseMoved.
+        """
+        try:
+            vb = self.view_box
+            if vb is None:
+                return
+            mouse_point = vb.mapSceneToView(pos)
+            x = int(round(mouse_point.x()))
+            y = int(round(mouse_point.y()))
+            # clamp
+            if x < 0 or y < 0 or x >= self.width or y >= self.height:
+                self.text_item.setText('')
+                return
+            try:
+                val = float(self.data[self.frame_index, y, x])
+            except Exception:
+                val = float('nan')
+            self.vline.setPos(x)
+            self.hline.setPos(y)
+            # small HTML-ish text for clarity
+            try:
+                self.text_item.setHtml(f"<div style='color: white;'>x={x} y={y}<br>val={val:.4g}</div>")
+            except Exception:
+                # fallback
+                self.text_item.setText(f"x={x} y={y} val={val:.4g}")
+            # place text near top-left of current view range
+            vr = vb.viewRange()
+            x_min = vr[0][0]
+            y_max = vr[1][1]
+            self.text_item.setPos(x_min, y_max)
+        except Exception:
+            # be robust to any binding differences
+            return
+
+    def _on_range_changed(self):
+        # Ignore programmatic changes triggered by setRange
+        if getattr(self, '_programmatic_range', False):
+            return
+        self.user_set_view = True
 
     # ----- Key handling -----
     def keyPressEvent(self, event):
