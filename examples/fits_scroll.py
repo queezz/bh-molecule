@@ -71,7 +71,7 @@ class FitsViewer(QtWidgets.QMainWindow):
 
         # Left: image plot
         self.glw = pg.GraphicsLayoutWidget()
-        self.plot = self.glw.addPlot()
+        self.plot = self.glw.addPlot(row=0, col=0)
         self.splitter.addWidget(self.glw)
         self.plot.setLabel("bottom", "X (pixels; wavelength axis)")
         self.plot.setLabel("left", "Y (pixels)")
@@ -97,6 +97,17 @@ class FitsViewer(QtWidgets.QMainWindow):
 
         self.image_item = pg.ImageItem()
         self.plot.addItem(self.image_item)
+
+        # Below: row profile plot (intensity vs X for cursor row)
+        self.row_plot = self.glw.addPlot(row=1, col=0)
+        self.row_plot.setLabel("bottom", "X (pixels)")
+        self.row_plot.setLabel("left", "Value")
+        self.row_curve = self.row_plot.plot(pen=pg.mkPen('c'))
+        self.row_xline = pg.InfiniteLine(angle=90, movable=False, pen=pg.mkPen('m'))
+        self.row_plot.addItem(self.row_xline, ignoreBounds=True)
+        # Track last cursor for row plot
+        self.last_cursor_y = max(0, min(self.height - 1, self.height // 2))
+        self.last_cursor_x = max(0, min(self.width - 1, self.width // 2))
 
         # Right: HistogramLUTWidget for interactive levels and histogram
         self.hist_widget = pg.HistogramLUTWidget()
@@ -136,6 +147,11 @@ class FitsViewer(QtWidgets.QMainWindow):
 
         # Initial draw and window size
         self._update_image()
+        # Initialize row profile after image is ready
+        try:
+            self._update_row_plot(self.last_cursor_y, self.last_cursor_x)
+        except Exception:
+            pass
         if window_size_px is not None:
             self.resize(window_size_px[0], window_size_px[1])
 
@@ -195,6 +211,11 @@ class FitsViewer(QtWidgets.QMainWindow):
         self._update_title()
         # HistogramLUTWidget updates itself when image levels change
         # Nothing else needed here
+        # Refresh row profile for current frame at last known row
+        try:
+            self._update_row_plot(self.last_cursor_y, self.last_cursor_x)
+        except Exception:
+            pass
 
     def _on_mouse_move(self, pos):
         """Update crosshair and show pixel value under cursor.
@@ -229,6 +250,11 @@ class FitsViewer(QtWidgets.QMainWindow):
             x_min = vr[0][0]
             y_max = vr[1][1]
             self.text_item.setPos(x_min, y_max)
+            # Update row profile plot when row changes or x moves
+            if y != self.last_cursor_y or x != self.last_cursor_x:
+                self.last_cursor_y = y
+                self.last_cursor_x = x
+                self._update_row_plot(y, x)
         except Exception:
             # be robust to any binding differences
             return
@@ -238,6 +264,42 @@ class FitsViewer(QtWidgets.QMainWindow):
         if getattr(self, '_programmatic_range', False):
             return
         self.user_set_view = True
+
+    def _update_row_plot(self, row_index: int, x_index: int | None = None):
+        """Update the row profile plot for the given row and optional x marker."""
+        if row_index < 0 or row_index >= self.height:
+            return
+        row = self.data[self.frame_index, row_index, :].astype(float)
+        xs = np.arange(self.width)
+        # Set data
+        self.row_curve.setData(xs, row)
+        # X range fixed to image width
+        try:
+            self.row_plot.setXRange(0, self.width, padding=0)
+        except Exception:
+            pass
+        # Y range via percentile limits using current lo/hi
+        vmin, vmax = percentile_limits(row, self.lo, self.hi)
+        # Fallback if degenerate
+        if not np.isfinite(vmin) or not np.isfinite(vmax) or vmin == vmax:
+            vmin, vmax = np.nanmin(row), np.nanmax(row)
+            if vmin == vmax:
+                vmax = vmin + 1.0
+        try:
+            self.row_plot.setYRange(vmin, vmax, padding=0)
+        except Exception:
+            pass
+        # Title and marker
+        try:
+            self.row_plot.setTitle(f"Row {row_index}")
+        except Exception:
+            pass
+        if x_index is None:
+            x_index = self.last_cursor_x
+        try:
+            self.row_xline.setPos(int(x_index))
+        except Exception:
+            pass
 
     # ----- Key handling -----
     def keyPressEvent(self, event):
