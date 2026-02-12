@@ -1,6 +1,12 @@
 from .physics import BHModel, Branch, MolecularConstants
 from .dataio import load_v00_wavelengths
 from .fit import BHFitter
+from .calibration import (
+    analyze_wavelength_linearity,
+    linear_fit_residuals,
+    plot_linearity_summary,
+    plot_fiber_line_fits,
+)
 
 from .instruments.vis133m import Vis133M
 
@@ -13,6 +19,10 @@ __all__ = [
     "MolecularConstants",
     "load_v00_wavelengths",
     "BHFitter",
+    "analyze_wavelength_linearity",
+    "linear_fit_residuals",
+    "plot_linearity_summary",
+    "plot_fiber_line_fits",
     "Vis133M",
     "plotting",
     "use_dark",
