@@ -172,6 +172,8 @@ class FitsViewer(QtWidgets.QMainWindow):
 
         toolbar = self.addToolBar("help")
         toolbar.addAction(help_action)
+        # Crosshair state (toggle via key binding 'C')
+        self.crosshair_enabled = True
     # ----- UI Helpers -----
     def _update_title(self):
         asp = "EQUAL" if self.aspect_equal else "AUTO"
@@ -227,8 +229,9 @@ class FitsViewer(QtWidgets.QMainWindow):
             if vb is None:
                 return
             mouse_point = vb.mapSceneToView(pos)
-            x = int(round(mouse_point.x()))
-            y = int(round(mouse_point.y()))
+            # Map to pixel centers: pixels are centered at half-integer positions
+            x = int(np.floor(mouse_point.x() + 0.5))
+            y = int(np.floor(mouse_point.y() + 0.5))
             # clamp
             if x < 0 or y < 0 or x >= self.width or y >= self.height:
                 self.text_item.setText('')
@@ -237,8 +240,10 @@ class FitsViewer(QtWidgets.QMainWindow):
                 val = float(self.data[self.frame_index, y, x])
             except Exception:
                 val = float('nan')
-            self.vline.setPos(x)
-            self.hline.setPos(y)
+            if self.crosshair_enabled:
+                # place lines through pixel center
+                self.vline.setPos(x + 0.5)
+                self.hline.setPos(y + 0.5)
             # small HTML-ish text for clarity
             try:
                 self.text_item.setHtml(f"<div style='color: white;'>x={x} y={y}<br>val={val:.4g}</div>")
@@ -250,11 +255,12 @@ class FitsViewer(QtWidgets.QMainWindow):
             x_min = vr[0][0]
             y_max = vr[1][1]
             self.text_item.setPos(x_min, y_max)
-            # Update row profile plot when row changes or x moves
-            if y != self.last_cursor_y or x != self.last_cursor_x:
-                self.last_cursor_y = y
-                self.last_cursor_x = x
-                self._update_row_plot(y, x)
+            # Update row profile plot only if crosshair is enabled
+            if self.crosshair_enabled:
+                if y != self.last_cursor_y or x != self.last_cursor_x:
+                    self.last_cursor_y = y
+                    self.last_cursor_x = x
+                    self._update_row_plot(y, x)
         except Exception:
             # be robust to any binding differences
             return
@@ -297,7 +303,16 @@ class FitsViewer(QtWidgets.QMainWindow):
         if x_index is None:
             x_index = self.last_cursor_x
         try:
-            self.row_xline.setPos(int(x_index))
+            # place row plot x marker at pixel center
+            self.row_xline.setPos(int(x_index) + 0.5)
+        except Exception:
+            pass
+
+    def _set_crosshair_enabled(self, enabled: bool):
+        self.crosshair_enabled = bool(enabled)
+        try:
+            self.vline.setVisible(self.crosshair_enabled)
+            self.hline.setVisible(self.crosshair_enabled)
         except Exception:
             pass
 
@@ -327,6 +342,9 @@ class FitsViewer(QtWidgets.QMainWindow):
             self._update_image()
         elif key == QtCore.Qt.Key.Key_H:
             self._toggle_histogram_panel()
+        elif key == QtCore.Qt.Key.Key_C:
+            # Toggle crosshair with 'C'
+            self._set_crosshair_enabled(not self.crosshair_enabled)
         elif key == QtCore.Qt.Key.Key_E:
             self.aspect_equal = not self.aspect_equal
             self._update_image()
@@ -376,6 +394,7 @@ class FitsViewer(QtWidgets.QMainWindow):
               <tr><td>; / '</td><td>High percentile -1 / +1</td></tr>
               <tr><td>H</td><td>Toggle histogram panel</td></tr>
               <tr><td>E</td><td>Toggle aspect (equal / auto)</td></tr>
+              <tr><td>C</td><td>Cursor on/off</td></tr>
               <tr><td>S</td><td>Save current frame as PNG</td></tr>
               <tr><td>Q or Esc</td><td>Quit</td></tr>
             </table>

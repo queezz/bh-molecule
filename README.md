@@ -32,5 +32,5 @@ source /Users/queezz/venvs/bh/bin/activate
 ```
 
 ```powershell
-ls $env:USERPROFILE\.venvs\echelle\Scripts
+& $env:USERPROFILE\.venvs\example-app\Scripts\Activate.ps1
 ```
