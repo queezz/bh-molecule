@@ -25,3 +25,12 @@ y = model.full_fit_model(x, C=1.0, T_rot=2000, dx=0.0, w_inst=0.02)
 # Generate a spectrum and save as CSV
 bh-spectra-csv --C 5.0 --T_rot 3500 --out spectrum.csv
 ```
+
+## Venv
+```bash
+source /Users/queezz/venvs/bh/bin/activate
+```
+
+```powershell
+ls $env:USERPROFILE\.venvs\echelle\Scripts
+```
