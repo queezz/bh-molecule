@@ -1,7 +1,13 @@
 import numpy as np
-import pandas as pd
 from astropy.io import fits
 from typing import NamedTuple
+
+from .wavecal import (
+    load_wavecal_csv,
+    csv_to_linear_formulas,
+    measure_peak_from_cube as _measure_peak_from_cube,
+    compute_wavelength_shift as _compute_wavelength_shift,
+)
 
 
 class FCPShape(NamedTuple):
@@ -17,22 +23,32 @@ class Vis133M:
     r"""Minimal loader/processor for VIS-1.33 m data with per-channel wavecal.
 
     This class wraps a FITS data cube produced by the VIS-1.33 m instrument and
-    a per-channel wavelength calibration CSV. It provides convenient accessors
-    and plotting helpers for frames, channels and pixels, plus simple dark
-    subtraction and time-axis helpers.
+    a per-channel wavelength calibration (CSV or analytic formula). It provides
+    convenient accessors and plotting helpers for frames, channels and pixels,
+    plus simple dark subtraction and time-axis helpers.
 
     Parameters
     ----------
     fits_path : str
         Path to a FITS file containing a 3D data cube with shape ``(F, C, P)``
         (frames, channels, pixels).
-    wavecal_csv : str
-        Path to a CSV file containing per-channel wavelength calibration. The
-        first column must contain channel indices (0-based preferred, 1-based
-        accepted). Remaining columns are interpreted as wavelength values [nm]
-        for each pixel.
+    wavecal : str | None
+        Path to a CSV file containing per-channel wavelength calibration, or
+        None if using explicit formula (slopes, intercepts). The first column
+        must contain channel indices (0-based preferred, 1-based accepted).
+        Remaining columns are wavelength values [nm] per pixel.
+    wavecal_mode : {"formula", "csv"}, optional
+        "formula" (default): compute wavelength from λ(x) = a*x + b + Δλ per
+        channel. If wavecal is a path, load CSV and convert to formulas.
+        "csv": use CSV table directly for pixel→wavelength lookup (legacy).
     scale : float, optional
         Multiplicative scale factor applied to the cube data (default 1.0).
+    slopes : ndarray | None
+        Per-channel slopes [nm/pixel] for formula mode. Required when
+        wavecal=None and wavecal_mode="formula".
+    intercepts : ndarray | None
+        Per-channel intercepts [nm] for formula mode. Required when
+        wavecal=None and wavecal_mode="formula".
 
     Attributes
     ----------
@@ -40,6 +56,8 @@ class Vis133M:
         The data cube of shape ``(F, C, P)``.
     wl_nm : ndarray
         Per-channel wavelength array with shape ``(C, P)`` in nanometres.
+    wavecal_shift : float
+        Global wavelength shift Δλ [nm] applied in formula mode.
     header : dict
         FITS header converted to a dict.
     exptime : float | None
@@ -49,7 +67,16 @@ class Vis133M:
         indices are used for plotting/time axes.
     """
 
-    def __init__(self, fits_path: str, wavecal_csv: str, scale: float = 1.0):
+    def __init__(
+        self,
+        fits_path: str,
+        wavecal: str | None = None,
+        scale: float = 1.0,
+        *,
+        wavecal_mode: str = "csv",
+        slopes: np.ndarray | None = None,
+        intercepts: np.ndarray | None = None,
+    ):
         hdu = fits.open(fits_path)[0]
         cube = np.asarray(hdu.data, dtype=float)  # (F, C, P)
         if cube.ndim != 3:
@@ -62,26 +89,161 @@ class Vis133M:
         self.time_s = None  # optional (F,) time vector in seconds
 
         F, C, P = cube.shape
-        df = pd.read_csv(wavecal_csv, header=None)
-        ch = pd.to_numeric(df.iloc[:, 0], errors="coerce").to_numpy()
-        # accept 0-based (preferred) or 1-based indices
-        is_zero_based = np.all(ch[:C] == np.arange(C))
-        is_one_based = np.all(ch[:C] == np.arange(1, C + 1))
-        if ch.size < C or not (is_zero_based or is_one_based):
-            raise ValueError("Wavecal col 0 must be channel indices 0..C-1 (or 1..C).")
-        wl = (
-            pd.to_numeric(df.iloc[:C, 1 : P + 1].stack(), errors="coerce")
-            .to_numpy()
-            .reshape(C, P)
-        )
-        if wl.shape != (C, P):
-            raise ValueError(f"Wavecal shape {wl.shape}")
-        if np.isnan(wl).any():
-            raise ValueError("Wavecal contains NaN")
-        self.wl_nm = wl  # (C, P)
+        mode = str(wavecal_mode).lower()
+        if mode not in ("formula", "csv"):
+            raise ValueError("wavecal_mode must be 'formula' or 'csv'")
+
+        self._wavecal_mode = mode
+        self.wavecal_shift = 0.0
+        self._wl_nm_csv = None  # for validation when loaded from CSV
+
+        if wavecal is not None:
+            # Load CSV: allow n_pixels=None so CSV with fewer pixels than cube works
+            # (formula mode extrapolates; csv mode requires exact match)
+            wl_csv = load_wavecal_csv(wavecal, C, P if mode == "csv" else None)
+            self._wl_nm_csv = wl_csv
+            if mode == "csv":
+                self.wl_nm = wl_csv
+                self._wavecal_slopes = None
+                self._wavecal_intercepts = None
+            else:
+                slopes, intercepts = csv_to_linear_formulas(wl_csv)
+                self._wavecal_slopes = np.asarray(slopes, dtype=float)
+                self._wavecal_intercepts = np.asarray(intercepts, dtype=float)
+                self.wl_nm = self._compute_wl_formula()
+        else:
+            if mode == "csv":
+                raise ValueError("wavecal is required when wavecal_mode='csv'")
+            if slopes is None or intercepts is None:
+                raise ValueError("slopes and intercepts required when wavecal=None")
+            self._wavecal_slopes = np.asarray(slopes, dtype=float)
+            self._wavecal_intercepts = np.asarray(intercepts, dtype=float)
+            if self._wavecal_slopes.shape != (C,) or self._wavecal_intercepts.shape != (C,):
+                raise ValueError("slopes and intercepts must have shape (C,)")
+            self.wl_nm = self._compute_wl_formula()
 
         self._dark = None  # None | scalar | (F,) | (C,) | (F,C) | ("idx", f, c)
         self._baseline_zero = False  # If True, subtract per-row minima for spectra
+
+    def _compute_wl_formula(self) -> np.ndarray:
+        """Compute wl_nm from λ(x) = a*x + b + Δλ."""
+        F, C, P = self.cube.shape
+        x = np.arange(P, dtype=float)
+        wl = np.empty((C, P))
+        for c in range(C):
+            a = self._wavecal_slopes[c]
+            b = self._wavecal_intercepts[c]
+            wl[c] = a * x + b + self.wavecal_shift
+        return wl
+
+    def set_wavecal_shift(self, delta_lambda_nm: float) -> None:
+        """Set the global wavelength shift applied in formula mode.
+
+        λ'(x) = a*x + b + Δλ
+
+        Parameters
+        ----------
+        delta_lambda_nm : float
+            Shift in nanometres.
+        """
+        if self._wavecal_mode != "formula":
+            raise RuntimeError("wavecal_shift only applies in formula mode")
+        self.wavecal_shift = float(delta_lambda_nm)
+        self.wl_nm = self._compute_wl_formula()
+
+    def measure_peak(
+        self,
+        channel: int,
+        pixel_window: tuple[int, int] | None = None,
+        average_frames: bool = True,
+    ) -> tuple[float, float, float] | None:
+        """Fit strongest peak (e.g. H-γ) in a channel spectrum.
+
+        Parameters
+        ----------
+        channel : int
+            Channel index.
+        pixel_window : tuple of int, optional
+            (start, stop) pixel indices. If None, use full spectrum.
+        average_frames : bool, optional
+            If True, average over frames before fitting (default True).
+
+        Returns
+        -------
+        result : tuple or None
+            (peak_pixel, peak_amplitude, sigma) if fit succeeds.
+        """
+        return _measure_peak_from_cube(
+            self.cube,
+            channel,
+            pixel_window=pixel_window,
+            average_frames=average_frames,
+            baseline_zero=self._baseline_zero,
+        )
+
+    def compute_wavelength_shift_from_peaks(
+        self,
+        peak_pixel_old: float,
+        peak_pixel_new: float,
+        channel: int = 0,
+    ) -> float:
+        """Compute wavelength shift Δλ from pixel shifts and channel dispersion.
+
+        Δλ = a_c * (peak_pixel_new - peak_pixel_old)
+
+        Parameters
+        ----------
+        peak_pixel_old : float
+            Peak pixel in reference (old) dataset.
+        peak_pixel_new : float
+            Peak pixel in new dataset.
+        channel : int, optional
+            Channel index for slope (default 0).
+
+        Returns
+        -------
+        delta_lambda : float
+            Wavelength shift in nm.
+        """
+        if self._wavecal_slopes is not None:
+            slope = self._wavecal_slopes[channel]
+        elif self._wl_nm_csv is not None:
+            slopes, _ = csv_to_linear_formulas(self._wl_nm_csv)
+            slope = slopes[channel]
+        else:
+            raise RuntimeError("Calibration (CSV or formula) required for slope")
+        return _compute_wavelength_shift(peak_pixel_old, peak_pixel_new, slope)
+
+    def compare_calibration_csv_vs_formula(self, channel: int) -> tuple[float, float]:
+        """Compare CSV and formula calibration for a channel.
+
+        Requires that calibration was loaded from CSV. When in csv mode,
+        formula is computed from the same CSV for comparison.
+        Compares only over the pixel range present in the CSV (cube may have more).
+
+        Returns
+        -------
+        max_abs_delta : float
+            max |λ_csv - λ_formula| over pixels.
+        rmse : float
+            Root-mean-square error between CSV and formula.
+        """
+        if self._wl_nm_csv is None:
+            raise RuntimeError("No CSV calibration loaded for comparison")
+        wl_csv = self._wl_nm_csv[channel]
+        n_pix = wl_csv.size
+        if self._wavecal_slopes is not None:
+            # formula mode: use current wl_nm (includes shift), slice to CSV extent
+            wl_form = self.wl_nm[channel, :n_pix]
+        else:
+            # csv mode: compute formula from CSV for comparison
+            slopes, intercepts = csv_to_linear_formulas(self._wl_nm_csv)
+            x = np.arange(n_pix, dtype=float)
+            wl_form = slopes[channel] * x + intercepts[channel]
+        delta = wl_csv - wl_form
+        max_abs = float(np.max(np.abs(delta)))
+        rmse = float(np.sqrt(np.mean(delta**2)))
+        return max_abs, rmse
 
     @property
     def shape(self):
