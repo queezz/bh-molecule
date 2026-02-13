@@ -3,6 +3,8 @@ docs_dir: docs
 
 theme:
   name: material
+  logo: assets/h2icon.svg
+  favicon: assets/h2icon.svg    
   features:
     - navigation.instant
     - navigation.tracking
@@ -80,7 +82,11 @@ nav:
       - physics.py: api/physics.md
       - constants.py: api/constants.md
       - fit.py: api/fit.md
-      - instruments.py: api/vis133m.md
+      - calibration.py: api/calibration.md
+      - dataio.py: api/dataio.md
+      - Vis133M: api/vis133m.md
+      - wavecal.py: api/wavecal.md
+      - plotting: api/plotting.md
   - Examples:
       - Quickstart: examples/02_quickstart.ipynb
       - Load spectral data: examples/03_load_spectral_data.ipynb

@@ -2,6 +2,4 @@
 
 ::: bh_molecule.instruments.vis133m
 
-A short API reference for the `Vis133M` loader/processor.
-
-
+Loader and processor for VIS-1.33 m FITS data cubes with per-channel wavelength calibration.
