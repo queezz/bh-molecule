@@ -9,26 +9,28 @@
       
       
       
+        <link rel="prev" href="../fit/">
       
-        <link rel="next" href="phys/">
+      
+        <link rel="next" href="../dataio/">
       
       
         
       
       
-      <link rel="icon" href="assets/h2icon.svg">
+      <link rel="icon" href="../../assets/h2icon.svg">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
-        <title>BH Molecule</title>
+        <title>calibration.py - BH Molecule</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -47,11 +49,11 @@
       
     
     
-      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="styles/brand.css">
+      <link rel="stylesheet" href="../../styles/brand.css">
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -76,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#bh-molecule" class="md-skip">
+        <a href="#calibrationpy-api" class="md-skip">
           Skip to content
         </a>
       
@@ -92,9 +94,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="BH Molecule" class="md-header__button md-logo" aria-label="BH Molecule" data-md-component="logo">
+    <a href="../.." title="BH Molecule" class="md-header__button md-logo" aria-label="BH Molecule" data-md-component="logo">
       
-  <img src="assets/h2icon.svg" alt="logo">
+  <img src="../../assets/h2icon.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -111,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              calibration.py
             
           </span>
         </div>
@@ -227,9 +229,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="BH Molecule" class="md-nav__button md-logo" aria-label="BH Molecule" data-md-component="logo">
+    <a href="../.." title="BH Molecule" class="md-nav__button md-logo" aria-label="BH Molecule" data-md-component="logo">
       
-  <img src="assets/h2icon.svg" alt="logo">
+  <img src="../../assets/h2icon.svg" alt="logo">
 
     </a>
     BH Molecule
@@ -253,37 +255,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -299,48 +274,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Installation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick start
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -352,7 +285,7 @@
   
   
     <li class="md-nav__item">
-      <a href="phys/" class="md-nav__link">
+      <a href="../../phys/" class="md-nav__link">
         
   
   
@@ -376,18 +309,20 @@
       
   
   
+    
   
   
+  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -408,7 +343,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -426,7 +361,7 @@
   
   
     <li class="md-nav__item">
-      <a href="api/physics/" class="md-nav__link">
+      <a href="../physics/" class="md-nav__link">
         
   
   
@@ -454,7 +389,7 @@
   
   
     <li class="md-nav__item">
-      <a href="api/constants/" class="md-nav__link">
+      <a href="../constants/" class="md-nav__link">
         
   
   
@@ -482,7 +417,7 @@
   
   
     <li class="md-nav__item">
-      <a href="api/fit/" class="md-nav__link">
+      <a href="../fit/" class="md-nav__link">
         
   
   
@@ -507,10 +442,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="api/calibration/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    calibration.py
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -526,6 +488,104 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bh_molecule.calibration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;calibration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" calibration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.calibration-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.calibration.analyze_wavelength_linearity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;analyze_wavelength_linearity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.calibration.linear_fit_residuals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;linear_fit_residuals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.calibration.plot_fiber_line_fits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;plot_fiber_line_fits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.calibration.plot_linearity_summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;plot_linearity_summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -538,7 +598,7 @@
   
   
     <li class="md-nav__item">
-      <a href="api/dataio/" class="md-nav__link">
+      <a href="../dataio/" class="md-nav__link">
         
   
   
@@ -566,7 +626,7 @@
   
   
     <li class="md-nav__item">
-      <a href="api/vis133m/" class="md-nav__link">
+      <a href="../vis133m/" class="md-nav__link">
         
   
   
@@ -594,7 +654,7 @@
   
   
     <li class="md-nav__item">
-      <a href="api/wavecal/" class="md-nav__link">
+      <a href="../wavecal/" class="md-nav__link">
         
   
   
@@ -622,7 +682,7 @@
   
   
     <li class="md-nav__item">
-      <a href="api/plotting/" class="md-nav__link">
+      <a href="../plotting/" class="md-nav__link">
         
   
   
@@ -704,7 +764,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/02_quickstart/" class="md-nav__link">
+      <a href="../../examples/02_quickstart/" class="md-nav__link">
         
   
   
@@ -732,7 +792,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/03_load_spectral_data/" class="md-nav__link">
+      <a href="../../examples/03_load_spectral_data/" class="md-nav__link">
         
   
   
@@ -760,7 +820,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/04_bh_fit/" class="md-nav__link">
+      <a href="../../examples/04_bh_fit/" class="md-nav__link">
         
   
   
@@ -795,7 +855,7 @@
   
   
     <li class="md-nav__item">
-      <a href="cli_commands/" class="md-nav__link">
+      <a href="../../cli_commands/" class="md-nav__link">
         
   
   
@@ -869,7 +929,7 @@
   
   
     <li class="md-nav__item">
-      <a href="dev-install-guide/" class="md-nav__link">
+      <a href="../../dev-install-guide/" class="md-nav__link">
         
   
   
@@ -897,7 +957,7 @@
   
   
     <li class="md-nav__item">
-      <a href="venv-outside-synced-folders/" class="md-nav__link">
+      <a href="../../venv-outside-synced-folders/" class="md-nav__link">
         
   
   
@@ -952,24 +1012,80 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#bh_molecule.calibration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation
+        <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;calibration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" calibration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.calibration-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.calibration.analyze_wavelength_linearity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;analyze_wavelength_linearity
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.calibration.linear_fit_residuals" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick start
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;linear_fit_residuals
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.calibration.plot_fiber_line_fits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;plot_fiber_line_fits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.calibration.plot_linearity_summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;plot_linearity_summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -993,34 +1109,181 @@
   
 
 
-<h1 id="bh-molecule">BH Molecule<a class="headerlink" href="#bh-molecule" title="Permanent link">&para;</a></h1>
-<p>This project provides tools to model and fit the A–X band spectra of boron hydride (BH). It began life as a set of Jupyter notebooks and has since been refactored into a Python package.</p>
-<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<p>You can install <strong>BH Molecule</strong> locally or directly from GitHub. Both methods will make the CLI commands (<code>bh-spectra</code>, <code>bh-spectra-csv</code>, <code>bh-spectra-plot</code>) available in your terminal.</p>
-<p><strong>From a cloned repository</strong>:</p>
-<p><div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>.
-</code></pre></div>
-Or, fordevelopment:
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
-</code></pre></div></p>
-<p>See the <a href="dev-install-guide/">Dev Install Guide</a> for more details.</p>
-<p><strong>Directly from GitHub</strong>:</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/queezz/bh-molecule.git
-</code></pre></div>
-<p>After installation, try:</p>
-<div class="highlight"><pre><span></span><code>bh-spectra<span class="w"> </span>--xmin<span class="w"> </span><span class="m">432</span>.8<span class="w"> </span>--xmax<span class="w"> </span><span class="m">434</span>.2<span class="w"> </span>--points<span class="w"> </span><span class="m">4000</span><span class="w"> </span>--out<span class="w"> </span>spectrum.npz
-</code></pre></div>
-<h2 id="quick-start">Quick start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
-<p>Use the Python API:</p>
-<p><strong>Python example:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">bh_molecule.dataio</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_v00_wavelengths</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">bh_molecule.physics</span><span class="w"> </span><span class="kn">import</span> <span class="n">BHModel</span>
+<h1 id="calibrationpy-api">calibration.py API<a class="headerlink" href="#calibrationpy-api" title="Permanent link">&para;</a></h1>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">BHModel</span><span class="p">(</span><span class="n">load_v00_wavelengths</span><span class="p">())</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">432.8</span><span class="p">,</span> <span class="mf">434.2</span><span class="p">,</span> <span class="mi">4000</span><span class="p">)</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">full_fit_model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">T_rot</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">w_inst</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
-</code></pre></div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="bh_molecule.calibration" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <code>bh_molecule.calibration</code>
+
+
+<a href="#bh_molecule.calibration" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+        <p>Wavelength calibration linearity analysis and diagnostics.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+<h3 id="bh_molecule.calibration-functions">Functions<a href="#bh_molecule.calibration-functions" class="headerlink" title="Permanent link">&para;</a></h3>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bh_molecule.calibration.analyze_wavelength_linearity" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">analyze_wavelength_linearity</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span></code>
+
+<a href="#bh_molecule.calibration.analyze_wavelength_linearity" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Analyze wavelength linearity per fiber.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>m</code>
+            </td>
+            <td>
+                  <code>(<span title="ndarray">ndarray</span>, <span title="shape">shape</span>(<span title="n_fibers">n_fibers</span>, <span title="n_pixels">n_pixels</span>))</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Wavelength calibration matrix.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>result</code></td>            <td>
+                  <code>dict with keys:</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>slopes      : (n_fibers,) ndarray
+intercepts  : (n_fibers,) ndarray
+r2          : (n_fibers,) ndarray
+rmse        : (n_fibers,) ndarray</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bh_molecule.calibration.linear_fit_residuals" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">linear_fit_residuals</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">slopes</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">intercepts</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></code>
+
+<a href="#bh_molecule.calibration.linear_fit_residuals" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return residual array Δλ = λ - (a*x + b).</p>
+<p>Shape: same as m (n_fibers, n_pixels).</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bh_molecule.calibration.plot_fiber_line_fits" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">plot_fiber_line_fits</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">slopes</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">intercepts</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">fiber_indices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ncols</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span></code>
+
+<a href="#bh_molecule.calibration.plot_fiber_line_fits" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Plot data + linear fit for selected fibers in a grid.</p>
+<p>If fiber_indices is None, select worst RMSE fibers.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bh_molecule.calibration.plot_linearity_summary" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">plot_linearity_summary</span><span class="p">(</span><span class="n">slopes</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">r2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">rmse</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span></code>
+
+<a href="#bh_molecule.calibration.plot_linearity_summary" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Summary plots: slope vs fiber, RMSE distribution.</p>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><p>Wavelength calibration linearity analysis and diagnostics for multi-fiber spectrographs.</p>
 
 
 
@@ -1070,12 +1333,12 @@ Or, fordevelopment:
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.instant", "navigation.tracking", "content.code.copy"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
-        <script src="javascripts/mathjax.js"></script>
+        <script src="../../javascripts/mathjax.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       
