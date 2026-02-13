@@ -32,5 +32,27 @@ source /Users/queezz/venvs/bh/bin/activate
 ```
 
 ```powershell
-& $env:USERPROFILE\.venvs\example-app\Scripts\Activate.ps1
+& $env:USERPROFILE\.venvs\bh\Scripts\Activate.ps1
 ```
+
+## Fits viewer
+
+For fast browsing of FITS files, install [fits-viewer](https://github.com/queezz/fits-viewer) directly from GitHub:
+
+```bash
+pip install git+https://github.com/queezz/fits-viewer.git
+```
+
+**Usage:**
+
+```bash
+fits-viewer path/to/file.fits --lo 1 --hi 99 --win 1200x800
+```
+
+**Options:**
+- `--lo`: Low percentile for initial contrast (default: 1.0)
+- `--hi`: High percentile for initial contrast (default: 99.0)
+- `--win WxH`: Initial window size in pixels (e.g., 1200x800)
+- `--equal`: Lock aspect ratio to equal
+
+This tool is particularly useful for quickly navigating through spectroscopy FITS files with multiple frames.
