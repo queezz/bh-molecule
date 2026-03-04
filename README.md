@@ -4,32 +4,23 @@ The A–X band arises from electronic transitions between the A ¹Π excited sta
 
 Originally developed as a set of Jupyter notebooks, this codebase is now a Python package with both an API and CLI tools.
 
+**Recommended:** Use a Python virtual environment when installing and running `bh-molecule`. If this repository is synced via Dropbox or another cloud service, create the environment **outside** the repo (for example in `~/.venvs/bh-molecule` on both Windows and macOS). See the [Venv](#venv) section below for details.
+
 📄[**Full documentation**](https://queezz.github.io/bh-molecule/)
 
 ## Table of Contents
 
+- [Table of Contents](#table-of-contents)
 - [Installation](#installation)
+  - [Install Package](#install-package)
 - [Package Overview](#package-overview)
 - [Python Example](#python-example)
 - [Fits Viewer](#fits-viewer)
+- [Venv](#venv)
+  - [Create virtual environment](#create-virtual-environment)
+  - [Activate virtual environment](#activate-virtual-environment)
 
 ## Installation
-
-### Create Virtual Environment
-
-**Linux / macOS:**
-
-```bash
-python3 -m venv ~/.venvs/bh
-source ~/.venvs/bh/bin/activate
-```
-
-**Windows PowerShell:**
-
-```powershell
-python -m venv "$HOME/.venvs/bh"
-& $env:USERPROFILE\.venvs\bh\Scripts\Activate.ps1
-```
 
 ### Install Package
 
@@ -90,3 +81,35 @@ fits-viewer path/to/file.fits --lo 1 --hi 99 --win 1200x800
 - `--equal`: Lock aspect ratio to equal
 
 This tool is particularly useful for quickly navigating through spectroscopy FITS files with multiple frames.
+
+
+## Venv
+Using a dedicated virtual environment keeps this project isolated from your system Python and other projects. When working from a Dropbox or other cloud-synced folder, it is best to keep the virtual environment **outside** the repository to avoid syncing large or transient files. Throughout these examples we place the environment in `~/.venvs/bh-molecule` on both Windows and macOS.
+
+### Create virtual environment
+
+**Linux / macOS:**
+
+```bash
+python3 -m venv ~/.venvs/bh-molecule
+```
+
+**Windows PowerShell:**
+
+```powershell
+python -m venv "$env:USERPROFILE/.venvs/bh-molecule"
+```
+
+### Activate virtual environment
+
+**Linux / macOS:**
+
+```bash
+source ~/.venvs/bh-molecule/bin/activate
+```
+
+**Windows PowerShell:**
+
+```powershell
+& "$env:USERPROFILE/.venvs/bh-molecule/Scripts/Activate.ps1"
+```
