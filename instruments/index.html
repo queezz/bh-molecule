@@ -9,8 +9,10 @@
       
       
       
-        <link rel="prev" href="../dev-install-guide/">
+        <link rel="prev" href="../phys/">
       
+      
+        <link rel="next" href="../api/physics/">
       
       
         
@@ -21,7 +23,7 @@
     
     
       
-        <title>Venv & Sync - BH Molecule</title>
+        <title>Instruments - BH Molecule</title>
       
     
     
@@ -76,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#using-a-venv-outside-a-synced-folder-dropboxonedrivegoogle-drive" class="md-skip">
+        <a href="#instruments-and-wavelength-calibration" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Venv & Sync
+              Instruments
             
           </span>
         </div>
@@ -256,9 +258,11 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../instruments/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
   
@@ -334,12 +338,10 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
+      <li class="md-tabs__item">
         <a href="../dev-install-guide/" class="md-tabs__link">
           
   
@@ -454,10 +456,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../instruments/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instruments
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -473,6 +502,109 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-reference-calibration-csv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Reference calibration (CSV)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-polynomial-wavelength-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Polynomial wavelength model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-stored-calibration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Stored calibration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-runtime-wavelength-reconstruction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Runtime wavelength reconstruction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-central-wavelength-estimation-in-bh-experiments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Central wavelength estimation in BH experiments
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Central wavelength estimation in BH experiments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-instrument-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From instrument metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-spectral-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From spectral features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -930,29 +1062,24 @@
       
   
   
-    
   
   
-  
     
     
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -970,7 +1097,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1013,37 +1140,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Venv & Sync
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../venv-outside-synced-folders/" class="md-nav__link">
         
   
   
@@ -1059,131 +1159,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#tldr" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TL;DR
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#create-activate-the-venv" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Create &amp; activate the venv
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Create &amp; activate the venv">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#windows-powershell" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Windows (PowerShell)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#macos-linux" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        macOS / Linux
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#point-ide-to-the-external-venv" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Point IDE to the external venv
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#jupyter-notebooks-in-cursor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Jupyter notebooks in Cursor
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common tasks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#recreate-the-environment" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recreate the environment
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#notes-gotchas" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Notes &amp; gotchas
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1223,10 +1198,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#tldr" class="md-nav__link">
+  <a href="#1-reference-calibration-csv" class="md-nav__link">
     <span class="md-ellipsis">
       
-        TL;DR
+        1. Reference calibration (CSV)
       
     </span>
   </a>
@@ -1234,22 +1209,55 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#create-activate-the-venv" class="md-nav__link">
+  <a href="#2-polynomial-wavelength-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Create &amp; activate the venv
+        2. Polynomial wavelength model
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Create &amp; activate the venv">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-stored-calibration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Stored calibration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-runtime-wavelength-reconstruction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Runtime wavelength reconstruction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-central-wavelength-estimation-in-bh-experiments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Central wavelength estimation in BH experiments
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Central wavelength estimation in BH experiments">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#windows-powershell" class="md-nav__link">
+  <a href="#from-instrument-metadata" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Windows (PowerShell)
+        From instrument metadata
       
     </span>
   </a>
@@ -1257,10 +1265,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#macos-linux" class="md-nav__link">
+  <a href="#from-spectral-features" class="md-nav__link">
     <span class="md-ellipsis">
       
-        macOS / Linux
+        From spectral features
       
     </span>
   </a>
@@ -1269,61 +1277,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#point-ide-to-the-external-venv" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Point IDE to the external venv
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#jupyter-notebooks-in-cursor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Jupyter notebooks in Cursor
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common tasks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#recreate-the-environment" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recreate the environment
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#notes-gotchas" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Notes &amp; gotchas
-      
-    </span>
-  </a>
   
 </li>
       
@@ -1347,138 +1300,138 @@
   
 
 
-<h1 id="using-a-venv-outside-a-synced-folder-dropboxonedrivegoogle-drive">Using a venv <strong>outside</strong> a synced folder (Dropbox/OneDrive/Google Drive)<a class="headerlink" href="#using-a-venv-outside-a-synced-folder-dropboxonedrivegoogle-drive" title="Permanent link">&para;</a></h1>
-<p>If you keep your repo inside a synced folder, excluding <code>.venv/</code> can be unreliable or annoying. Easiest fix: <strong>create the virtual environment outside the synced tree</strong> and point your tools to it.</p>
-<p>This page shows how.</p>
+<h1 id="instruments-and-wavelength-calibration">Instruments and Wavelength Calibration<a class="headerlink" href="#instruments-and-wavelength-calibration" title="Permanent link">&para;</a></h1>
+<p>This page describes how wavelength calibration for the <strong>Vis133M spectrometer</strong> is generated and used during runtime.</p>
+<p>The calibration workflow is:</p>
+<div class="highlight"><pre><span></span><code>Reference CSV + reference FITS
+        ↓
+Polynomial wavelength model
+        ↓
+Stored in bh_wavecal.json
+        ↓
+Runtime wavelength reconstruction
+</code></pre></div>
+<p>The original CSV reference is only required once to build the calibration.</p>
 <hr />
-<h2 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h2>
+<h2 id="1-reference-calibration-csv">1. Reference calibration (CSV)<a class="headerlink" href="#1-reference-calibration-csv" title="Permanent link">&para;</a></h2>
+<p>The Vis133M spectrometer is initially calibrated using a CSV reference table.</p>
+<p>The CSV contains:</p>
 <ul>
-<li>Put venvs in a local directory (e.g. <code>~/.venvs</code> or <code>C:\Users\&lt;you&gt;\.venvs</code>).</li>
-<li>Create/activate the venv there.</li>
-<li>Tell Cursor/VS Code to use that interpreter.</li>
-<li>Keep <code>.venv/</code> in <code>.gitignore</code> in case someone creates one inside the repo.</li>
+<li><strong>1024 detector pixels</strong> in the dispersion direction  </li>
+<li><strong>multiple spatial channels</strong>, each containing wavelength values for all pixels</li>
 </ul>
-<hr />
-<h2 id="create-activate-the-venv">Create &amp; activate the venv<a class="headerlink" href="#create-activate-the-venv" title="Permanent link">&para;</a></h2>
-<h3 id="windows-powershell">Windows (PowerShell)<a class="headerlink" href="#windows-powershell" title="Permanent link">&para;</a></h3>
-<p><strong>1) Pick a home for all your venvs</strong></p>
-<div class="highlight"><pre><span></span><code><span class="nv">$ENV_DIR</span> <span class="p">=</span> <span class="s2">&quot;$env:USERPROFILE\.venvs&quot;</span>
-<span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Force</span> <span class="nv">$ENV_DIR</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<p>The file is loaded using:</p>
+<div class="highlight"><pre><span></span><code>load_wavecal_csv()
 </code></pre></div>
-<p><strong>2) Create the venv (choose ONE of these)</strong></p>
-<p>Option A — with the Python launcher:</p>
-<div class="highlight"><pre><span></span><code><span class="n">py</span> <span class="p">-</span><span class="n">3</span><span class="p">.</span><span class="n">12</span> <span class="n">-m</span> <span class="n">venv</span> <span class="s2">&quot;$ENV_DIR\bh-molecule&quot;</span>
+<p>which returns a wavelength matrix:</p>
+<div class="highlight"><pre><span></span><code>(n_channels, n_pixels)
 </code></pre></div>
-<p>Option B — with <code>python</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="n">python</span> <span class="n">-m</span> <span class="n">venv</span> <span class="s2">&quot;$ENV_DIR\bh-molecule&quot;</span>
-</code></pre></div>
-<p><strong>3) Activate</strong></p>
-<div class="highlight"><pre><span></span><code><span class="p">&amp;</span> <span class="s2">&quot;$ENV_DIR\bh-molecule\Scripts\Activate.ps1&quot;</span>
-</code></pre></div>
-<p><strong>4) Upgrade pip</strong></p>
-<div class="highlight"><pre><span></span><code><span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-U</span> <span class="n">pip</span>
-</code></pre></div>
-<p><strong>5) Install this project (dev extras)</strong></p>
-<div class="highlight"><pre><span></span><code><span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-e</span> <span class="s2">&quot;.[dev]&quot;</span>
-</code></pre></div>
-<blockquote>
-<p>If activation is blocked on Windows, run once:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Set-ExecutionPolicy</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span> <span class="n">RemoteSigned</span>
-</code></pre></div>
-</blockquote>
-<h3 id="macos-linux">macOS / Linux<a class="headerlink" href="#macos-linux" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nv">ENV_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.venvs&quot;</span>
-mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ENV_DIR</span><span class="s2">&quot;</span>
-
-python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ENV_DIR</span><span class="s2">/bh-molecule&quot;</span>
-<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ENV_DIR</span><span class="s2">/bh-molecule/bin/activate&quot;</span>
-
-python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>pip
-python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
-</code></pre></div>
-<p>Deactivate any time:</p>
-<div class="highlight"><pre><span></span><code>deactivate
+<p>For diagnostics or verification, the CSV can be converted to simple linear fits using:</p>
+<div class="highlight"><pre><span></span><code>csv_to_linear_formulas()
 </code></pre></div>
 <hr />
-<h2 id="point-ide-to-the-external-venv">Point IDE to the external venv<a class="headerlink" href="#point-ide-to-the-external-venv" title="Permanent link">&para;</a></h2>
-<ol>
-<li><strong>Ctrl+Shift+P → “Python: Select Interpreter” → “Enter interpreter path”</strong></li>
-</ol>
-<ul>
-<li>Windows:
-     <code>C:\Users\&lt;you&gt;\.venvs\bh-molecule\Scripts\python.exe</code></li>
-<li>macOS/Linux:
-     <code>/Users/&lt;you&gt;/.venvs/bh-molecule/bin/python</code></li>
-</ul>
-<ol>
-<li><strong>Persist for this workspace</strong> (recommended):</li>
-</ol>
-<p>Create <code>.vscode/settings.json</code>:</p>
-<p><strong>Windows</strong></p>
+<h2 id="2-polynomial-wavelength-model">2. Polynomial wavelength model<a class="headerlink" href="#2-polynomial-wavelength-model" title="Permanent link">&para;</a></h2>
+<p>To avoid loading the CSV at runtime, the wavelength solution is compressed into a <strong>polynomial mapping</strong>.</p>
+<p>For a chosen detector channel:</p>
+<p>λ(x) = c₀ + c₁ x + c₂ x² + ...</p>
+<p>where</p>
+<div class="highlight"><pre><span></span><code>x = pixel - pixel_reference
+</code></pre></div>
+<p>The coefficients are obtained by least-squares fitting to the CSV reference wavelengths.</p>
+<p>The helper function:</p>
+<div class="highlight"><pre><span></span><code>compute_calibration_from_reference(csv_path, fits_path)
+</code></pre></div>
+<p>returns:</p>
+<div class="highlight"><pre><span></span><code>{
+  reference_cw_nm
+  coefficients
+  formula_type
+  pixel_reference
+}
+</code></pre></div>
+<hr />
+<h2 id="3-stored-calibration">3. Stored calibration<a class="headerlink" href="#3-stored-calibration" title="Permanent link">&para;</a></h2>
+<p>The calibration is written to:</p>
+<div class="highlight"><pre><span></span><code>bh_molecule/_resources/bh_wavecal.json
+</code></pre></div>
+<p>Example:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;python.defaultInterpreterPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${env:USERPROFILE}\\.venvs\\bh-molecule\\Scripts\\python.exe&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;python.terminal.activateEnvironment&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="nt">&quot;reference_cw_nm&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">433.0</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;coefficients&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">430.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.02</span><span class="p">,</span><span class="w"> </span><span class="mf">1e-7</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;formula_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;polynomial&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;pixel_reference&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">512</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><strong>macOS/Linux</strong></p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;python.defaultInterpreterPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${env:HOME}/.venvs/bh-molecule/bin/python&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;python.terminal.activateEnvironment&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
-<span class="p">}</span>
+<p>The file is normally generated using:</p>
+<div class="highlight"><pre><span></span><code>tools/build_wavecal.py
 </code></pre></div>
-<p>(Optional) Make external venvs auto-discoverable in the picker:</p>
+<p>which:</p>
+<ol>
+<li>reads the reference CSV</li>
+<li>fits the polynomial</li>
+<li>writes <code>bh_wavecal.json</code></li>
+</ol>
+<hr />
+<h2 id="4-runtime-wavelength-reconstruction">4. Runtime wavelength reconstruction<a class="headerlink" href="#4-runtime-wavelength-reconstruction" title="Permanent link">&para;</a></h2>
+<p>During normal data processing the CSV reference is <strong>not used</strong>.</p>
+<p>Instead:</p>
+<ol>
+<li>Load calibration
+<div class="highlight"><pre><span></span><code>cfg = load_bh_wavecal_json()
+</code></pre></div></li>
+<li>
+<p>Determine the central wavelength (CW)</p>
 <ul>
-<li>Windows (User Settings): <code>"python.venvPath": "C:\\Users\\&lt;you&gt;\\.venvs"</code></li>
-<li>macOS/Linux (User Settings): <code>"python.venvPath": "~/.venvs"</code></li>
+<li>from FITS header (<code>get_cw_from_header</code>)</li>
+<li>or from spectral features (<code>estimate_cw_from_features</code>)</li>
 </ul>
+</li>
+<li>
+<p>Generate wavelength axis
+<div class="highlight"><pre><span></span><code>apply_polynomial_wavecal(n_pixels, cw_nm=cw, wavecal=cfg)
+</code></pre></div>
+If the measured CW differs from the reference CW, the polynomial is shifted by
+<div class="highlight"><pre><span></span><code>cw_nm − reference_cw_nm
+</code></pre></div>
+preserving dispersion while adapting to the new centre wavelength.</p>
+</li>
+</ol>
 <hr />
-<h2 id="jupyter-notebooks-in-cursor">Jupyter notebooks in Cursor<a class="headerlink" href="#jupyter-notebooks-in-cursor" title="Permanent link">&para;</a></h2>
+<h2 id="5-central-wavelength-estimation-in-bh-experiments">5. Central wavelength estimation in BH experiments<a class="headerlink" href="#5-central-wavelength-estimation-in-bh-experiments" title="Permanent link">&para;</a></h2>
+<p>Typical spectra around <strong>433 nm</strong> contain two useful features:</p>
 <ul>
-<li>Kernel picker → <strong>Select Another Kernel</strong> → <strong>Python Environments</strong> → choose the same venv,
-  or run <strong>“Python: Select Interpreter to start Jupyter server”</strong> and pick it.</li>
+<li>the <strong>BH Q-branch bundle</strong></li>
+<li>the <strong>H-γ line</strong></li>
 </ul>
-<hr />
-<h2 id="common-tasks">Common tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
-<p>Install/upgrade project deps:</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>pip
-python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+<p>Two CW estimation strategies are supported.</p>
+<h3 id="from-instrument-metadata">From instrument metadata<a class="headerlink" href="#from-instrument-metadata" title="Permanent link">&para;</a></h3>
+<p>FITS headers may contain CW information:</p>
+<div class="highlight"><pre><span></span><code>CWL
+CENWAVE
+WAVELEN
+LAM_CEN
+CRVAL1
 </code></pre></div>
-<p>Add a package:</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>&lt;package&gt;
-<span class="c1"># Then record it in pyproject (e.g., optional-dependencies.dev) if needed.</span>
-</code></pre></div>
-<p>Freeze (for debugging):</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>freeze<span class="w"> </span>&gt;<span class="w"> </span>freeze.txt
-</code></pre></div>
-<hr />
-<h2 id="recreate-the-environment">Recreate the environment<a class="headerlink" href="#recreate-the-environment" title="Permanent link">&para;</a></h2>
-<p>If things drift, rebuild quickly:</p>
-<p><strong>Windows</strong></p>
-<div class="highlight"><pre><span></span><code><span class="nb">Remove-Item</span> <span class="n">-Recurse</span> <span class="n">-Force</span> <span class="s2">&quot;$env:USERPROFILE\.venvs\bh-molecule&quot;</span>
-<span class="n">python</span> <span class="n">-m</span> <span class="n">venv</span> <span class="s2">&quot;$env:USERPROFILE\.venvs\bh-molecule&quot;</span>
-<span class="p">&amp;</span> <span class="s2">&quot;$env:USERPROFILE\.venvs\bh-molecule\Scripts\Activate.ps1&quot;</span>
-<span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-U</span> <span class="n">pip</span>
-<span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-e</span> <span class="s2">&quot;.[dev]&quot;</span>
-</code></pre></div>
-<p><strong>macOS / Linux</strong></p>
-<div class="highlight"><pre><span></span><code>rm<span class="w"> </span>-rf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.venvs/bh-molecule&quot;</span>
-python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.venvs/bh-molecule&quot;</span>
-<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.venvs/bh-molecule/bin/activate&quot;</span>
-python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>pip
-python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+<p>These are scanned by:</p>
+<div class="highlight"><pre><span></span><code>get_cw_from_header()
 </code></pre></div>
 <hr />
-<h2 id="notes-gotchas">Notes &amp; gotchas<a class="headerlink" href="#notes-gotchas" title="Permanent link">&para;</a></h2>
+<h3 id="from-spectral-features">From spectral features<a class="headerlink" href="#from-spectral-features" title="Permanent link">&para;</a></h3>
+<p>If metadata is unavailable, CW can be estimated from the measured spectrum.</p>
+<div class="highlight"><pre><span></span><code>estimate_cw_from_features(spectrum)
+</code></pre></div>
+<p>This method:</p>
+<ol>
+<li>averages over non-dispersion axes</li>
+<li>finds the dominant peak</li>
+<li>converts the pixel index to wavelength using the polynomial calibration</li>
+</ol>
+<p>More precise workflows may additionally fit:</p>
 <ul>
-<li><strong>Synced folders:</strong> keeping venvs outside avoids sync noise and conflicts (Dropbox/OneDrive/Drive).</li>
-<li><strong>.gitignore:</strong> add <code>.venv/</code> so a local in-repo venv never gets committed:</li>
+<li>the <strong>H-γ peak</strong></li>
+<li>the <strong>BH Q-branch spectrum</strong></li>
 </ul>
-<p><div class="highlight"><pre><span></span><code>.venv/
-</code></pre></div>
-* <strong>Windows execution policy:</strong> if activation is blocked, run once:</p>
-<p><div class="highlight"><pre><span></span><code><span class="nb">Set-ExecutionPolicy</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span> <span class="n">RemoteSigned</span>
-</code></pre></div>
-* <strong>Multiple machines:</strong> each machine should have its own venv; reinstall with <code>-e ".[dev]"</code>.</p>
+<p>to refine the CW estimate.</p>
 
 
 
