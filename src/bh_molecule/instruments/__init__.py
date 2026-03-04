@@ -11,6 +11,12 @@ from .wavecal import (
     fit_peak_gaussian,
     measure_peak_from_cube,
     compute_wavelength_shift,
+    compute_calibration_from_reference,
+    save_bh_wavecal_json,
+    load_bh_wavecal_json,
+    apply_polynomial_wavecal,
+    estimate_cw_from_features,
+    get_cw_from_header,
 )
 
 __all__ = [
@@ -21,4 +27,10 @@ __all__ = [
     "fit_peak_gaussian",
     "measure_peak_from_cube",
     "compute_wavelength_shift",
+    "compute_calibration_from_reference",
+    "save_bh_wavecal_json",
+    "load_bh_wavecal_json",
+    "apply_polynomial_wavecal",
+    "estimate_cw_from_features",
+    "get_cw_from_header",
 ]
