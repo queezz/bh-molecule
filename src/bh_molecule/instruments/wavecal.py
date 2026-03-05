@@ -567,22 +567,33 @@ def apply_polynomial_wavecal(
     return apply_wavecal(n_pixels, cw_nm=cw_nm, wavecal=wavecal)
 
 
+# Wavelength of H-gamma (Balmer line) in air, nm. Used when estimating CW from
+# the strongest peak under the assumption that it is H-gamma.
+H_GAMMA_NM = 434.0462
+
+
 def estimate_cw_from_features(
     spectrum: np.ndarray,
     *,
     wavecal: Mapping[str, Any] | None = None,
     diagnostic: bool = False,
+    assumed_line_nm: float | None = None,
 ) -> float:
     """Estimate central wavelength (CW) from spectral features.
 
-    This helper provides a simple, CSV-free way to estimate the CW for a
-    measurement when header metadata are missing or unreliable.
+    The **strongest peak** in the spectrum is used. By default we assume that
+    peak is **H-gamma** (434.05 nm). The calibration polynomial (in calibration-
+    pixel space) is evaluated at the peak pixel (with correct data→cal pixel
+    scaling); then:
+
+        CW = reference_cw_nm + (assumed_line_nm - wavelength_at_peak_in_ref)
+
+    so that the centre of the detector corresponds to the correct CW for that
+    line.
 
     For a 3D cube (F, C, P): the frame and channel with strongest total
-    signal are selected; optionally a few neighbouring frames are averaged
-    to improve SNR. The brightest pixel in the resulting 1D spectrum is used
-    as the dominant feature; CW is inferred from the calibrated wavelength
-    at that pixel using the stored polynomial.
+    signal are selected; a few neighbouring frames are averaged to improve
+    SNR. The brightest pixel in the resulting 1D spectrum is the "chosen peak".
 
     Parameters
     ----------
@@ -597,6 +608,10 @@ def estimate_cw_from_features(
         If True, create a matplotlib plot showing the spectrum used, all
         detected peaks (green), the selected peak (red), and a title with
         estimated CW, frame/channel used, and peak pixel.
+    assumed_line_nm : float | None, optional
+        Wavelength in nm of the line assumed at the strongest peak. Default
+        None means use H-gamma (434.05 nm). Set to another value if your
+        dominant line is different.
 
     Returns
     -------
@@ -633,16 +648,29 @@ def estimate_cw_from_features(
 
     pixel_ref = int(wavecal["pixel_reference"])
     coeffs = np.asarray(wavecal["coefficients"], dtype=float)
+    ref_cw_nm = float(wavecal["reference_cw_nm"])
+    n_pixels = arr.size
+    cal_pixels = wavecal.get("calibration_pixels")
+    if cal_pixels is None:
+        cal_pixels = n_pixels
+    else:
+        cal_pixels = int(cal_pixels)
 
     peak_idx = int(np.argmax(arr))
-    x = float(peak_idx - pixel_ref)
+    # Map data pixel to calibration pixel space (handles binning mismatch).
+    scale = cal_pixels / float(n_pixels)
+    peak_cal = peak_idx * scale
+    x_rel = float(peak_cal - pixel_ref)
 
-    wl = 0.0
+    # Wavelength at peak in the reference calibration (no CW shift).
+    wl_at_peak = 0.0
     power = 1.0
     for c in coeffs:
-        wl += float(c) * power
-        power *= x
-    cw_nm = float(wl)
+        wl_at_peak += float(c) * power
+        power *= x_rel
+
+    line_nm = assumed_line_nm if assumed_line_nm is not None else H_GAMMA_NM
+    cw_nm = ref_cw_nm + (line_nm - wl_at_peak)
 
     if diagnostic:
         peak_inds, _ = find_peaks(
