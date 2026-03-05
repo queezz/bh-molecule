@@ -781,6 +781,34 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#bh_molecule.instruments.wavecal-attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attributes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attributes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.instruments.wavecal.H_GAMMA_NM" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;H_GAMMA_NM
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#bh_molecule.instruments.wavecal-functions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1298,6 +1326,34 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#bh_molecule.instruments.wavecal-attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attributes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attributes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.instruments.wavecal.H_GAMMA_NM" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;H_GAMMA_NM
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#bh_molecule.instruments.wavecal-functions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1503,7 +1559,27 @@
 
 
 
+<h3 id="bh_molecule.instruments.wavecal-attributes">Attributes<a href="#bh_molecule.instruments.wavecal-attributes" class="headerlink" title="Permanent link">&para;</a></h3>
 
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="bh_molecule.instruments.wavecal.H_GAMMA_NM" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">H_GAMMA_NM</span> <span class="o">=</span> <span class="mf">434.0462</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+<a href="#bh_molecule.instruments.wavecal.H_GAMMA_NM" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
 
 
 <h3 id="bh_molecule.instruments.wavecal-functions">Functions<a href="#bh_molecule.instruments.wavecal-functions" class="headerlink" title="Permanent link">&para;</a></h3>
@@ -1980,7 +2056,7 @@ the calibrated pixel range for the chosen channel is used.</p>
 
 
 <h4 id="bh_molecule.instruments.wavecal.estimate_cw_from_features" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">estimate_cw_from_features</span><span class="p">(</span><span class="n">spectrum</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">wavecal</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span></code>
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">estimate_cw_from_features</span><span class="p">(</span><span class="n">spectrum</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">wavecal</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">diagnostic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">assumed_line_nm</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span></code>
 
 <a href="#bh_molecule.instruments.wavecal.estimate_cw_from_features" class="headerlink" title="Permanent link">&para;</a></h4>
 
@@ -1988,18 +2064,17 @@ the calibrated pixel range for the chosen channel is used.</p>
     <div class="doc doc-contents ">
 
         <p>Estimate central wavelength (CW) from spectral features.</p>
-<p>This helper provides a simple, CSV-free way to estimate the CW for a
-measurement when header metadata are missing or unreliable. The current
-implementation is intentionally conservative:</p>
-<ul>
-<li>the spectrum is treated as a 1D array (any extra dimensions are
-  averaged);</li>
-<li>the brightest pixel is taken as a proxy for the dominant feature bundle;</li>
-<li>CW is inferred from the calibrated wavelength at that pixel using the
-  stored polynomial from :func:<code>load_bh_wavecal_json</code>.</li>
-</ul>
-<p>More sophisticated logic (e.g. explicitly locating H-γ and the BH
-Q-branch bundle) can be built on top of this function in future.</p>
+<p>The <strong>strongest peak</strong> in the spectrum is used. By default we assume that
+peak is <strong>H-gamma</strong> (434.05 nm). The calibration polynomial (in calibration-
+pixel space) is evaluated at the peak pixel (with correct data→cal pixel
+scaling); then:</p>
+<div class="highlight"><pre><span></span><code>CW = reference_cw_nm + (assumed_line_nm - wavelength_at_peak_in_ref)
+</code></pre></div>
+<p>so that the centre of the detector corresponds to the correct CW for that
+line.</p>
+<p>For a 3D cube (F, C, P): the frame and channel with strongest total
+signal are selected; a few neighbouring frames are averaged to improve
+SNR. The brightest pixel in the resulting 1D spectrum is the "chosen peak".</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -2023,7 +2098,8 @@ Q-branch bundle) can be built on top of this function in future.</p>
             <td>
               <div class="doc-md-description">
                 <p>1D or ND array of intensities along the dispersion axis in the last
-dimension.</p>
+dimension. If 3D (F, C, P), frame and channel are auto-selected by
+signal strength and neighbouring frames may be averaged.</p>
               </div>
             </td>
             <td>
@@ -2041,6 +2117,42 @@ dimension.</p>
               <div class="doc-md-description">
                 <p>Optional pre-loaded calibration dictionary. When omitted, it is loaded
 from <code>bh_wavecal.json</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>diagnostic</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, create a matplotlib plot showing the spectrum used, all
+detected peaks (green), the selected peak (red), and a title with
+estimated CW, frame/channel used, and peak pixel.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>assumed_line_nm</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Wavelength in nm of the line assumed at the strongest peak. Default
+None means use H-gamma (434.05 nm). Set to another value if your
+dominant line is different.</p>
               </div>
             </td>
             <td>
