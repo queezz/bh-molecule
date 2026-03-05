@@ -133,24 +133,29 @@ class Vis133M:
     def from_files(
         cls,
         fits_path: str,
-        wavecal_json: str,
+        *,
+        wavecal: str | None = None,
         cw: str | float = "auto",
         scale: float = 1.0,
     ) -> "Vis133M":
         """Create a Vis133M instance with wavelength calibration from a JSON polynomial.
 
-        Loads the FITS cube and header, loads the wavecal JSON, determines central
-        wavelength (CW), applies the polynomial wavelength calibration, and stores
-        slopes/intercepts so all plotting methods use the calibrated wavelength axis.
+        Loads the FITS cube and header, loads the wavecal JSON (from package
+        resources by default, or from a custom path if provided), determines
+        central wavelength (CW), applies the polynomial wavelength calibration,
+        and stores slopes/intercepts so all plotting methods use the calibrated
+        wavelength axis.
 
         Parameters
         ----------
         fits_path : str
             Path to a FITS file containing a 3D data cube (F, C, P).
-        wavecal_json : str
-            Path to a wavelength calibration JSON file (e.g. bh_avecal.json or
-            bh_wavecal.json) as produced by the calibration builder. Loaded via
-            load_bh_wavecal_json(path=wavecal_json).
+        wavecal : str | None, optional
+            Path to a wavelength calibration JSON file. When ``None`` (default),
+            the file ``bh_wavecal.json`` is loaded from package resources
+            (bh_molecule._resources) via importlib.resources. Pass a path to use
+            a custom calibration file (e.g. ``"bh_avecal.json"`` or
+            ``"custom.json"``).
         cw : str | float, optional
             Central wavelength in nm. If ``"auto"`` (default), use
             get_cw_from_header(header); if None, use estimate_cw_from_features(cube).
@@ -172,7 +177,10 @@ class Vis133M:
             raise ValueError(f"Expected 3D cube, got {cube.ndim}D")
         F, C, P = cube.shape
 
-        wavecal = load_bh_wavecal_json(path=wavecal_json)
+        if wavecal is None:
+            wavecal = load_bh_wavecal_json()
+        else:
+            wavecal = load_bh_wavecal_json(path=wavecal)
 
         if cw == "auto":
             cw_nm = get_cw_from_header(header)
