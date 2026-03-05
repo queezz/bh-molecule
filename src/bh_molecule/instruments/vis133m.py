@@ -2,6 +2,7 @@ import numpy as np
 from astropy.io import fits
 from typing import NamedTuple
 
+from bh_molecule.constants import BALMER_LINES_NM
 from .wavecal import (
     load_wavecal_csv,
     csv_to_linear_formulas,
@@ -9,8 +10,6 @@ from .wavecal import (
     compute_wavelength_shift as _compute_wavelength_shift,
     load_bh_wavecal_json,
     apply_polynomial_wavecal,
-    get_cw_from_header,
-    estimate_cw_from_features,
 )
 
 
@@ -32,42 +31,47 @@ def _print_calibration_report(instance: "Vis133M") -> None:
 
 def _format_calibration_report(instance: "Vis133M") -> list[str] | None:
     """Format the wavelength calibration report. Returns None if not from_files."""
-    if not hasattr(instance, "cw_nm"):
+    if not getattr(instance, "_from_files", False):
         return None
-    cw_source_display = {
-        "header": "FITS header",
-        "features": "spectral features",
-        "manual": "manual",
-    }.get(instance.cw_source, instance.cw_source)
-    delta_str = f"{instance.delta_cw_nm:+.2f} nm"
     fits_path = getattr(instance, "_calibration_fits_path", instance.filename)
     lines = [
         "Vis133M calibration report",
         "--------------------------",
         f"FITS file: {fits_path}",
         "",
-        "CW determination:",
-        f"  source: {cw_source_display}",
-        f"  CW used: {instance.cw_nm:.2f} nm",
-        "",
-        "Reference calibration:",
-        f"  reference CW: {instance.reference_cw_nm:.2f} nm",
-        f"  ΔCW applied: {delta_str}",
-        "",
+    ]
+    cw_nm = getattr(instance, "cw_nm", None)
+    if cw_nm is not None:
+        cw_method = getattr(instance, "cw_method", "manual")
+        lines.extend(["CW determination:", f"  method: {cw_method}"])
+        if cw_method == "line":
+            if getattr(instance, "line_name", None) is not None:
+                lines.append(f"  line: {instance.line_name}")
+            if getattr(instance, "line_wavelength", None) is not None:
+                lines.append(f"  wavelength: {instance.line_wavelength:.4f} nm")
+            if getattr(instance, "peak_pixel", None) is not None:
+                lines.append(f"  peak pixel: {instance.peak_pixel}")
+            if getattr(instance, "frame_used", None) is not None:
+                lines.append(f"  frame used: {instance.frame_used}")
+        lines.append(f"  CW used: {cw_nm:.2f} nm")
+        lines.extend([
+            "",
+            "Reference calibration:",
+            f"  reference CW: {instance.reference_cw_nm:.2f} nm",
+            f"  ΔCW applied: {instance.delta_cw_nm:+.2f} nm",
+            "",
+        ])
+    lines.extend([
         "Spectral axis:",
         f"  data pixels: {instance.data_pixels}",
-    ]
-    if instance.calibration_pixels is not None:
+    ])
+    if getattr(instance, "calibration_pixels", None) is not None:
         lines.append(f"  calibration pixels: {instance.calibration_pixels}")
-        if instance.binning_factor is not None:
+        if getattr(instance, "binning_factor", None) is not None:
             lines.append(f"  binning factor: {instance.binning_factor:.1f}")
     else:
         lines.append("  calibration pixels: (not in wavecal)")
-    lines.extend([
-        "",
-        "Polynomial:",
-        f"  order: {instance._poly_order}",
-    ])
+    lines.extend(["", "Polynomial:", f"  order: {instance._poly_order}"])
     return lines
 
 
@@ -182,78 +186,51 @@ class Vis133M:
         cls,
         fits_path: str,
         *,
-        wavecal: str | None = None,
-        cw: str | float = "auto",
+        cw: float | None = None,
+        line: str | float | None = None,
         scale: float = 1.0,
-        diagnostic_cw: bool = False,
     ) -> "Vis133M":
-        """Create a Vis133M instance with wavelength calibration from a JSON polynomial.
+        """Create a Vis133M instance with polynomial wavelength calibration from JSON.
 
-        Loads the FITS cube and header, loads the wavecal JSON (from package
-        resources by default, or from a custom path if provided), determines
-        central wavelength (CW), applies the polynomial wavelength calibration,
-        and stores slopes/intercepts so all plotting methods use the calibrated
-        wavelength axis.
+        Loads the FITS cube and the wavecal JSON from package resources. CW must
+        be set explicitly: pass ``cw`` (nm) to use a value directly, or pass
+        ``line`` (name or wavelength) to record the reference line for later
+        use with :meth:`estimate_cw_from_line` and :meth:`apply_cw`. If neither
+        is provided, data are loaded with dispersion only; call :meth:`apply_cw`
+        after estimating CW.
 
         Parameters
         ----------
         fits_path : str
             Path to a FITS file containing a 3D data cube (F, C, P).
-        wavecal : str | None, optional
-            Path to a wavelength calibration JSON file. When ``None`` (default),
-            the file ``bh_wavecal.json`` is loaded from package resources
-            (bh_molecule._resources) via importlib.resources. Pass a path to use
-            a custom calibration file (e.g. ``"bh_avecal.json"`` or
-            ``"custom.json"``).
-        cw : str | float, optional
-            Central wavelength in nm. If ``"auto"`` (default), use
-            get_cw_from_header(header); if None, use estimate_cw_from_features(cube).
-            If a float, use that value directly.
+        cw : float | None, optional
+            Central wavelength in nm. If provided, calibration is applied
+            immediately. Mutually exclusive with ``line``.
+        line : str | float | None, optional
+            Reference line: string (e.g. ``"H_gamma"``) looked up in
+            :data:`bh_molecule.constants.BALMER_LINES_NM`, or float (wavelength
+            in nm). Stored for use with :meth:`estimate_cw_from_line`; does not
+            apply CW by itself.
         scale : float, optional
-            Multiplicative scale factor applied to the cube data (default 1.0).
-        diagnostic_cw : bool, optional
-            If True and CW is taken from spectral features (no header CW), show a
-            diagnostic plot from estimate_cw_from_features (spectrum, peaks, chosen
-            peak). Default False.
+            Multiplicative scale factor (default 1.0).
 
         Returns
         -------
         Vis133M
-            Instance with wavelength calibration applied; plot_spectrum_plotly,
-            plot_pixel_range, and other methods use the calibrated wavelength axis.
+            Instance. If ``cw`` was provided, wavelength axis is calibrated.
         """
+        if cw is not None and line is not None:
+            raise ValueError("Provide only one of cw or line, not both")
+
         with fits.open(fits_path) as hdul:
             hdu = hdul[0]
             cube = np.asarray(hdu.data, dtype=float)
-            header = dict(hdu.header)
         if cube.ndim != 3:
             raise ValueError(f"Expected 3D cube, got {cube.ndim}D")
         F, C, P = cube.shape
 
-        if wavecal is None:
-            wavecal = load_bh_wavecal_json()
-        else:
-            wavecal = load_bh_wavecal_json(path=wavecal)
-
-        if cw == "auto":
-            cw_nm = get_cw_from_header(header)
-            if cw_nm is not None:
-                cw_source = "header"
-            else:
-                cw_nm = estimate_cw_from_features(
-                    cube,
-                    wavecal=wavecal,
-                    diagnostic=diagnostic_cw,
-                )
-                cw_source = "features"
-        elif isinstance(cw, (int, float)):
-            cw_nm = float(cw)
-            cw_source = "manual"
-        else:
-            raise TypeError(f"cw must be 'auto' or a float, got {type(cw).__name__!r}")
-
+        wavecal = load_bh_wavecal_json()
         reference_cw_nm = float(wavecal["reference_cw_nm"])
-        delta_cw_nm = cw_nm - reference_cw_nm
         data_pixels = int(P)
         calibration_pixels = wavecal.get("calibration_pixels")
         if calibration_pixels is not None:
@@ -263,7 +240,17 @@ class Vis133M:
             binning_factor = None
         poly_order = len(wavecal["coefficients"]) - 1
 
-        wl_nm = apply_polynomial_wavecal(P, cw_nm=cw_nm, wavecal=wavecal)
+        if cw is not None:
+            cw_nm = float(cw)
+            delta_cw_nm = cw_nm - reference_cw_nm
+            wl_nm = apply_polynomial_wavecal(P, cw_nm=cw_nm, wavecal=wavecal)
+        else:
+            cw_nm = None
+            delta_cw_nm = 0.0
+            wl_nm = apply_polynomial_wavecal(
+                P, cw_nm=reference_cw_nm, wavecal=wavecal
+            )
+
         x = np.arange(P, dtype=float)
         coefs = np.polyfit(x, wl_nm, 1)
         slopes = np.full(C, coefs[0])
@@ -277,15 +264,33 @@ class Vis133M:
             slopes=slopes,
             intercepts=intercepts,
         )
-        instance.cw_nm = cw_nm
-        instance.cw_source = cw_source
+        instance._from_files = True
+        instance._calibration_fits_path = fits_path
+        instance._wavecal_dict = wavecal
         instance.reference_cw_nm = reference_cw_nm
-        instance.delta_cw_nm = delta_cw_nm
         instance.data_pixels = data_pixels
         instance.calibration_pixels = calibration_pixels
         instance.binning_factor = binning_factor
         instance._poly_order = poly_order
-        instance._calibration_fits_path = fits_path
+        instance.cw_nm = cw_nm
+        instance.cw_method = "manual" if cw_nm is not None else None
+        instance.delta_cw_nm = delta_cw_nm if cw_nm is not None else None
+        instance.line_name = None
+        instance.line_wavelength = None
+        instance.peak_pixel = None
+        instance.frame_used = None
+
+        if line is not None:
+            if isinstance(line, str):
+                if line not in BALMER_LINES_NM:
+                    raise ValueError(
+                        f"Unknown line {line!r}. Known: {list(BALMER_LINES_NM)}"
+                    )
+                instance.line_name = line
+                instance.line_wavelength = BALMER_LINES_NM[line]
+            else:
+                instance.line_wavelength = float(line)
+
         _print_calibration_report(instance)
         return instance
 
@@ -325,6 +330,223 @@ class Vis133M:
             )
         else:
             print("\n".join(lines))
+
+    def pick_frame(self, method: str = "max") -> int:
+        """Return the frame index with strongest total signal.
+
+        Parameters
+        ----------
+        method : str, optional
+            Only ``"max"`` is supported: frame with maximum sum over (channel, pixel).
+
+        Returns
+        -------
+        int
+            Frame index (0-based).
+        """
+        if method != "max":
+            raise ValueError(f"Unknown method={method!r}")
+        frame_signal = self.cube.sum(axis=(1, 2))
+        return int(np.argmax(frame_signal))
+
+    def plot_spectrum_pixels(
+        self,
+        frame: int,
+        channel: int | None = None,
+        *,
+        reduce: str = "sum_channels",
+        show_peaks: bool = True,
+    ):
+        """Plot spectrum with pixel index on the x-axis (for CW inspection).
+
+        Uses Plotly. Optionally marks detected peaks.
+
+        Parameters
+        ----------
+        frame : int
+            Frame index.
+        channel : int | None, optional
+            If provided, plot that channel; otherwise use ``reduce``.
+        reduce : str, optional
+            When ``channel`` is None, ``"sum_channels"`` (default) sums channels.
+        show_peaks : bool, optional
+            If True, detect peaks with scipy.signal.find_peaks and mark them.
+
+        Returns
+        -------
+        plotly.graph_objects.Figure
+        """
+        from scipy.signal import find_peaks
+
+        try:
+            import plotly.graph_objects as go
+        except ImportError as e:
+            raise ImportError("plotly is required for plot_spectrum_pixels()") from e
+
+        pixels, intensity = self.spectrum(frame, channel=channel, reduce=reduce)
+        intensity = np.asarray(intensity, dtype=float)
+
+        fig = go.Figure(
+            go.Scatter(
+                x=pixels,
+                y=intensity,
+                mode="lines",
+                name="spectrum",
+                hovertemplate="pixel = %{x}<br>I = %{y:.4g}<extra></extra>",
+            )
+        )
+
+        if show_peaks:
+            prominence = max(
+                1e-9,
+                (np.nanmax(intensity) - np.nanmin(intensity)) * 0.05,
+            )
+            peak_inds, _ = find_peaks(intensity, prominence=prominence)
+            if peak_inds.size > 0:
+                fig.add_trace(
+                    go.Scatter(
+                        x=pixels[peak_inds],
+                        y=intensity[peak_inds],
+                        mode="markers",
+                        marker=dict(symbol="circle-open", size=10, color="green"),
+                        name="peaks",
+                    )
+                )
+
+        fig.update_layout(
+            title=f"Spectrum (pixels): frame={frame}"
+            + (f", channel={channel}" if channel is not None else ""),
+            xaxis_title="pixel",
+            yaxis_title="intensity",
+            hovermode="x unified",
+        )
+        return fig
+
+    def estimate_cw_from_line(
+        self,
+        peak_pixel: int,
+        *,
+        wavelength: float | None = None,
+        line: str | None = None,
+    ) -> float:
+        """Estimate central wavelength from a known line at a given pixel.
+
+        Does not modify the instance. Use :meth:`apply_cw` to apply the result.
+
+        Parameters
+        ----------
+        peak_pixel : int
+            Pixel index (data coordinates) where the line is observed.
+        wavelength : float | None, optional
+            Wavelength of the line in nm. One of ``wavelength`` or ``line``
+            must be provided.
+        line : str | None, optional
+            Name of the line (e.g. ``"H_gamma"``) looked up in
+            :data:`bh_molecule.constants.BALMER_LINES_NM`. One of ``wavelength``
+            or ``line`` must be provided.
+
+        Returns
+        -------
+        float
+            Estimated CW in nm.
+        """
+        if wavelength is None and line is None:
+            raise ValueError("Provide wavelength or line")
+        if wavelength is not None and line is not None:
+            raise ValueError("Provide only one of wavelength or line")
+
+        if line is not None:
+            if line not in BALMER_LINES_NM:
+                raise ValueError(
+                    f"Unknown line {line!r}. Known: {list(BALMER_LINES_NM)}"
+                )
+            line_nm = BALMER_LINES_NM[line]
+        else:
+            line_nm = float(wavelength)
+
+        wavecal = getattr(self, "_wavecal_dict", None)
+        if wavecal is None:
+            wavecal = load_bh_wavecal_json()
+
+        P = self.cube.shape[-1]
+        cal_pixels = wavecal.get("calibration_pixels", P)
+        cal_pixels = int(cal_pixels)
+        pixel_ref = int(wavecal["pixel_reference"])
+        ref_cw_nm = float(wavecal["reference_cw_nm"])
+        coeffs = np.asarray(wavecal["coefficients"], dtype=float)
+
+        scale = cal_pixels / float(P)
+        peak_cal = peak_pixel * scale
+        x_rel = float(peak_cal - pixel_ref)
+
+        wl_ref = 0.0
+        power = 1.0
+        for c in coeffs:
+            wl_ref += float(c) * power
+            power *= x_rel
+
+        return ref_cw_nm + (line_nm - wl_ref)
+
+    def apply_cw(
+        self,
+        cw_nm: float,
+        *,
+        line_name: str | None = None,
+        line_wavelength: float | None = None,
+        peak_pixel: int | None = None,
+        frame_used: int | None = None,
+    ) -> None:
+        """Apply central wavelength and update the wavelength axis.
+
+        Regenerates the wavelength calibration from the stored polynomial
+        and the given CW. Updates calibration metadata. Optionally store
+        line info (e.g. from :meth:`estimate_cw_from_line`) for the report.
+
+        Parameters
+        ----------
+        cw_nm : float
+            Central wavelength in nm.
+        line_name : str | None, optional
+            Name of the reference line (e.g. ``"H_gamma"``) for the report.
+        line_wavelength : float | None, optional
+            Wavelength of the line in nm for the report.
+        peak_pixel : int | None, optional
+            Pixel index used for the estimate (for the report).
+        frame_used : int | None, optional
+            Frame index used (for the report).
+        """
+        if not getattr(self, "_from_files", False):
+            raise RuntimeError(
+                "apply_cw is only available for instances created with "
+                "Vis133M.from_files()"
+            )
+        wavecal = self._wavecal_dict
+        F, C, P = self.cube.shape
+        wl_nm = apply_polynomial_wavecal(P, cw_nm=cw_nm, wavecal=wavecal)
+        x = np.arange(P, dtype=float)
+        coefs = np.polyfit(x, wl_nm, 1)
+        self._wavecal_slopes = np.full(C, coefs[0])
+        self._wavecal_intercepts = np.full(C, coefs[1])
+        self.wl_nm = self._compute_wl_formula()
+
+        self.cw_nm = float(cw_nm)
+        self.reference_cw_nm = float(wavecal["reference_cw_nm"])
+        self.delta_cw_nm = self.cw_nm - self.reference_cw_nm
+        if line_name is not None or line_wavelength is not None:
+            self.cw_method = "line"
+            self.line_name = line_name
+            if line_wavelength is not None:
+                self.line_wavelength = float(line_wavelength)
+            elif line_name is not None and line_name in BALMER_LINES_NM:
+                self.line_wavelength = BALMER_LINES_NM[line_name]
+            else:
+                self.line_wavelength = line_wavelength
+            self.peak_pixel = peak_pixel
+            self.frame_used = frame_used
+        else:
+            self.cw_method = "manual"
+            self.peak_pixel = None
+            self.frame_used = None
 
     def measure_peak(
         self,
@@ -533,38 +755,58 @@ class Vis133M:
         return img  # (F, C)
 
     def spectrum(
-        self, frame: int, channel: int, *, zero_min: bool | None = None
+        self,
+        frame: int,
+        channel: int | None = None,
+        *,
+        reduce: str = "sum_channels",
+        zero_min: bool | None = None,
     ) -> tuple[np.ndarray, np.ndarray]:
-        """Return wavelength and signal arrays for a given ``(frame, channel)``.
+        """Return (x-axis, intensity) for a frame.
 
         Parameters
         ----------
         frame : int
             Frame index (0-based).
-        channel : int
-            Channel index (0-based).
+        channel : int | None, optional
+            If provided, return that channel's spectrum. If None, combine
+            channels according to ``reduce``.
+        reduce : str, optional
+            When ``channel`` is None, how to combine channels: ``"sum_channels"``
+            (default) sums across channels.
+        zero_min : bool | None, optional
+            If True, subtract per-row minimum. If None, use ``set_baseline_zero``
+            setting.
 
         Returns
         -------
         tuple of ndarray
-            ``(wavelengths, signal)`` where both arrays have shape ``(P,)`` and
-            wavelengths are in nanometres. ``signal`` is scaled by the current
-            ``scale`` attribute.
-
-        Raises
-        ------
-        IndexError
-            If ``frame`` or ``channel`` are out of range.
+            If ``channel`` is provided: ``(wavelengths, signal)`` in nm and
+            scaled counts. If ``channel`` is None: ``(pixels, intensity)``
+            with pixel indices and combined intensity (for inspection).
         """
         F, C, P = self.shape
-        if not (0 <= frame < F and 0 <= channel < C):
-            raise IndexError("frame/channel out of range")
-        x = self.wl_nm[channel]
-        row = self.cube[frame, channel]
+        if not (0 <= frame < F):
+            raise IndexError("frame out of range")
         use_zero = self._baseline_zero if zero_min is None else bool(zero_min)
+
+        if channel is not None:
+            if not (0 <= channel < C):
+                raise IndexError("channel out of range")
+            x = self.wl_nm[channel]
+            row = self.cube[frame, channel].astype(float)
+            if use_zero:
+                row = self._rowmin_row_p(row)
+            return x, row * self.scale
+
+        pixels = np.arange(P, dtype=float)
+        if reduce == "sum_channels":
+            row = self.cube[frame].sum(axis=0).astype(float)
+        else:
+            raise ValueError(f"Unknown reduce={reduce!r}")
         if use_zero:
             row = self._rowmin_row_p(row)
-        return x, row * self.scale  # (P,), (P,)
+        return pixels, row * self.scale
 
     def _apply_dark(self, img_fc: np.ndarray) -> np.ndarray:
         """Apply the configured dark subtraction to an ``(F, C)`` image.

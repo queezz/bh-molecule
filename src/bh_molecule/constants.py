@@ -161,4 +161,18 @@ BH_A = MolecularConstants(
 # Optional convenience map
 BH_CONSTANTS: Dict[str, MolecularConstants] = {"X": BH_X, "A": BH_A}
 
-__all__ = ["MolecularConstants", "BH_X", "BH_A", "BH_CONSTANTS"]
+# Balmer line wavelengths in air (nm), for wavelength calibration
+BALMER_LINES_NM: Dict[str, float] = {
+    "H_alpha": 656.279,
+    "H_beta": 486.133,
+    "H_gamma": 434.0462,
+    "H_delta": 410.174,
+}
+
+__all__ = [
+    "MolecularConstants",
+    "BH_X",
+    "BH_A",
+    "BH_CONSTANTS",
+    "BALMER_LINES_NM",
+]
