@@ -1601,7 +1601,7 @@ omitted, the reference CW from the JSON file is used.</p>
 
 
 <h4 id="bh_molecule.instruments.wavecal.compute_calibration_from_reference" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">compute_calibration_from_reference</span><span class="p">(</span><span class="n">csv_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fits_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">degree</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">pixel_reference</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span></code>
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">compute_calibration_from_reference</span><span class="p">(</span><span class="n">wavcal_csv</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fits_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">degree</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">pixel_reference</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span></code>
 
 <a href="#bh_molecule.instruments.wavecal.compute_calibration_from_reference" class="headerlink" title="Permanent link">&para;</a></h4>
 
@@ -1627,14 +1627,15 @@ original CSV file.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>csv_path</code>
+                <code>wavcal_csv</code>
             </td>
             <td>
                   <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Path to a CSV file containing per-channel wavelength calibration in the
+                <p>Path to a <em>Vis133M instrument</em> CSV file containing per-channel wavelength
+calibration (dispersion) in the
 format expected by :func:<code>load_wavecal_csv</code>.</p>
               </div>
             </td>
@@ -2489,8 +2490,8 @@ columns present in the CSV (convenient when cube has more pixels).</p>
         <p>Save calibration parameters to <code>bh_wavecal.json</code>.</p>
 <p>When <em>path</em> is <code>None</code>, the JSON is written into the installed package
 resources directory under <code>bh_molecule._resources/bh_wavecal.json</code>. This
-helper is primarily intended for the developer utility script
-<code>tools/build_wavecal.py</code>.</p>
+helper is primarily intended for the offline builder in
+<code>bh_molecule.calibration_builder</code>.</p>
 
 
     </div>
