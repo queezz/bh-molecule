@@ -1,3 +1,19 @@
+"""Build the Vis133M spectrometer wavelength calibration (bh_wavecal.json).
+
+This module is responsible for deriving the *instrument* wavelength
+calibration from a dedicated Vis133M wavecal CSV (for example,
+``133mVis_wavcal.csv``) and a reference FITS cube. The result is stored in
+``bh_wavecal.json`` and reused at runtime.
+
+Important:
+
+- The input CSV **must** be the instrument calibration CSV (per-channel
+  wavelengths versus detector pixel).
+- The BH molecular line CSV files (``11BH_v00.csv``, ``11BH_v11.csv``,
+  ``11BH_v22.csv``) contain the BH Q-branch wavelengths
+  and **must not** be used as wavelength calibration input here.
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -11,7 +27,7 @@ from bh_molecule.instruments.wavecal import (
 )
 
 __all__ = [
-    "resolve_reference_csv",
+    "resolve_wavcal_csv",
     "build_bh_wavecal",
     "compute_calibration_from_reference",
     "save_bh_wavecal_json",
@@ -19,8 +35,8 @@ __all__ = [
 ]
 
 
-def resolve_reference_csv(name_or_path: str) -> str:
-    """Resolve a BH reference CSV path.
+def resolve_wavcal_csv(name_or_path: str) -> str:
+    """Resolve an instrument wavecal CSV path.
 
     If *name_or_path* points to an existing file on disk, it is used directly.
     Otherwise, it is resolved inside the installed package resources directory
@@ -43,7 +59,7 @@ def resolve_reference_csv(name_or_path: str) -> str:
 
 def build_bh_wavecal(
     *,
-    csv: str,
+    wavcal_csv: str,
     fits: str,
     channel: int = 0,
     degree: int = 2,
@@ -57,9 +73,11 @@ def build_bh_wavecal(
 
     Parameters
     ----------
-    csv:
-        Path or filename of the reference wavelength CSV. If it does not exist
-        as a filesystem path, it is resolved inside ``bh_molecule._resources``.
+    wavcal_csv:
+        Path or filename of the **instrument** wavelength calibration CSV
+        (for example ``133mVis_wavcal.csv``). If it does not exist as a
+        filesystem path, it is resolved inside ``bh_molecule._resources``.
+        BH molecular CSVs (``11BH_v*.csv``) are **not** valid here.
     fits:
         Path to a reference FITS cube.
     channel:
@@ -77,11 +95,18 @@ def build_bh_wavecal(
     Mapping[str, Any]
         The calibration parameters dictionary written to JSON.
     """
-    csv_path = resolve_reference_csv(csv)
+    name = Path(wavcal_csv).name
+    upper_name = name.upper()
+    if upper_name.startswith("11BH_V"):
+        raise ValueError(
+            "BH molecular line CSV files cannot be used for wavelength calibration."
+        )
+
+    wavcal_csv_path = resolve_wavcal_csv(wavcal_csv)
     fits_path = str(Path(fits).expanduser().resolve())
 
     params = compute_calibration_from_reference(
-        csv_path,
+        wavcal_csv_path,
         fits_path,
         channel=int(channel),
         degree=int(degree),
@@ -154,18 +179,19 @@ def main(argv: list[str] | None = None) -> None:
 
     args = p.parse_args(argv)
     params = build_bh_wavecal(
-        csv=args.csv,
+        wavcal_csv=args.csv,
         fits=args.fits,
         channel=int(args.channel),
         degree=int(args.degree),
         pixel_reference=args.pixel_reference,
         out=args.out,
     )
-    out_path = args.out or str(resources.files("bh_molecule._resources").joinpath("bh_wavecal.json"))
+    out_path = args.out or str(
+        resources.files("bh_molecule._resources").joinpath("bh_wavecal.json")
+    )
     print(f"Saved wavelength calibration JSON to: {out_path}")
     print(f"reference_cw_nm={float(params['reference_cw_nm']):.6g} nm")
 
 
 if __name__ == "__main__":
     main()
-

@@ -18,16 +18,18 @@ The original CSV reference is only required once to build the calibration.
 
 ---
 
-## 1. Reference calibration (CSV)
+## 1. Reference calibration (instrument CSV)
 
-The Vis133M spectrometer is initially calibrated using a CSV reference table.
+The Vis133M spectrometer is initially calibrated using a **dedicated instrument
+wavecal CSV** (for example `133mVis_wavcal.csv`), which contains the per-channel
+dispersion of the spectrometer.
 
-The CSV contains:
+The wavecal CSV contains:
 
 - **1024 detector pixels** in the dispersion direction  
 - **multiple spatial channels**, each containing wavelength values for all pixels
 
-The file is loaded using:
+The instrument CSV is loaded using:
 
 ```
 load_wavecal_csv()
@@ -104,12 +106,12 @@ Example:
 The file is normally generated using the package-integrated builder module:
 
 ```
-python -m bh_molecule.calibration_builder --csv 11BH_v00.csv --fits path/to/reference.fits
+python -m bh_molecule.calibration_builder --csv 133mVis_wavcal.csv --fits path/to/reference.fits
 ```
 
 This builder:
 
-1. reads the reference CSV
+1. reads the **instrument wavecal** CSV (e.g. `133mVis_wavcal.csv`)
 2. fits the polynomial
 3. writes `bh_wavecal.json`
 

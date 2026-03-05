@@ -1,0 +1,10 @@
+{
+  "reference_cw_nm": 433.2637880549955,
+  "coefficients": [
+    433.2637880549955,
+    0.0047750026500936625,
+    -1.2040267554221358e-08
+  ],
+  "formula_type": "polynomial",
+  "pixel_reference": 512
+}

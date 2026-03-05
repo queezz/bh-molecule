@@ -292,7 +292,7 @@ def get_cw_from_header(header: Mapping[str, Any]) -> float | None:
 
 
 def compute_calibration_from_reference(
-    csv_path: str,
+    wavcal_csv: str,
     fits_path: str,
     *,
     channel: int = 0,
@@ -307,8 +307,9 @@ def compute_calibration_from_reference(
 
     Parameters
     ----------
-    csv_path :
-        Path to a CSV file containing per-channel wavelength calibration in the
+    wavcal_csv :
+        Path to a *Vis133M instrument* CSV file containing per-channel wavelength
+        calibration (dispersion) in the
         format expected by :func:`load_wavecal_csv`.
     fits_path :
         Path to a reference FITS cube acquired with the spectrometer.
@@ -344,13 +345,13 @@ def compute_calibration_from_reference(
     if not (0 <= channel < n_channels):
         raise ValueError(f"channel index {channel} out of range 0..{n_channels-1}")
 
-    wl_nm = load_wavecal_csv(csv_path, n_channels=n_channels, n_pixels=None)
-    if wl_nm.shape[0] <= channel:
+    wavcal = load_wavecal_csv(wavcal_csv, n_channels=n_channels, n_pixels=None)
+    if wavcal.shape[0] <= channel:
         raise ValueError(
-            f"CSV has only {wl_nm.shape[0]} channels, cannot use channel {channel}"
+            f"CSV has only {wavcal.shape[0]} channels, cannot use channel {channel}"
         )
 
-    wl_ch = np.asarray(wl_nm[channel], dtype=float)
+    wl_ch = np.asarray(wavcal[channel], dtype=float)
     n_pix_csv = wl_ch.size
     if n_pix_csv < degree + 1:
         raise ValueError(
