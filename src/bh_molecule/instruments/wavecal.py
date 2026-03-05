@@ -373,15 +373,21 @@ def compute_calibration_from_reference(
     cw_header = get_cw_from_header(header)
     if cw_header is not None:
         reference_cw_nm = float(cw_header)
+        cw_source = "fits_header"
     else:
         reference_cw_nm = float(np.polyval(poly_desc, 0.0))
+        cw_source = "polynomial"
 
-    return {
+    result: dict[str, Any] = {
         "reference_cw_nm": reference_cw_nm,
         "coefficients": [float(c) for c in coeffs],
         "formula_type": "polynomial",
         "pixel_reference": int(pixel_reference),
+        "cw_source": cw_source,
     }
+    if cw_header is not None:
+        result["header_cw_nm"] = float(cw_header)
+    return result
 
 
 def save_bh_wavecal_json(

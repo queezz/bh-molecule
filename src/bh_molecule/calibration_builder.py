@@ -190,7 +190,20 @@ def main(argv: list[str] | None = None) -> None:
         resources.files("bh_molecule._resources").joinpath("bh_wavecal.json")
     )
     print(f"Saved wavelength calibration JSON to: {out_path}")
-    print(f"reference_cw_nm={float(params['reference_cw_nm']):.6g} nm")
+    ref_cw = float(params["reference_cw_nm"])
+    print(f"reference_cw_nm={ref_cw:.6g} nm")
+    cw_source = params.get("cw_source")
+    if cw_source == "fits_header":
+        header_cw = float(params.get("header_cw_nm", ref_cw))
+        print(
+            f"Central wavelength taken from FITS header: {header_cw:.6g} nm "
+            "(please verify that the header CW value is correct for this dataset)."
+        )
+    else:
+        print(
+            "No usable CW found in FITS header; reference_cw_nm was derived "
+            "from the fitted polynomial at the reference pixel."
+        )
 
 
 if __name__ == "__main__":
