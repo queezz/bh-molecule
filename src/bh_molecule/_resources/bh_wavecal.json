@@ -6,5 +6,8 @@
     -1.2040267554221358e-08
   ],
   "formula_type": "polynomial",
-  "pixel_reference": 512
+  "pixel_reference": 512,
+  "calibration_pixels": 1024,
+  "cw_source": "polynomial",
+  "header_cw_nm": 433.2637880549955
 }
