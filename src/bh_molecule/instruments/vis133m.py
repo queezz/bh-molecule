@@ -23,6 +23,54 @@ class FCPShape(NamedTuple):
         return f"{self.F}F × {self.C}C × {self.P}P (frames × channels × pixels)"
 
 
+def _print_calibration_report(instance: "Vis133M") -> None:
+    """Print the wavelength calibration report for a from_files instance."""
+    lines = _format_calibration_report(instance)
+    if lines is not None:
+        print("\n".join(lines))
+
+
+def _format_calibration_report(instance: "Vis133M") -> list[str] | None:
+    """Format the wavelength calibration report. Returns None if not from_files."""
+    if not hasattr(instance, "cw_nm"):
+        return None
+    cw_source_display = {
+        "header": "FITS header",
+        "features": "spectral features",
+        "manual": "manual",
+    }.get(instance.cw_source, instance.cw_source)
+    delta_str = f"{instance.delta_cw_nm:+.2f} nm"
+    fits_path = getattr(instance, "_calibration_fits_path", instance.filename)
+    lines = [
+        "Vis133M calibration report",
+        "--------------------------",
+        f"FITS file: {fits_path}",
+        "",
+        "CW determination:",
+        f"  source: {cw_source_display}",
+        f"  CW used: {instance.cw_nm:.2f} nm",
+        "",
+        "Reference calibration:",
+        f"  reference CW: {instance.reference_cw_nm:.2f} nm",
+        f"  ΔCW applied: {delta_str}",
+        "",
+        "Spectral axis:",
+        f"  data pixels: {instance.data_pixels}",
+    ]
+    if instance.calibration_pixels is not None:
+        lines.append(f"  calibration pixels: {instance.calibration_pixels}")
+        if instance.binning_factor is not None:
+            lines.append(f"  binning factor: {instance.binning_factor:.1f}")
+    else:
+        lines.append("  calibration pixels: (not in wavecal)")
+    lines.extend([
+        "",
+        "Polynomial:",
+        f"  order: {instance._poly_order}",
+    ])
+    return lines
+
+
 class Vis133M:
     r"""Minimal loader/processor for VIS-1.33 m data with per-channel wavecal.
 
@@ -184,12 +232,27 @@ class Vis133M:
 
         if cw == "auto":
             cw_nm = get_cw_from_header(header)
-            if cw_nm is None:
+            if cw_nm is not None:
+                cw_source = "header"
+            else:
                 cw_nm = estimate_cw_from_features(cube, wavecal=wavecal)
+                cw_source = "features"
         elif isinstance(cw, (int, float)):
             cw_nm = float(cw)
+            cw_source = "manual"
         else:
             raise TypeError(f"cw must be 'auto' or a float, got {type(cw).__name__!r}")
+
+        reference_cw_nm = float(wavecal["reference_cw_nm"])
+        delta_cw_nm = cw_nm - reference_cw_nm
+        data_pixels = int(P)
+        calibration_pixels = wavecal.get("calibration_pixels")
+        if calibration_pixels is not None:
+            calibration_pixels = int(calibration_pixels)
+            binning_factor = data_pixels / calibration_pixels
+        else:
+            binning_factor = None
+        poly_order = len(wavecal["coefficients"]) - 1
 
         wl_nm = apply_polynomial_wavecal(P, cw_nm=cw_nm, wavecal=wavecal)
         x = np.arange(P, dtype=float)
@@ -197,7 +260,7 @@ class Vis133M:
         slopes = np.full(C, coefs[0])
         intercepts = np.full(C, coefs[1])
 
-        return cls(
+        instance = cls(
             fits_path,
             wavecal=None,
             scale=scale,
@@ -205,6 +268,17 @@ class Vis133M:
             slopes=slopes,
             intercepts=intercepts,
         )
+        instance.cw_nm = cw_nm
+        instance.cw_source = cw_source
+        instance.reference_cw_nm = reference_cw_nm
+        instance.delta_cw_nm = delta_cw_nm
+        instance.data_pixels = data_pixels
+        instance.calibration_pixels = calibration_pixels
+        instance.binning_factor = binning_factor
+        instance._poly_order = poly_order
+        instance._calibration_fits_path = fits_path
+        _print_calibration_report(instance)
+        return instance
 
     def _compute_wl_formula(self) -> np.ndarray:
         """Compute wl_nm from λ(x) = a*x + b + Δλ."""
@@ -231,6 +305,17 @@ class Vis133M:
             raise RuntimeError("wavecal_shift only applies in formula mode")
         self.wavecal_shift = float(delta_lambda_nm)
         self.wl_nm = self._compute_wl_formula()
+
+    def calibration_report(self) -> None:
+        """Print the wavelength calibration report (for instances from from_files)."""
+        lines = _format_calibration_report(self)
+        if lines is None:
+            print(
+                "Calibration report only available for instances created with "
+                "Vis133M.from_files()."
+            )
+        else:
+            print("\n".join(lines))
 
     def measure_peak(
         self,
