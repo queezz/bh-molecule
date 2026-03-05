@@ -530,10 +530,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-polynomial-wavelength-model" class="md-nav__link">
+  <a href="#2-polynomial-wavelength-model-and-calibration-pixels" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Polynomial wavelength model
+        2. Polynomial wavelength model and calibration pixels
       
     </span>
   </a>
@@ -1209,10 +1209,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-polynomial-wavelength-model" class="md-nav__link">
+  <a href="#2-polynomial-wavelength-model-and-calibration-pixels" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Polynomial wavelength model
+        2. Polynomial wavelength model and calibration pixels
       
     </span>
   </a>
@@ -1332,23 +1332,31 @@ dispersion of the spectrometer.</p>
 <div class="highlight"><pre><span></span><code>csv_to_linear_formulas()
 </code></pre></div>
 <hr />
-<h2 id="2-polynomial-wavelength-model">2. Polynomial wavelength model<a class="headerlink" href="#2-polynomial-wavelength-model" title="Permanent link">&para;</a></h2>
-<p>To avoid loading the CSV at runtime, the wavelength solution is compressed into a <strong>polynomial mapping</strong>.</p>
-<p>For a chosen detector channel:</p>
-<p>λ(x) = c₀ + c₁ x + c₂ x² + ...</p>
+<h2 id="2-polynomial-wavelength-model-and-calibration-pixels">2. Polynomial wavelength model and calibration pixels<a class="headerlink" href="#2-polynomial-wavelength-model-and-calibration-pixels" title="Permanent link">&para;</a></h2>
+<p>To avoid loading the CSV at runtime, the wavelength solution is compressed into
+an <strong>instrument dispersion polynomial</strong>.</p>
+<p>For a chosen detector channel, in the <em>calibration</em> pixel coordinate system:</p>
+<p>λ(x_cal) = P(x_cal - pixel_reference)</p>
 <p>where</p>
-<div class="highlight"><pre><span></span><code>x = pixel - pixel_reference
+<ul>
+<li>P is the fitted polynomial</li>
+<li><code>x_cal</code> is the pixel coordinate in the calibration image</li>
+<li><code>pixel_reference</code> is the reference pixel index in that calibration image</li>
+</ul>
+<p>The calibration cube used to build this model has a fixed number of pixels in
+the dispersion direction:</p>
+<div class="highlight"><pre><span></span><code>calibration_pixels = len(x_cal)
 </code></pre></div>
-<p>The coefficients are obtained by least-squares fitting to the CSV reference wavelengths.</p>
 <p>The helper function:</p>
-<div class="highlight"><pre><span></span><code>compute_calibration_from_reference(csv_path, fits_path)
+<div class="highlight"><pre><span></span><code>compute_calibration_from_reference(wavcal_csv, fits_path)
 </code></pre></div>
-<p>returns:</p>
+<p>returns a dictionary including:</p>
 <div class="highlight"><pre><span></span><code>{
-  reference_cw_nm
-  coefficients
-  formula_type
-  pixel_reference
+  reference_cw_nm,   # CW of the calibration image
+  coefficients,      # polynomial coefficients for P
+  formula_type,
+  pixel_reference,   # reference pixel in calibration coordinates
+  calibration_pixels # wavelength axis length of the calibration image
 }
 </code></pre></div>
 <hr />
@@ -1356,14 +1364,13 @@ dispersion of the spectrometer.</p>
 <p>The calibration is written to:</p>
 <div class="highlight"><pre><span></span><code>bh_molecule/_resources/bh_wavecal.json
 </code></pre></div>
-<p>Example:</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;reference_cw_nm&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">433.0</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;coefficients&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">430.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.02</span><span class="p">,</span><span class="w"> </span><span class="mf">1e-7</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;formula_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;polynomial&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;pixel_reference&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">512</span>
-<span class="p">}</span>
-</code></pre></div>
+<p>Example schema:</p>
+<ul>
+<li><code>reference_cw_nm</code> – central wavelength of the <em>calibration</em> FITS image  </li>
+<li><code>coefficients</code> – polynomial coefficients for P  </li>
+<li><code>pixel_reference</code> – reference pixel index in the calibration cube  </li>
+<li><code>calibration_pixels</code> – number of calibration pixels along dispersion  </li>
+</ul>
 <p>The file is normally generated using the package-integrated builder module:</p>
 <div class="highlight"><pre><span></span><code>python -m bh_molecule.calibration_builder --csv 133mVis_wavcal.csv --fits path/to/reference.fits
 </code></pre></div>
@@ -1381,23 +1388,28 @@ dispersion of the spectrometer.</p>
 <li>Load calibration
 <div class="highlight"><pre><span></span><code>cfg = load_bh_wavecal_json()
 </code></pre></div></li>
-<li>
-<p>Determine the central wavelength (CW)</p>
-<ul>
-<li>from FITS header (<code>get_cw_from_header</code>)</li>
-<li>or from spectral features (<code>estimate_cw_from_features</code>)</li>
-</ul>
-</li>
-<li>
-<p>Generate wavelength axis
-<div class="highlight"><pre><span></span><code>apply_polynomial_wavecal(n_pixels, cw_nm=cw, wavecal=cfg)
-</code></pre></div>
-If the measured CW differs from the reference CW, the polynomial is shifted by
-<div class="highlight"><pre><span></span><code>cw_nm − reference_cw_nm
-</code></pre></div>
-preserving dispersion while adapting to the new centre wavelength.</p>
-</li>
+<li>Obtain the central wavelength (CW_data) for the <strong>current</strong> measurement
+   from manual input, FITS metadata, H-γ fitting or BH Q-branch fitting.</li>
+<li>Generate wavelength axis using the calibration pixels and CW shift:</li>
 </ol>
+<p>Let:</p>
+<ul>
+<li><code>N = n_pixels</code> – dispersion length in the <em>data</em> cube</li>
+<li><code>Nc = cfg["calibration_pixels"]</code> – dispersion length of the calibration cube</li>
+</ul>
+<p>Define the mapping from data pixels to calibration pixels:</p>
+<div class="highlight"><pre><span></span><code>scale = Nc / N
+x_data = np.arange(N)
+x_cal  = x_data * scale
+</code></pre></div>
+<p>Then the wavelength axis is:</p>
+<div class="highlight"><pre><span></span><code>wl = apply_wavecal(n_pixels=N, cw_nm=CW_data, wavecal=cfg)
+</code></pre></div>
+<p>internally implementing:</p>
+<div class="highlight"><pre><span></span><code>λ(x_data) = P(x_cal - pixel_reference) + (CW_data - reference_cw_nm)
+</code></pre></div>
+<p>with P defined entirely by the calibration step. The code does <strong>not</strong> infer
+CW_data automatically; it must be provided explicitly for each dataset.</p>
 <hr />
 <h2 id="5-central-wavelength-estimation-in-bh-experiments">5. Central wavelength estimation in BH experiments<a class="headerlink" href="#5-central-wavelength-estimation-in-bh-experiments" title="Permanent link">&para;</a></h2>
 <p>Typical spectra around <strong>433 nm</strong> contain two useful features:</p>

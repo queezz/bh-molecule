@@ -804,6 +804,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#bh_molecule.instruments.wavecal.apply_wavecal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;apply_wavecal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#bh_molecule.instruments.wavecal.compute_calibration_from_reference" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1310,6 +1321,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#bh_molecule.instruments.wavecal.apply_wavecal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;apply_wavecal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#bh_molecule.instruments.wavecal.compute_calibration_from_reference" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1497,12 +1519,38 @@
 
     <div class="doc doc-contents ">
 
-        <p>Return a wavelength axis using a stored polynomial calibration.</p>
-<p>The calibration is defined by <code>bh_wavecal.json</code> which stores a reference
-central wavelength, a polynomial in pixel-offset coordinates, and a
-reference pixel index. When <em>cw_nm</em> is provided and differs from the
-reference CW, the entire wavelength axis is shifted by the scalar
-difference, preserving dispersion.</p>
+        <p>Backward-compatible wrapper for :func:<code>apply_wavecal</code>.</p>
+<p>This function is kept for compatibility with existing code. It does <strong>not</strong>
+attempt to infer CW from headers or data; if <em>cw_nm</em> is omitted, the
+calibration's own <code>reference_cw_nm</code> is used (i.e. zero CW shift).</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bh_molecule.instruments.wavecal.apply_wavecal" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">apply_wavecal</span><span class="p">(</span><span class="n">n_pixels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cw_nm</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">wavecal</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></code>
+
+<a href="#bh_molecule.instruments.wavecal.apply_wavecal" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return a wavelength axis using a stored dispersion + explicit CW.</p>
+<p>This helper evaluates the calibration polynomial in the <em>calibration</em>
+pixel coordinate system and then applies a global CW shift:</p>
+<p>λ(x_data) = P(x_cal - pixel_reference) + (CW_data - reference_cw_nm)</p>
+<p>where</p>
+<ul>
+<li>P is the dispersion polynomial defined during calibration</li>
+<li>x_cal = x_data * (calibration_pixels / n_pixels)</li>
+<li>CW_data is the user-supplied <code>cw_nm</code></li>
+<li><code>reference_cw_nm</code> is the CW of the calibration image</li>
+</ul>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -1525,7 +1573,7 @@ difference, preserving dispersion.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Number of detector pixels along the dispersion direction.</p>
+                <p>Number of detector pixels along the dispersion direction in the <em>data</em>.</p>
               </div>
             </td>
             <td>
@@ -1537,16 +1585,16 @@ difference, preserving dispersion.</p>
                 <code>cw_nm</code>
             </td>
             <td>
-                  <code><span title="float">float</span> | None</code>
+                  <code><span title="float">float</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Central wavelength (CW) in nm for the <em>current</em> measurement. When
-omitted, the reference CW from the JSON file is used.</p>
+                <p>Central wavelength (CW) in nm for the <em>current</em> measurement (must be
+supplied explicitly; it is not inferred automatically).</p>
               </div>
             </td>
             <td>
-                  <code>None</code>
+                <em>required</em>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -1554,16 +1602,15 @@ omitted, the reference CW from the JSON file is used.</p>
                 <code>wavecal</code>
             </td>
             <td>
-                  <code><span title="typing.Mapping">Mapping</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>] | None</code>
+                  <code><span title="typing.Mapping">Mapping</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Optional pre-loaded JSON dictionary. When omitted, it is loaded via
-:func:<code>load_bh_wavecal_json</code>.</p>
+                <p>Calibration dictionary as returned by :func:<code>load_bh_wavecal_json</code>.</p>
               </div>
             </td>
             <td>
-                  <code>None</code>
+                <em>required</em>
             </td>
           </tr>
       </tbody>
