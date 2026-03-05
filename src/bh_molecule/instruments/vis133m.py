@@ -7,6 +7,10 @@ from .wavecal import (
     csv_to_linear_formulas,
     measure_peak_from_cube as _measure_peak_from_cube,
     compute_wavelength_shift as _compute_wavelength_shift,
+    load_bh_wavecal_json,
+    apply_polynomial_wavecal,
+    get_cw_from_header,
+    estimate_cw_from_features,
 )
 
 
@@ -124,6 +128,75 @@ class Vis133M:
 
         self._dark = None  # None | scalar | (F,) | (C,) | (F,C) | ("idx", f, c)
         self._baseline_zero = False  # If True, subtract per-row minima for spectra
+
+    @classmethod
+    def from_files(
+        cls,
+        fits_path: str,
+        wavecal_json: str,
+        cw: str | float = "auto",
+        scale: float = 1.0,
+    ) -> "Vis133M":
+        """Create a Vis133M instance with wavelength calibration from a JSON polynomial.
+
+        Loads the FITS cube and header, loads the wavecal JSON, determines central
+        wavelength (CW), applies the polynomial wavelength calibration, and stores
+        slopes/intercepts so all plotting methods use the calibrated wavelength axis.
+
+        Parameters
+        ----------
+        fits_path : str
+            Path to a FITS file containing a 3D data cube (F, C, P).
+        wavecal_json : str
+            Path to a wavelength calibration JSON file (e.g. bh_avecal.json or
+            bh_wavecal.json) as produced by the calibration builder. Loaded via
+            load_bh_wavecal_json(path=wavecal_json).
+        cw : str | float, optional
+            Central wavelength in nm. If ``"auto"`` (default), use
+            get_cw_from_header(header); if None, use estimate_cw_from_features(cube).
+            If a float, use that value directly.
+        scale : float, optional
+            Multiplicative scale factor applied to the cube data (default 1.0).
+
+        Returns
+        -------
+        Vis133M
+            Instance with wavelength calibration applied; plot_spectrum_plotly,
+            plot_pixel_range, and other methods use the calibrated wavelength axis.
+        """
+        with fits.open(fits_path) as hdul:
+            hdu = hdul[0]
+            cube = np.asarray(hdu.data, dtype=float)
+            header = dict(hdu.header)
+        if cube.ndim != 3:
+            raise ValueError(f"Expected 3D cube, got {cube.ndim}D")
+        F, C, P = cube.shape
+
+        wavecal = load_bh_wavecal_json(path=wavecal_json)
+
+        if cw == "auto":
+            cw_nm = get_cw_from_header(header)
+            if cw_nm is None:
+                cw_nm = estimate_cw_from_features(cube, wavecal=wavecal)
+        elif isinstance(cw, (int, float)):
+            cw_nm = float(cw)
+        else:
+            raise TypeError(f"cw must be 'auto' or a float, got {type(cw).__name__!r}")
+
+        wl_nm = apply_polynomial_wavecal(P, cw_nm=cw_nm, wavecal=wavecal)
+        x = np.arange(P, dtype=float)
+        coefs = np.polyfit(x, wl_nm, 1)
+        slopes = np.full(C, coefs[0])
+        intercepts = np.full(C, coefs[1])
+
+        return cls(
+            fits_path,
+            wavecal=None,
+            scale=scale,
+            wavecal_mode="formula",
+            slopes=slopes,
+            intercepts=intercepts,
+        )
 
     def _compute_wl_formula(self) -> np.ndarray:
         """Compute wl_nm from λ(x) = a*x + b + Δλ."""
