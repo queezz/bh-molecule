@@ -101,13 +101,13 @@ Example:
 }
 ```
 
-The file is normally generated using:
+The file is normally generated using the package-integrated builder module:
 
 ```
-tools/build_wavecal.py
+python -m bh_molecule.calibration_builder --csv 11BH_v00.csv --fits path/to/reference.fits
 ```
 
-which:
+This builder:
 
 1. reads the reference CSV
 2. fits the polynomial

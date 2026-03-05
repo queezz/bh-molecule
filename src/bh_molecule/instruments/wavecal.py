@@ -391,8 +391,8 @@ def save_bh_wavecal_json(
 
     When *path* is ``None``, the JSON is written into the installed package
     resources directory under ``bh_molecule._resources/bh_wavecal.json``. This
-    helper is primarily intended for the developer utility script
-    ``tools/build_wavecal.py``.
+    helper is primarily intended for the offline builder in
+    ``bh_molecule.calibration_builder``.
     """
     if path is None:
         res_dir = resources.files("bh_molecule._resources")
