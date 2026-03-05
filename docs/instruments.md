@@ -49,36 +49,43 @@ csv_to_linear_formulas()
 
 ---
 
-## 2. Polynomial wavelength model
+## 2. Polynomial wavelength model and calibration pixels
 
-To avoid loading the CSV at runtime, the wavelength solution is compressed into a **polynomial mapping**.
+To avoid loading the CSV at runtime, the wavelength solution is compressed into
+an **instrument dispersion polynomial**.
 
-For a chosen detector channel:
+For a chosen detector channel, in the *calibration* pixel coordinate system:
 
-λ(x) = c₀ + c₁ x + c₂ x² + ...
+λ(x_cal) = P(x_cal - pixel_reference)
 
 where
 
-```
-x = pixel - pixel_reference
-```
+- P is the fitted polynomial
+- ``x_cal`` is the pixel coordinate in the calibration image
+- ``pixel_reference`` is the reference pixel index in that calibration image
 
-The coefficients are obtained by least-squares fitting to the CSV reference wavelengths.
+The calibration cube used to build this model has a fixed number of pixels in
+the dispersion direction:
+
+```
+calibration_pixels = len(x_cal)
+```
 
 The helper function:
 
 ```
-compute_calibration_from_reference(csv_path, fits_path)
+compute_calibration_from_reference(wavcal_csv, fits_path)
 ```
 
-returns:
+returns a dictionary including:
 
 ```
 {
-  reference_cw_nm
-  coefficients
-  formula_type
-  pixel_reference
+  reference_cw_nm,   # CW of the calibration image
+  coefficients,      # polynomial coefficients for P
+  formula_type,
+  pixel_reference,   # reference pixel in calibration coordinates
+  calibration_pixels # wavelength axis length of the calibration image
 }
 ```
 
@@ -92,16 +99,12 @@ The calibration is written to:
 bh_molecule/_resources/bh_wavecal.json
 ```
 
-Example:
+Example schema:
 
-```json
-{
-  "reference_cw_nm": 433.0,
-  "coefficients": [430.0, 0.02, 1e-7],
-  "formula_type": "polynomial",
-  "pixel_reference": 512
-}
-```
+- ``reference_cw_nm`` – central wavelength of the *calibration* FITS image  
+- ``coefficients`` – polynomial coefficients for P  
+- ``pixel_reference`` – reference pixel index in the calibration cube  
+- ``calibration_pixels`` – number of calibration pixels along dispersion  
 
 The file is normally generated using the package-integrated builder module:
 
@@ -127,20 +130,37 @@ Instead:
 ```
 cfg = load_bh_wavecal_json()
 ```
-2. Determine the central wavelength (CW)
+2. Obtain the central wavelength (CW_data) for the **current** measurement
+   from manual input, FITS metadata, H-γ fitting or BH Q-branch fitting.
+3. Generate wavelength axis using the calibration pixels and CW shift:
 
-    - from FITS header (`get_cw_from_header`)
-    - or from spectral features (`estimate_cw_from_features`)
-    
-3. Generate wavelength axis
+Let:
+
+- ``N = n_pixels`` – dispersion length in the *data* cube
+- ``Nc = cfg["calibration_pixels"]`` – dispersion length of the calibration cube
+
+Define the mapping from data pixels to calibration pixels:
+
 ```
-apply_polynomial_wavecal(n_pixels, cw_nm=cw, wavecal=cfg)
+scale = Nc / N
+x_data = np.arange(N)
+x_cal  = x_data * scale
 ```
-If the measured CW differs from the reference CW, the polynomial is shifted by
+
+Then the wavelength axis is:
+
 ```
-cw_nm − reference_cw_nm
+wl = apply_wavecal(n_pixels=N, cw_nm=CW_data, wavecal=cfg)
 ```
-preserving dispersion while adapting to the new centre wavelength.
+
+internally implementing:
+
+```
+λ(x_data) = P(x_cal - pixel_reference) + (CW_data - reference_cw_nm)
+```
+
+with P defined entirely by the calibration step. The code does **not** infer
+CW_data automatically; it must be provided explicitly for each dataset.
 
 ---
 

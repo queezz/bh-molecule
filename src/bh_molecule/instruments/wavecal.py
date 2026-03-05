@@ -384,6 +384,7 @@ def compute_calibration_from_reference(
         "formula_type": "polynomial",
         "pixel_reference": int(pixel_reference),
         "cw_source": cw_source,
+        "calibration_pixels": int(n_pix_csv),
     }
     if cw_header is not None:
         result["header_cw_nm"] = float(cw_header)
@@ -413,6 +414,9 @@ def save_bh_wavecal_json(
                 "coefficients": [float(c) for c in params["coefficients"]],
                 "formula_type": str(params.get("formula_type", "polynomial")),
                 "pixel_reference": int(params["pixel_reference"]),
+                "calibration_pixels": int(params["calibration_pixels"]),
+                "cw_source": params.get("cw_source", "polynomial"),
+                "header_cw_nm": float(params.get("header_cw_nm", params["reference_cw_nm"])),
             },
             f,
             indent=2,
@@ -449,12 +453,90 @@ def load_bh_wavecal_json(path: str | None = None) -> dict:
     if not isinstance(coeffs, (list, tuple)) or len(coeffs) < 2:
         raise ValueError("coefficients must be a list of at least two floats")
 
-    return {
+    cal_pix = cfg.get("calibration_pixels")
+    if cal_pix is not None:
+        cal_pix_val = int(cal_pix)
+    else:
+        cal_pix_val = None
+
+    out: dict[str, Any] = {
         "reference_cw_nm": float(cfg["reference_cw_nm"]),
         "coefficients": [float(c) for c in coeffs],
         "formula_type": "polynomial",
         "pixel_reference": int(cfg["pixel_reference"]),
     }
+    if cal_pix_val is not None:
+        out["calibration_pixels"] = cal_pix_val
+    if "cw_source" in cfg:
+        out["cw_source"] = cfg["cw_source"]
+    if "header_cw_nm" in cfg:
+        out["header_cw_nm"] = float(cfg["header_cw_nm"])
+    return out
+
+
+def apply_wavecal(
+    n_pixels: int,
+    cw_nm: float,
+    wavecal: Mapping[str, Any],
+) -> np.ndarray:
+    """Return a wavelength axis using a stored dispersion + explicit CW.
+
+    This helper evaluates the calibration polynomial in the *calibration*
+    pixel coordinate system and then applies a global CW shift:
+
+    λ(x_data) = P(x_cal - pixel_reference) + (CW_data - reference_cw_nm)
+
+    where
+
+    - P is the dispersion polynomial defined during calibration
+    - x_cal = x_data * (calibration_pixels / n_pixels)
+    - CW_data is the user-supplied ``cw_nm``
+    - ``reference_cw_nm`` is the CW of the calibration image
+
+    Parameters
+    ----------
+    n_pixels :
+        Number of detector pixels along the dispersion direction in the *data*.
+    cw_nm :
+        Central wavelength (CW) in nm for the *current* measurement (must be
+        supplied explicitly; it is not inferred automatically).
+    wavecal :
+        Calibration dictionary as returned by :func:`load_bh_wavecal_json`.
+
+    Returns
+    -------
+    ndarray
+        Wavelength axis of shape ``(n_pixels,)`` in nanometres.
+    """
+    coeffs = np.asarray(wavecal["coefficients"], dtype=float)
+    pixel_ref = int(wavecal["pixel_reference"])
+    ref_cw = float(wavecal["reference_cw_nm"])
+
+    cal_pix = wavecal.get("calibration_pixels")
+    if cal_pix is None:
+        raise ValueError(
+            "wavecal is missing 'calibration_pixels'. Rebuild bh_wavecal.json "
+            "with an updated calibration_builder so this field is recorded."
+        )
+    cal_pix = int(cal_pix)
+    if cal_pix <= 0:
+        raise ValueError("calibration_pixels must be a positive integer")
+
+    # Map data pixel indices into the calibration pixel coordinate system.
+    scale = cal_pix / float(n_pixels)
+    x_data = np.arange(n_pixels, dtype=float)
+    x_cal = x_data * scale
+    x_rel = x_cal - float(pixel_ref)
+
+    # Evaluate polynomial with coefficients c0 + c1*x + c2*x^2 + ...
+    wl = np.zeros_like(x_rel, dtype=float)
+    power = np.ones_like(x_rel, dtype=float)
+    for c in coeffs:
+        wl += c * power
+        power *= x_rel
+
+    wl += float(cw_nm) - ref_cw
+    return wl
 
 
 def apply_polynomial_wavecal(
@@ -463,49 +545,17 @@ def apply_polynomial_wavecal(
     cw_nm: float | None = None,
     wavecal: Mapping[str, Any] | None = None,
 ) -> np.ndarray:
-    """Return a wavelength axis using a stored polynomial calibration.
+    """Backward-compatible wrapper for :func:`apply_wavecal`.
 
-    The calibration is defined by ``bh_wavecal.json`` which stores a reference
-    central wavelength, a polynomial in pixel-offset coordinates, and a
-    reference pixel index. When *cw_nm* is provided and differs from the
-    reference CW, the entire wavelength axis is shifted by the scalar
-    difference, preserving dispersion.
-
-    Parameters
-    ----------
-    n_pixels :
-        Number of detector pixels along the dispersion direction.
-    cw_nm :
-        Central wavelength (CW) in nm for the *current* measurement. When
-        omitted, the reference CW from the JSON file is used.
-    wavecal :
-        Optional pre-loaded JSON dictionary. When omitted, it is loaded via
-        :func:`load_bh_wavecal_json`.
-
-    Returns
-    -------
-    ndarray
-        Wavelength axis of shape ``(n_pixels,)`` in nanometres.
+    This function is kept for compatibility with existing code. It does **not**
+    attempt to infer CW from headers or data; if *cw_nm* is omitted, the
+    calibration's own ``reference_cw_nm`` is used (i.e. zero CW shift).
     """
     if wavecal is None:
         wavecal = load_bh_wavecal_json()
-
-    coeffs = np.asarray(wavecal["coefficients"], dtype=float)
-    pixel_ref = int(wavecal["pixel_reference"])
-    ref_cw = float(wavecal["reference_cw_nm"])
-
-    x = np.arange(n_pixels, dtype=float) - float(pixel_ref)
-    # Evaluate polynomial with coefficients c0 + c1*x + c2*x^2 + ...
-    wl = np.zeros_like(x, dtype=float)
-    power = np.ones_like(x, dtype=float)
-    for c in coeffs:
-        wl += c * power
-        power *= x
-
-    if cw_nm is not None:
-        wl += float(cw_nm) - ref_cw
-
-    return wl
+    if cw_nm is None:
+        cw_nm = float(wavecal["reference_cw_nm"])
+    return apply_wavecal(n_pixels, cw_nm=cw_nm, wavecal=wavecal)
 
 
 def estimate_cw_from_features(
