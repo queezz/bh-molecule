@@ -185,6 +185,7 @@ class Vis133M:
         wavecal: str | None = None,
         cw: str | float = "auto",
         scale: float = 1.0,
+        diagnostic_cw: bool = False,
     ) -> "Vis133M":
         """Create a Vis133M instance with wavelength calibration from a JSON polynomial.
 
@@ -210,6 +211,10 @@ class Vis133M:
             If a float, use that value directly.
         scale : float, optional
             Multiplicative scale factor applied to the cube data (default 1.0).
+        diagnostic_cw : bool, optional
+            If True and CW is taken from spectral features (no header CW), show a
+            diagnostic plot from estimate_cw_from_features (spectrum, peaks, chosen
+            peak). Default False.
 
         Returns
         -------
@@ -235,7 +240,11 @@ class Vis133M:
             if cw_nm is not None:
                 cw_source = "header"
             else:
-                cw_nm = estimate_cw_from_features(cube, wavecal=wavecal)
+                cw_nm = estimate_cw_from_features(
+                    cube,
+                    wavecal=wavecal,
+                    diagnostic=diagnostic_cw,
+                )
                 cw_source = "features"
         elif isinstance(cw, (int, float)):
             cw_nm = float(cw)

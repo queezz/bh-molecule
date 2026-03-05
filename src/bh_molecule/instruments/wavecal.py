@@ -10,6 +10,7 @@ from typing import Mapping, Any
 import numpy as np
 from astropy.io import fits
 from scipy.optimize import curve_fit
+from scipy.signal import find_peaks
 
 
 def load_wavecal_csv(
@@ -562,41 +563,60 @@ def estimate_cw_from_features(
     spectrum: np.ndarray,
     *,
     wavecal: Mapping[str, Any] | None = None,
+    diagnostic: bool = False,
 ) -> float:
     """Estimate central wavelength (CW) from spectral features.
 
     This helper provides a simple, CSV-free way to estimate the CW for a
-    measurement when header metadata are missing or unreliable. The current
-    implementation is intentionally conservative:
+    measurement when header metadata are missing or unreliable.
 
-    - the spectrum is treated as a 1D array (any extra dimensions are
-      averaged);
-    - the brightest pixel is taken as a proxy for the dominant feature bundle;
-    - CW is inferred from the calibrated wavelength at that pixel using the
-      stored polynomial from :func:`load_bh_wavecal_json`.
-
-    More sophisticated logic (e.g. explicitly locating H-γ and the BH
-    Q-branch bundle) can be built on top of this function in future.
+    For a 3D cube (F, C, P): the frame and channel with strongest total
+    signal are selected; optionally a few neighbouring frames are averaged
+    to improve SNR. The brightest pixel in the resulting 1D spectrum is used
+    as the dominant feature; CW is inferred from the calibrated wavelength
+    at that pixel using the stored polynomial.
 
     Parameters
     ----------
     spectrum :
         1D or ND array of intensities along the dispersion axis in the last
-        dimension.
+        dimension. If 3D (F, C, P), frame and channel are auto-selected by
+        signal strength and neighbouring frames may be averaged.
     wavecal :
         Optional pre-loaded calibration dictionary. When omitted, it is loaded
         from ``bh_wavecal.json``.
+    diagnostic : bool, optional
+        If True, create a matplotlib plot showing the spectrum used, all
+        detected peaks (green), the selected peak (red), and a title with
+        estimated CW, frame/channel used, and peak pixel.
 
     Returns
     -------
     float
         Estimated CW in nanometres.
     """
+    import matplotlib.pyplot as plt
+
     arr = np.asarray(spectrum, dtype=float)
     if arr.ndim == 0:
         raise ValueError("spectrum must be at least 1D")
-    if arr.ndim > 1:
-        # Average over all axes except the last (dispersion axis).
+
+    frame_used: int | None = None
+    channel_used: int | None = None
+
+    if arr.ndim == 3:
+        F, C, P = arr.shape
+        frame_signal = arr.sum(axis=(1, 2))
+        best_frame = int(np.argmax(frame_signal))
+        f_lo = max(0, best_frame - 1)
+        f_hi = min(F, best_frame + 2)
+        sub = arr[f_lo:f_hi].mean(axis=0)
+        channel_signal = sub.sum(axis=1)
+        best_channel = int(np.argmax(channel_signal))
+        arr = sub[best_channel, :].copy()
+        frame_used = best_frame
+        channel_used = best_channel
+    elif arr.ndim > 1:
         axes = tuple(range(arr.ndim - 1))
         arr = arr.mean(axis=axes)
 
@@ -609,11 +629,53 @@ def estimate_cw_from_features(
     peak_idx = int(np.argmax(arr))
     x = float(peak_idx - pixel_ref)
 
-    # Evaluate polynomial at the peak pixel to estimate absolute wavelength.
     wl = 0.0
     power = 1.0
     for c in coeffs:
         wl += float(c) * power
         power *= x
+    cw_nm = float(wl)
 
-    return float(wl)
+    if diagnostic:
+        peak_inds, _ = find_peaks(
+            arr,
+            prominence=max(1e-9, (np.nanmax(arr) - np.nanmin(arr)) * 0.05),
+        )
+        if peak_inds.size == 0:
+            peak_inds = np.array([peak_idx])
+
+        fig, ax = plt.subplots()
+        pixels = np.arange(arr.size)
+        ax.plot(pixels, arr, color="k", linewidth=0.8, label="spectrum")
+        ax.scatter(
+            peak_inds,
+            arr[peak_inds],
+            color="green",
+            s=40,
+            zorder=5,
+            label="detected peaks",
+        )
+        ax.scatter(
+            [peak_idx],
+            [arr[peak_idx]],
+            color="red",
+            s=80,
+            zorder=6,
+            label="chosen peak",
+        )
+        title_parts = [
+            f"Estimated CW: {cw_nm:.2f} nm",
+            f"Peak pixel: {peak_idx}",
+        ]
+        if frame_used is not None:
+            title_parts.append(f"Frame used: {frame_used}")
+        if channel_used is not None:
+            title_parts.append(f"Channel used: {channel_used}")
+        ax.set_title("  |  ".join(title_parts))
+        ax.set_xlabel("pixel")
+        ax.set_ylabel("intensity")
+        ax.legend(loc="upper right")
+        fig.tight_layout()
+        plt.show()
+
+    return cw_nm
