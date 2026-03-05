@@ -68,7 +68,9 @@ def load_wavecal_csv(
                 raise ValueError(f"Row {i} col {j}: invalid wavelength")
             vals.append(v)
         if n_pixels is not None and len(vals) != n_pixels:
-            raise ValueError(f"Row {i}: expected {n_pixels} wavelength cols, got {len(vals)}")
+            raise ValueError(
+                f"Row {i}: expected {n_pixels} wavelength cols, got {len(vals)}"
+            )
         wl_rows.append(vals)
 
     ch_arr = np.array(ch_col)
@@ -117,7 +119,9 @@ def csv_to_linear_formulas(wl_nm: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     return slopes, intercepts
 
 
-def _gaussian_plus_baseline(x: np.ndarray, amp: float, mu: float, sigma: float, base: float) -> np.ndarray:
+def _gaussian_plus_baseline(
+    x: np.ndarray, amp: float, mu: float, sigma: float, base: float
+) -> np.ndarray:
     """Gaussian + constant baseline model."""
     return base + amp * np.exp(-0.5 * ((x - mu) / sigma) ** 2)
 
@@ -219,7 +223,9 @@ def measure_peak_from_cube(
     else:
         spec = stack[0]
 
-    return fit_peak_gaussian(spec, pixel_window=pixel_window, baseline_zero=baseline_zero)
+    return fit_peak_gaussian(
+        spec, pixel_window=pixel_window, baseline_zero=baseline_zero
+    )
 
 
 def compute_wavelength_shift(
@@ -417,7 +423,9 @@ def save_bh_wavecal_json(
                 "pixel_reference": int(params["pixel_reference"]),
                 "calibration_pixels": int(params["calibration_pixels"]),
                 "cw_source": params.get("cw_source", "polynomial"),
-                "header_cw_nm": float(params.get("header_cw_nm", params["reference_cw_nm"])),
+                "header_cw_nm": float(
+                    params.get("header_cw_nm", params["reference_cw_nm"])
+                ),
             },
             f,
             indent=2,
@@ -674,8 +682,7 @@ def estimate_cw_from_features(
         ax.set_title("  |  ".join(title_parts))
         ax.set_xlabel("pixel")
         ax.set_ylabel("intensity")
-        ax.legend(loc="upper right")
-        fig.tight_layout()
+        ax.legend(loc="upper left", bbox_to_anchor=(1.02, 1), frameon=True)
         plt.show()
 
     return cw_nm
