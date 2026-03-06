@@ -122,7 +122,7 @@ class Vis133M:
         wavecal: str | None = None,
         scale: float = 1.0,
         *,
-        wavecal_mode: str = "csv",
+        wavecal_mode: str = "formula",
         slopes: np.ndarray | None = None,
         intercepts: np.ndarray | None = None,
     ):
@@ -164,7 +164,18 @@ class Vis133M:
             if mode == "csv":
                 raise ValueError("wavecal is required when wavecal_mode='csv'")
             if slopes is None or intercepts is None:
-                raise ValueError("slopes and intercepts required when wavecal=None")
+                # Default: use the package polynomial wavecal at its reference CW
+                # to derive an approximate linear dispersion relation. This keeps
+                # Vis133M(fits_path) usable without an external instrument CSV.
+                wavecal_dict = load_bh_wavecal_json()
+                reference_cw_nm = float(wavecal_dict["reference_cw_nm"])
+                wl_nm_1d = apply_polynomial_wavecal(
+                    P, cw_nm=reference_cw_nm, wavecal=wavecal_dict
+                )
+                x = np.arange(P, dtype=float)
+                coefs = np.polyfit(x, wl_nm_1d, 1)
+                slopes = np.full(C, float(coefs[0]))
+                intercepts = np.full(C, float(coefs[1]))
             self._wavecal_slopes = np.asarray(slopes, dtype=float)
             self._wavecal_intercepts = np.asarray(intercepts, dtype=float)
             if self._wavecal_slopes.shape != (C,) or self._wavecal_intercepts.shape != (C,):
