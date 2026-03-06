@@ -1310,6 +1310,10 @@ class Vis133M:
                 vmax=vmax,
             )
         ax.set_xlabel(xlabel)
+        if xlabel == "frame":
+            from matplotlib.ticker import MaxNLocator
+
+            ax.xaxis.set_major_locator(MaxNLocator(integer=True))
         ax.set_ylabel("channel")
         cb = plt.colorbar(im, ax=ax)
         cb.set_label(cbar_label)
