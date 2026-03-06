@@ -95,7 +95,9 @@ def plot_grid(
     n = len(keys)
     ncols = min(max(1, ncols), n)
     nrows = math.ceil(n / ncols)
-    fig, axes = plt.subplots(nrows, ncols, figsize=(5.2 * ncols, 3.8 * nrows), squeeze=False)
+    fig, axes = plt.subplots(
+        nrows, ncols, figsize=(5.2 * ncols, 3.8 * nrows), squeeze=False
+    )
     axs = axes.ravel()
     for ax, key in zip(axs, keys):
         x, y, yfit = curves[key]
@@ -221,4 +223,3 @@ def plot_overlay(
 
 
 __all__ = ["plot_single", "plot_grid", "plot_overlay"]
-

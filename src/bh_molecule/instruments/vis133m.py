@@ -1270,6 +1270,7 @@ class Vis133M:
         vmin: float | None = None,
         vmax: float | None = None,
         extent: tuple | None = None,
+        colorbar: bool = True,
     ):
         """Internal helper: plot an (F, C) image with time on x and channel on y.
 
@@ -1362,8 +1363,9 @@ class Vis133M:
 
             ax.xaxis.set_major_locator(MaxNLocator(integer=True))
         ax.set_ylabel("channel")
-        cb = plt.colorbar(im, ax=ax)
-        cb.set_label(cbar_label)
+        if colorbar:
+            cb = plt.colorbar(im, ax=ax)
+            cb.set_label(cbar_label)
         if channel_line is not None:
             ax.axhline(float(channel_line), ls="--", lw=1.5, color="w", alpha=0.85)
         return ax
@@ -1422,6 +1424,7 @@ class Vis133M:
         log_scale: bool = False,
         vmin: float | None = None,
         vmax: float | None = None,
+        colorbar: bool = True,
     ):
         """Plot the result of ``map_band(nm_range)``.
 
@@ -1450,6 +1453,7 @@ class Vis133M:
             log_scale=log_scale,
             vmin=vmin,
             vmax=vmax,
+            colorbar=colorbar,
         )
 
     # MARK: Plotly

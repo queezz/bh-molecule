@@ -27,6 +27,13 @@ def export_band_maps_pdf(
     log_scale=False,
     grid=None,
     grid_figsize=(11, 8.5),
+    show_axes=False,
+    show_titles=True,
+    title_fontsize=8,
+    single_colorbar=True,
+    show_spines=False,
+    annotate=None,
+    tight_layout=True,
 ):
     """Export per-file band-map plots to a multi-page PDF.
 
@@ -42,6 +49,26 @@ def export_band_maps_pdf(
         ``(lo, hi)`` wavelength range in nanometres for ``Vis133M.plot_band_map``.
     cmap, cbar_label, channel_line, require_time, subtract_dark, log_scale :
         Forwarded to ``Vis133M.plot_band_map``.
+    grid : tuple (rows, cols) | None
+        If set, render band maps in a contact-sheet grid; otherwise one per page.
+    grid_figsize : tuple
+        Figure size for grid pages.
+    show_axes : bool
+        If False, remove xticks, yticks, xlabel, ylabel on grid subplots.
+    show_titles : bool
+        If True, show shot number (path.stem) as subplot title.
+    title_fontsize : int
+        Font size for subplot titles.
+    single_colorbar : bool
+        If True (default), one colorbar per page is drawn from the last subplot's
+        image (all subplots share vmin/vmax). If False, each subplot gets its own
+        colorbar.
+    show_spines : bool
+        If False, hide subplot borders (spines).
+    annotate : None | "max" | "snr"
+        If "max", show max intensity in the upper-left corner of each subplot.
+    tight_layout : bool
+        Unused for grid pages; grid uses constrained_layout=True instead.
     """
     # Materialise list so we can scan and then render.
     paths = [Path(p) for p in fits_files]
@@ -109,13 +136,16 @@ def export_band_maps_pdf(
             ):
                 batch = paths[start : start + plots_per_page]
 
-                fig, axes = plt.subplots(rows, cols, figsize=grid_figsize)
+                fig, axes = plt.subplots(
+                    rows, cols, figsize=grid_figsize, constrained_layout=True
+                )
                 # Normalise axes array for both scalar and 2D cases.
                 if hasattr(axes, "ravel"):
                     axes_flat = axes.ravel()
                 else:  # pragma: no cover - degenerate 1x1 case
                     axes_flat = [axes]
 
+                im_last = None  # last imshow result for page colorbar
                 # Draw each band map into the grid.
                 for ax, path in zip(axes_flat, batch):
                     s = Vis133M.from_files(path)
@@ -132,14 +162,54 @@ def export_band_maps_pdf(
                         log_scale=log_scale,
                         vmin=vmin,
                         vmax=vmax,
+                        colorbar=not single_colorbar,
                     )
-                    ax.set_title(path.stem, fontsize=9)
+                    if single_colorbar:
+                        im_last = ax.images[0]
+                    if show_titles:
+                        ax.set_title(path.stem, fontsize=title_fontsize)
+                    else:
+                        ax.set_title("")
+
+                    if annotate == "max":
+                        img = ax.images[0].get_array()
+                        ax.text(
+                            0.02,
+                            0.95,
+                            f"{float(np.max(img)):.1e}",
+                            transform=ax.transAxes,
+                            fontsize=6,
+                            color="white",
+                            va="top",
+                        )
+                    elif annotate == "snr":
+                        # SNR annotation: extend as needed (e.g. compute from data).
+                        pass
+
+                # Axis and spine control for used axes.
+                for ax in axes_flat[: len(batch)]:
+                    if not show_axes:
+                        ax.set_xticks([])
+                        ax.set_yticks([])
+                        ax.set_xlabel("")
+                        ax.set_ylabel("")
+                    if not show_spines:
+                        for spine in ax.spines.values():
+                            spine.set_visible(False)
+
+                # One colorbar per page when single_colorbar (same norm via vmin/vmax).
+                if single_colorbar and im_last is not None:
+                    fig.colorbar(
+                        im_last,
+                        ax=axes,
+                        location="right",
+                        label=cbar_label,
+                    )
 
                 # Hide any unused axes on the last page.
                 for ax in axes_flat[len(batch) :]:
                     ax.axis("off")
 
-                fig.tight_layout()
                 pdf.savefig(fig)
                 plt.close(fig)
 
