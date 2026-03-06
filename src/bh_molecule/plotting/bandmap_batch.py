@@ -198,7 +198,7 @@ def export_band_maps_pdf(
                         for spine in ax.spines.values():
                             spine.set_visible(False)
 
-                # One colorbar per page: gradient only, no ticks or labels.
+                # One colorbar per page: gradient + min/max labels only (no ticks).
                 if single_colorbar and im_last is not None:
                     cb = fig.colorbar(
                         im_last,
@@ -213,6 +213,35 @@ def export_band_maps_pdf(
                     cb.ax.yaxis.set_minor_locator(NullLocator())
                     cb.ax.yaxis.set_major_formatter(NullFormatter())
                     cb.ax.yaxis.set_minor_formatter(NullFormatter())
+
+                    vmin = im_last.norm.vmin
+                    vmax = im_last.norm.vmax
+
+                    def _fmt(v):
+                        if v == 0 or not np.isfinite(v):
+                            return f"{v:.0e}"
+                        exp = int(np.floor(np.log10(abs(v))))
+                        base = v / (10**exp)
+                        return f"${base:.0f} \\times 10^{exp}$"
+
+                    cb.ax.text(
+                        -0.3,
+                        1.02,
+                        _fmt(vmax),
+                        transform=cb.ax.transAxes,
+                        ha="left",
+                        va="center",
+                        fontsize=8,
+                    )
+                    cb.ax.text(
+                        -0.3,
+                        -0.03,
+                        _fmt(vmin),
+                        transform=cb.ax.transAxes,
+                        ha="left",
+                        va="center",
+                        fontsize=8,
+                    )
 
                 # Hide any unused axes on the last page.
                 for ax in axes_flat[len(batch) :]:
