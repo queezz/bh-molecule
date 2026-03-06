@@ -22,6 +22,19 @@ class FCPShape(NamedTuple):
         return f"{self.F}F × {self.C}C × {self.P}P (frames × channels × pixels)"
 
 
+def parse_vis133m_header(header: dict) -> dict:
+    """Extract useful acquisition metadata from a Vis133M FITS header."""
+    return {
+        "frames": header.get("NUMKIN"),
+        "channels": header.get("NTRACKS"),
+        "exposure_s": header.get("EXPOSURE"),
+        "temperature_c": header.get("TEMP"),
+        "central_wavelength_nm": header.get("DTNWLGTH"),
+        "binning": header.get("HBIN"),
+        "date": header.get("DATE"),
+    }
+
+
 def _format_calibration_report(instance: "Vis133M") -> list[str] | None:
     """Format the wavelength calibration report. Returns None if not from_files."""
     if not getattr(instance, "_from_files", False):
@@ -231,10 +244,12 @@ class Vis133M:
 
         with fits.open(fits_path) as hdul:
             hdu = hdul[0]
+            header = hdu.header
             cube = np.asarray(hdu.data, dtype=float)
         if cube.ndim != 3:
             raise ValueError(f"Expected 3D cube, got {cube.ndim}D")
         F, C, P = cube.shape
+        header_dict = dict(header)
 
         wavecal = load_bh_wavecal_json()
         reference_cw_nm = float(wavecal["reference_cw_nm"])
@@ -271,6 +286,8 @@ class Vis133M:
             slopes=slopes,
             intercepts=intercepts,
         )
+        instance.header = header_dict
+        instance.meta = parse_vis133m_header(header_dict)
         instance._from_files = True
         instance._calibration_fits_path = fits_path
         instance._wavecal_dict = wavecal
@@ -338,6 +355,25 @@ class Vis133M:
             )
         else:
             print("\n".join(lines))
+
+    def print_header(self):
+        """Print all FITS header fields."""
+        for k in sorted(self.header):
+            print(f"{k:12} : {self.header[k]}")
+
+    def summary(self):
+        """Print a compact summary of the acquisition."""
+        f, c, p = self.cube.shape
+        meta = getattr(self, "meta", parse_vis133m_header(self.header))
+        print("Vis133M acquisition")
+        print("-------------------")
+        print(f"Frames      : {f}")
+        print(f"Channels    : {c}")
+        print(f"Pixels      : {p}")
+        print(f"Exposure(s) : {meta.get('exposure_s')}")
+        print(f"Temp (C)    : {meta.get('temperature_c')}")
+        print(f"Center λ nm : {meta.get('central_wavelength_nm')}")
+        print(f"Date        : {meta.get('date')}")
 
     def pick_frame(self, method: str = "max") -> int:
         """Return the frame index with strongest total signal.
