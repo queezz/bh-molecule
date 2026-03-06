@@ -35,8 +35,9 @@ def export_band_maps_pdf(
     show_spines=False,
     annotate=None,
     tight_layout=True,
+    output_format="pdf",
 ):
-    """Export per-file band-map plots to a multi-page PDF.
+    """Export per-file band-map plots to a multi-page PDF or PNG files.
 
     Parameters
     ----------
@@ -70,6 +71,9 @@ def export_band_maps_pdf(
         If "max", show max intensity in the upper-left corner of each subplot.
     tight_layout : bool
         Unused for grid pages; grid uses constrained_layout=True instead.
+    output_format : {"pdf", "png"}
+        If "pdf", write a single multi-page PDF. If "png", write one PNG per page
+        (e.g. output_stem_001.png, output_stem_002.png, ...).
     """
     # Materialise list so we can scan and then render.
     paths = [Path(p) for p in fits_files]
@@ -98,10 +102,27 @@ def export_band_maps_pdf(
         vmin = None
         vmax = None
 
-    output_pdf = Path(output_pdf)
-    output_pdf.parent.mkdir(parents=True, exist_ok=True)
+    output_path = Path(output_pdf)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    use_png = output_format.lower() == "png"
+    if use_png:
+        stem = output_path.with_suffix("").name
+        out_dir = output_path.parent
+        page_counter = [0]  # use list so inner fn can mutate
 
-    with PdfPages(output_pdf) as pdf:
+        def save_page(fig):
+            page_counter[0] += 1
+            path = out_dir / f"{stem}_{page_counter[0]:03d}.png"
+            fig.savefig(path, dpi=150)
+            plt.close(fig)
+    else:
+        pdf = PdfPages(output_path)
+
+        def save_page(fig):
+            pdf.savefig(fig)
+            plt.close(fig)
+
+    try:
         if grid is None:
             # One band-map per page.
             for path in tqdm(paths, desc="Rendering band maps"):
@@ -125,8 +146,7 @@ def export_band_maps_pdf(
 
                 fig.suptitle(path.name, y=0.995)
                 fig.tight_layout()
-                pdf.savefig(fig)
-                plt.close(fig)
+                save_page(fig)
         else:
             # Contact-sheet style grid of band-maps per page.
             rows, cols = grid
@@ -247,8 +267,10 @@ def export_band_maps_pdf(
                 for ax in axes_flat[len(batch) :]:
                     ax.axis("off")
 
-                pdf.savefig(fig)
-                plt.close(fig)
+                save_page(fig)
+    finally:
+        if not use_png:
+            pdf.close()
 
 
 def export_band_maps_from_folder(
