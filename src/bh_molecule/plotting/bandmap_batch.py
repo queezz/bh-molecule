@@ -4,7 +4,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.backends.backend_pdf import PdfPages
-from matplotlib.ticker import FixedLocator
+from matplotlib.ticker import FuncFormatter
 
 try:
     # Prefer rich notebook progress bars when available.
@@ -201,25 +201,30 @@ def export_band_maps_pdf(
 
                 # One colorbar per page when single_colorbar (same norm via vmin/vmax).
                 if single_colorbar and im_last is not None:
+                    # Build formatter and pass into colorbar so only our labels are used
+                    # (avoids duplicate labels from Colorbar's default ScalarFormatter).
+                    cbar_format = None
+                    exponent = None
+                    if vmin is not None and vmax is not None and vmax > 0:
+                        exponent = int(floor(log10(vmax)))
+                        scale = 10**exponent
+                        cbar_format = FuncFormatter(
+                            lambda x, pos, s=scale: f"{x / s:.0f}"
+                        )
                     cb = fig.colorbar(
                         im_last,
                         ax=axes,
                         location="right",
                         fraction=0.025,
+                        format=cbar_format,
                     )
                     if vmin is not None and vmax is not None:
-                        ticks = np.linspace(vmin, vmax, 4)
-                        cb.ax.yaxis.set_major_locator(FixedLocator(ticks))
-                        if vmax > 0:
-                            exponent = int(floor(log10(vmax)))
-                            scale = 10**exponent
-                            cb.ax.set_yticklabels(
-                                [f"{tick / scale:.0f}" for tick in ticks]
-                            )
-                            cb.ax.set_title(
-                                f"×10^{exponent}",
-                                fontsize=8,
-                            )
+                        cb.set_ticks(np.linspace(vmin, vmax, 4))
+                    if exponent is not None:
+                        cb.ax.set_title(
+                            f"×10^{exponent}",
+                            fontsize=8,
+                        )
 
                 # Hide any unused axes on the last page.
                 for ax in axes_flat[len(batch) :]:
