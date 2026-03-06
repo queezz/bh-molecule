@@ -303,7 +303,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../examples/02_quickstart/" class="md-tabs__link">
+        <a href="../../examples/bh-fitting/" class="md-tabs__link">
           
   
   
@@ -886,6 +886,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#bh_molecule.fit.BHFitter.set_bounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;set_bounds
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1111,6 +1122,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/bh-fitting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BH Spectrum Fitting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1593,6 +1632,17 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;plot_single
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.fit.BHFitter.set_bounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;set_bounds
       
     </span>
   </a>
@@ -2372,158 +2422,6 @@ enabled.</p>
 
     <div class="doc doc-contents ">
 
-        <p>Plot a grid of fit curves.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>curves</code>
-            </td>
-            <td>
-                  <code><span title="dict">dict</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Mapping from <code>(frame, channel)</code> to <code>(x, y, yfit)</code> tuples.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>frames</code>
-            </td>
-            <td>
-                  <code><span title="iterable">iterable</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If provided, only include these frames.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>channels</code>
-            </td>
-            <td>
-                  <code><span title="iterable">iterable</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If provided, only include these channels.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>ncols</code>
-            </td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Preferred number of columns in the plot grid.</p>
-              </div>
-            </td>
-            <td>
-                  <code>3</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>xlim</code>
-            </td>
-            <td>
-                  <code><span title="tuple">tuple</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Axis limits forwarded to each subplot.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>ylim</code>
-            </td>
-            <td>
-                  <code><span title="tuple">tuple</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Axis limits forwarded to each subplot.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>suptitle</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Optional figure-level title.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code>fig, axes : tuple</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Matplotlib figure and axes array for the created grid.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
 
     </div>
 
@@ -2539,239 +2437,6 @@ enabled.</p>
 
 
     <div class="doc doc-contents ">
-
-        <p>Overlay multiple channels for a single frame.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>curves</code>
-            </td>
-            <td>
-                  <code><span title="dict">dict</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Mapping from <code>(frame, channel)</code> to <code>(x, y, yfit)</code> tuples.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>frame</code>
-            </td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Frame index to draw.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>channels</code>
-            </td>
-            <td>
-                  <code><span title="iterable">iterable</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If provided, only include these channels.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>xlim</code>
-            </td>
-            <td>
-                  <code><span title="tuple">tuple</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Axis limits.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>ylim</code>
-            </td>
-            <td>
-                  <code><span title="tuple">tuple</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Axis limits.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>title</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Axis title.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>cmap</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Matplotlib colormap name used to assign channel colors.</p>
-              </div>
-            </td>
-            <td>
-                  <code>&#39;tab10&#39;</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>line_width</code>
-            </td>
-            <td>
-                  <code><span title="float">float</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Width of the model lines.</p>
-              </div>
-            </td>
-            <td>
-                  <code>1.0</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>line_alpha</code>
-            </td>
-            <td>
-                  <code><span title="float">float</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Transparency for model lines.</p>
-              </div>
-            </td>
-            <td>
-                  <code>0.95</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>scatter_size</code>
-            </td>
-            <td>
-                  <code><span title="float">float</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Size for scatter points.</p>
-              </div>
-            </td>
-            <td>
-                  <code>8.0</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>scatter_alpha</code>
-            </td>
-            <td>
-                  <code><span title="float">float</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Alpha for scatter points.</p>
-              </div>
-            </td>
-            <td>
-                  <code>0.35</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>legend_cols</code>
-            </td>
-            <td>
-                  <code><span title="int">int</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Number of columns for the legend. If <code>None</code> a sensible default
-is chosen.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code>fig, ax : tuple</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Matplotlib figure and axis containing the overlay plot.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
 
 
     </div>
@@ -2789,7 +2454,23 @@ is chosen.</p>
 
     <div class="doc doc-contents ">
 
-        <p>Plot a single fit result (data and optional model curve).</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h6 id="bh_molecule.fit.BHFitter.set_bounds" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <code class="highlight language-python"><span class="n">set_bounds</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+<a href="#bh_molecule.fit.BHFitter.set_bounds" class="headerlink" title="Permanent link">&para;</a></h6>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Update parameter bounds for the fitter.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -2805,32 +2486,17 @@ is chosen.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>res</code>
+                <code>lower</code>
             </td>
             <td>
-                  <code><span title="dict">dict</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Result dictionary as returned by <code>fit</code> (must contain <code>x</code> and
-<code>y</code>; may contain <code>yfit</code>).</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>xlim</code>
-            </td>
-            <td>
-                  <code><span title="tuple">tuple</span></code>
+                  <code><span title="sequence">sequence</span> or <span title="dict">dict</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>X-axis limits as <code>(xmin, xmax)</code>. Defaults to the fitter's
-<code>nm_window</code>.</p>
+                <p>Lower bounds for parameters. If a sequence is provided it must
+have the same length as <code>param_names</code>. If a dict is provided,
+keys must match parameter names and only those bounds will be
+updated.</p>
               </div>
             </td>
             <td>
@@ -2839,46 +2505,14 @@ is chosen.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>ylim</code>
+                <code>upper</code>
             </td>
             <td>
-                  <code><span title="tuple">tuple</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Y-axis limits as <code>(ymin, ymax)</code>.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>title</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
+                  <code><span title="sequence">sequence</span> or <span title="dict">dict</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Plot title.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>ax</code>
-            </td>
-            <td>
-                  <code><span title="matplotlib.axes.Axes">Axes</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Axis to draw into. If <code>None</code> a new figure and axis are created.</p>
+                <p>Upper bounds for parameters. Same rules as <code>lower</code>.</p>
               </div>
             </td>
             <td>
@@ -2889,28 +2523,12 @@ is chosen.</p>
     </table>
 
 
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-<th>Name</th>          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-<td><code>ax</code></td>            <td>
-                  <code><span title="matplotlib.axes.Axes">Axes</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The axis containing the plot.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Bounds are stored internally as numpy arrays in <code>self.bounds</code>.
+This method allows updating either all bounds at once or only
+selected parameters.</p>
+</details>
 
     </div>
 
