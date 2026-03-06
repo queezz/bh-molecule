@@ -90,6 +90,7 @@ nav:
       - wavecal.py: api/wavecal.md
       - plotting: api/plotting.md
   - Examples:
+      - BH Spectrum Fitting: examples/bh-fitting.md
       - Quickstart: examples/02_quickstart.ipynb
       - Load spectral data: examples/03_load_spectral_data.ipynb
       - BH fit example: examples/04_bh_fit.ipynb
