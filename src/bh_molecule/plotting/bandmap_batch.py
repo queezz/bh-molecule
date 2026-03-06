@@ -3,6 +3,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.backends.backend_pdf import PdfPages
+from matplotlib.ticker import FixedLocator, FormatStrFormatter
 
 try:
     # Prefer rich notebook progress bars when available.
@@ -199,12 +200,17 @@ def export_band_maps_pdf(
 
                 # One colorbar per page when single_colorbar (same norm via vmin/vmax).
                 if single_colorbar and im_last is not None:
-                    fig.colorbar(
+                    cb = fig.colorbar(
                         im_last,
                         ax=axes,
                         location="right",
-                        label=cbar_label,
+                        fraction=0.025,
                     )
+                    cb.ax.yaxis.set_major_formatter(FormatStrFormatter("%.1e"))
+                    if vmin is not None and vmax is not None:
+                        cb.ax.yaxis.set_major_locator(
+                            FixedLocator(np.linspace(vmin, vmax, 4))
+                        )
 
                 # Hide any unused axes on the last page.
                 for ax in axes_flat[len(batch) :]:
