@@ -1495,14 +1495,14 @@
 
 
 <h4 id="bh_molecule.plotting.export_band_maps_pdf" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">export_band_maps_pdf</span><span class="p">(</span><span class="n">fits_files</span><span class="p">,</span> <span class="n">output_pdf</span><span class="p">,</span> <span class="n">cw_nm</span><span class="p">,</span> <span class="n">nm_range</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cbar_label</span><span class="o">=</span><span class="s1">&#39;intensity&#39;</span><span class="p">,</span> <span class="n">channel_line</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">require_time</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">subtract_dark</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_scale</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grid_figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mf">8.5</span><span class="p">))</span></code>
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">export_band_maps_pdf</span><span class="p">(</span><span class="n">fits_files</span><span class="p">,</span> <span class="n">output_pdf</span><span class="p">,</span> <span class="n">cw_nm</span><span class="p">,</span> <span class="n">nm_range</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cbar_label</span><span class="o">=</span><span class="s1">&#39;intensity&#39;</span><span class="p">,</span> <span class="n">channel_line</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">require_time</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">subtract_dark</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_scale</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grid_figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mf">8.5</span><span class="p">),</span> <span class="n">show_axes</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_titles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title_fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">single_colorbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_spines</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tight_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">output_format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">)</span></code>
 
 <a href="#bh_molecule.plotting.export_band_maps_pdf" class="headerlink" title="Permanent link">&para;</a></h4>
 
 
     <div class="doc doc-contents ">
 
-        <p>Export per-file band-map plots to a multi-page PDF.</p>
+        <p>Export per-file band-map plots to a multi-page PDF or PNG files.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -1668,6 +1668,169 @@
             </td>
             <td>
                   <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>grid</code>
+            </td>
+            <td>
+                  <code><span title="tuple">tuple</span>(<span title="rows">rows</span>, <span title="cols">cols</span>) | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If set, render band maps in a contact-sheet grid; otherwise one per page.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>grid_figsize</code>
+            </td>
+            <td>
+                  <code><span title="tuple">tuple</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Figure size for grid pages.</p>
+              </div>
+            </td>
+            <td>
+                  <code>(11, 8.5)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>show_axes</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If False, remove xticks, yticks, xlabel, ylabel on grid subplots.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>show_titles</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, show shot number (path.stem) as subplot title.</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>title_fontsize</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Font size for subplot titles.</p>
+              </div>
+            </td>
+            <td>
+                  <code>8</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>single_colorbar</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True (default), one colorbar per page is drawn from the last subplot's
+image (all subplots share vmin/vmax). If False, each subplot gets its own
+colorbar.</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>show_spines</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If False, hide subplot borders (spines).</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>annotate</code>
+            </td>
+            <td>
+                  <code>None | <span title="max">max</span> | <span title="snr">snr</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If "max", show max intensity in the upper-left corner of each subplot.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>tight_layout</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Unused for grid pages; grid uses constrained_layout=True instead.</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>output_format</code>
+            </td>
+            <td>
+                  <code>(<span title="pdf">pdf</span>, <span title="png">png</span>)</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If "pdf", write a single multi-page PDF. If "png", write one PNG per page
+(e.g. output_stem_001.png, output_stem_002.png, ...).</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#34;pdf&#34;</code>
             </td>
           </tr>
       </tbody>
