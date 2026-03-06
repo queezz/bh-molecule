@@ -22,13 +22,6 @@ class FCPShape(NamedTuple):
         return f"{self.F}F × {self.C}C × {self.P}P (frames × channels × pixels)"
 
 
-def _print_calibration_report(instance: "Vis133M") -> None:
-    """Print the wavelength calibration report for a from_files instance."""
-    lines = _format_calibration_report(instance)
-    if lines is not None:
-        print("\n".join(lines))
-
-
 def _format_calibration_report(instance: "Vis133M") -> list[str] | None:
     """Format the wavelength calibration report. Returns None if not from_files."""
     if not getattr(instance, "_from_files", False):
@@ -189,6 +182,7 @@ class Vis133M:
         cw: float | None = None,
         line: str | float | None = None,
         scale: float = 1.0,
+        verbose: bool = False,
     ) -> "Vis133M":
         """Create a Vis133M instance with polynomial wavelength calibration from JSON.
 
@@ -213,6 +207,8 @@ class Vis133M:
             apply CW by itself.
         scale : float, optional
             Multiplicative scale factor (default 1.0).
+        verbose : bool, optional
+            If True, print the calibration report after loading (default False).
 
         Returns
         -------
@@ -291,7 +287,8 @@ class Vis133M:
             else:
                 instance.line_wavelength = float(line)
 
-        _print_calibration_report(instance)
+        if verbose:
+            instance.calibration_report()
         return instance
 
     def _compute_wl_formula(self) -> np.ndarray:
