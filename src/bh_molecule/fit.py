@@ -52,6 +52,8 @@ class BHFitter:
         vis,
         model,
         nm_window=(433.05, 433.90),
+        # Parameter order for p0 / bounds:
+        # [C, T_rot (K), dx (nm), w_inst (nm), base, I_R7, I_R8]
         p0=(1.0, 4000.0, 0.01, 0.025, 0.0, 1e-3, 1e-3),
         bounds=([0, 0, 0, 0, -10, 0, 0], [10, 10000, 1, 0.1, 10, 1, 1]),
         maxfev=40000,
