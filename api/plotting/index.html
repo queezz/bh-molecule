@@ -832,6 +832,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#bh_molecule.plotting.export_band_maps_from_folder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;export_band_maps_from_folder
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.plotting.export_band_maps_pdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;export_band_maps_pdf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#bh_molecule.plotting.plot_grid" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1283,6 +1305,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#bh_molecule.plotting.export_band_maps_from_folder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;export_band_maps_from_folder
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.plotting.export_band_maps_pdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;export_band_maps_pdf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#bh_molecule.plotting.plot_grid" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1412,6 +1456,222 @@
 
 
     <div class="doc doc-contents ">
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bh_molecule.plotting.export_band_maps_from_folder" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">export_band_maps_from_folder</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">output_pdf</span><span class="p">,</span> <span class="n">cw_nm</span><span class="p">,</span> <span class="n">nm_range</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s1">&#39;*.fits&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+<a href="#bh_molecule.plotting.export_band_maps_from_folder" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Export band maps for all FITS files in a folder.</p>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>export_band_maps_from_folder(
+    folder,
+    "bh_maps.pdf",
+    cw_nm=431.91,
+    nm_range=(431.0, 433.5),
+    grid=(2, 3),
+)</p>
+</details>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bh_molecule.plotting.export_band_maps_pdf" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">export_band_maps_pdf</span><span class="p">(</span><span class="n">fits_files</span><span class="p">,</span> <span class="n">output_pdf</span><span class="p">,</span> <span class="n">cw_nm</span><span class="p">,</span> <span class="n">nm_range</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cbar_label</span><span class="o">=</span><span class="s1">&#39;intensity&#39;</span><span class="p">,</span> <span class="n">channel_line</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">require_time</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">subtract_dark</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_scale</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grid_figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mf">8.5</span><span class="p">))</span></code>
+
+<a href="#bh_molecule.plotting.export_band_maps_pdf" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Export per-file band-map plots to a multi-page PDF.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>fits_files</code>
+            </td>
+            <td>
+                  <code><span title="iterable">iterable</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Iterable of FITS file paths.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>output_pdf</code>
+            </td>
+            <td>
+                  <code><span title="path">path</span> - <span title="like">like</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Output PDF path.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>cw_nm</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Central wavelength (nm) to apply via <code>Vis133M.apply_cw</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>nm_range</code>
+            </td>
+            <td>
+                  <code><span title="tuple">tuple</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><code>(lo, hi)</code> wavelength range in nanometres for <code>Vis133M.plot_band_map</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>cmap</code>
+            </td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Forwarded to <code>Vis133M.plot_band_map</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>cbar_label</code>
+            </td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Forwarded to <code>Vis133M.plot_band_map</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>channel_line</code>
+            </td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Forwarded to <code>Vis133M.plot_band_map</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>require_time</code>
+            </td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Forwarded to <code>Vis133M.plot_band_map</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>subtract_dark</code>
+            </td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Forwarded to <code>Vis133M.plot_band_map</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>log_scale</code>
+            </td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Forwarded to <code>Vis133M.plot_band_map</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
