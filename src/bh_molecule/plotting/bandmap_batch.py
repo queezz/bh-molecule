@@ -55,8 +55,10 @@ def export_band_maps_pdf(
         img = s.band(nm_range, subtract_dark=subtract_dark)
 
         if log_scale:
+            # For logarithmic colour scaling we must use the original
+            # linear intensities but ignore non-positive values so that
+            # LogNorm can derive sensible limits.
             img = img[img > 0]
-            img = np.log10(img)
 
         if img.size > 0:
             vmin = min(vmin, float(img.min()))
