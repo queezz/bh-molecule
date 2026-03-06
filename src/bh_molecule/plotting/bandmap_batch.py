@@ -1,9 +1,10 @@
+from math import floor, log10
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.backends.backend_pdf import PdfPages
-from matplotlib.ticker import FixedLocator, FormatStrFormatter
+from matplotlib.ticker import FixedLocator
 
 try:
     # Prefer rich notebook progress bars when available.
@@ -206,11 +207,19 @@ def export_band_maps_pdf(
                         location="right",
                         fraction=0.025,
                     )
-                    cb.ax.yaxis.set_major_formatter(FormatStrFormatter("%.1e"))
                     if vmin is not None and vmax is not None:
-                        cb.ax.yaxis.set_major_locator(
-                            FixedLocator(np.linspace(vmin, vmax, 4))
-                        )
+                        ticks = np.linspace(vmin, vmax, 4)
+                        cb.ax.yaxis.set_major_locator(FixedLocator(ticks))
+                        if vmax > 0:
+                            exponent = int(floor(log10(vmax)))
+                            scale = 10**exponent
+                            cb.ax.set_yticklabels(
+                                [f"{tick / scale:.0f}" for tick in ticks]
+                            )
+                            cb.ax.set_title(
+                                f"×10^{exponent}",
+                                fontsize=8,
+                            )
 
                 # Hide any unused axes on the last page.
                 for ax in axes_flat[len(batch) :]:
