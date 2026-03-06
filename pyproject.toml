@@ -1,6 +1,6 @@
 [project]
 name = "bh-molecule"
-version = "0.1.0"
+version = "0.1.1"
 description = "BH (boron hydride) A–X band spectrum model and fitting tools"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -13,7 +13,9 @@ dependencies = [
   "matplotlib>=3.8",
   "astropy>=6.0",
   "plotly>=5.0",
-  "nbformat>=5.10"
+  "nbformat>=5.10",
+  "tqdm>=4.0",
+  "ipywidgets>=8.0"
 ]
 
 [project.optional-dependencies]
