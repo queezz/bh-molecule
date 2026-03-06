@@ -1,10 +1,9 @@
-from math import floor, log10
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.backends.backend_pdf import PdfPages
-from matplotlib.ticker import FuncFormatter
+from matplotlib.ticker import NullFormatter, NullLocator
 
 try:
     # Prefer rich notebook progress bars when available.
@@ -199,32 +198,21 @@ def export_band_maps_pdf(
                         for spine in ax.spines.values():
                             spine.set_visible(False)
 
-                # One colorbar per page when single_colorbar (same norm via vmin/vmax).
+                # One colorbar per page: gradient only, no ticks or labels.
                 if single_colorbar and im_last is not None:
-                    # Build formatter and pass into colorbar so only our labels are used
-                    # (avoids duplicate labels from Colorbar's default ScalarFormatter).
-                    cbar_format = None
-                    exponent = None
-                    if vmin is not None and vmax is not None and vmax > 0:
-                        exponent = int(floor(log10(vmax)))
-                        scale = 10**exponent
-                        cbar_format = FuncFormatter(
-                            lambda x, pos, s=scale: f"{x / s:.0f}"
-                        )
                     cb = fig.colorbar(
                         im_last,
                         ax=axes,
                         location="right",
-                        fraction=0.025,
-                        format=cbar_format,
+                        fraction=0.02,
+                        pad=0.015,
                     )
-                    if vmin is not None and vmax is not None:
-                        cb.set_ticks(np.linspace(vmin, vmax, 4))
-                    if exponent is not None:
-                        cb.ax.set_title(
-                            f"×10^{exponent}",
-                            fontsize=8,
-                        )
+                    cb.set_ticks([])
+                    cb.ax.yaxis.offsetText.set_visible(False)
+                    cb.ax.yaxis.set_major_locator(NullLocator())
+                    cb.ax.yaxis.set_minor_locator(NullLocator())
+                    cb.ax.yaxis.set_major_formatter(NullFormatter())
+                    cb.ax.yaxis.set_minor_formatter(NullFormatter())
 
                 # Hide any unused axes on the last page.
                 for ax in axes_flat[len(batch) :]:
