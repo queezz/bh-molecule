@@ -219,6 +219,57 @@ class BHFitter:
             res["yfit"] = self._f(x, *params)
         return res
 
+    def set_bounds(self, lower=None, upper=None):
+        """Update parameter bounds for the fitter.
+
+        Parameters
+        ----------
+        lower : sequence or dict, optional
+            Lower bounds for parameters. If a sequence is provided it must
+            have the same length as ``param_names``. If a dict is provided,
+            keys must match parameter names and only those bounds will be
+            updated.
+        upper : sequence or dict, optional
+            Upper bounds for parameters. Same rules as ``lower``.
+
+        Notes
+        -----
+        Bounds are stored internally as numpy arrays in ``self.bounds``.
+        This method allows updating either all bounds at once or only
+        selected parameters.
+        """
+
+        lo, hi = self.bounds
+        lo = lo.copy()
+        hi = hi.copy()
+
+        if isinstance(lower, dict):
+            for k, v in lower.items():
+                i = self.param_names.index(k)
+                lo[i] = float(v)
+        elif lower is not None:
+            lower = np.asarray(lower, float)
+            if lower.size != len(self.param_names):
+                raise ValueError("Lower bounds must match number of parameters")
+            lo = lower
+
+        if isinstance(upper, dict):
+            for k, v in upper.items():
+                i = self.param_names.index(k)
+                hi[i] = float(v)
+        elif upper is not None:
+            upper = np.asarray(upper, float)
+            if upper.size != len(self.param_names):
+                raise ValueError("Upper bounds must match number of parameters")
+            hi = upper
+
+        if np.any(lo >= hi):
+            raise ValueError(
+                "Each lower bound must be strictly smaller than upper bound"
+            )
+
+        self.bounds = (lo, hi)
+
     # MARK: Batch fit
     def batch(self, frames, channels, return_curves=False):
         """Run fits for multiple frames and channels and collect results.
