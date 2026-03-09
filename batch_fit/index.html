@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../examples/04_bh_fit/">
+        <link rel="prev" href="../instruments/">
       
       
-        <link rel="next" href="../dev-install-guide/">
+        <link rel="next" href="../api/physics/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>Command Line - BH Molecule</title>
+        <title>Batch fit - BH Molecule</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#bh-molecule-cli-commands" class="md-skip">
+        <a href="#bh-batch-fitting-workflow" class="md-skip">
           Skip to content
         </a>
       
@@ -111,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Command Line
+              Batch fit
             
           </span>
         </div>
@@ -277,9 +277,11 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../batch_fit/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
   
@@ -336,11 +338,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../cli_commands/" class="md-tabs__link">
         
   
   
@@ -502,10 +502,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../batch_fit/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Batch fit
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -521,6 +548,114 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#location" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Location
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#main-entry-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Main entry points
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pipeline-steps-single-shot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline steps (single shot)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#internal-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal helpers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -979,37 +1114,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Command Line
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../cli_commands/" class="md-nav__link">
         
   
   
@@ -1025,131 +1133,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Installation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#batch-fitting-bh-batch" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Batch fitting: bh batch
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Parameters
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#generate-spectrum-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Generate Spectrum Data
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Generate Spectrum Data">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#bh-spectra" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        bh-spectra
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bh-spectra-csv" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        bh-spectra-csv
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#plot-spectrum" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Plot Spectrum
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example Workflow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Notes
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1294,10 +1277,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#location" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation
+        Location
       
     </span>
   </a>
@@ -1305,10 +1288,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#batch-fitting-bh-batch" class="md-nav__link">
+  <a href="#purpose" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Batch fitting: bh batch
+        Purpose
       
     </span>
   </a>
@@ -1316,10 +1299,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-parameters" class="md-nav__link">
+  <a href="#main-entry-points" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Parameters
+        Main entry points
       
     </span>
   </a>
@@ -1327,49 +1310,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#generate-spectrum-data" class="md-nav__link">
+  <a href="#pipeline-steps-single-shot" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Generate Spectrum Data
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Generate Spectrum Data">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#bh-spectra" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        bh-spectra
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bh-spectra-csv" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        bh-spectra-csv
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#plot-spectrum" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Plot Spectrum
+        Pipeline steps (single shot)
       
     </span>
   </a>
@@ -1377,10 +1321,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#example-workflow" class="md-nav__link">
+  <a href="#internal-helpers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example Workflow
+        Internal helpers
       
     </span>
   </a>
@@ -1388,10 +1332,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#dependencies" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI
       
     </span>
   </a>
@@ -1418,188 +1384,118 @@
   
 
 
-<h1 id="bh-molecule-cli-commands">BH-Molecule CLI Commands<a class="headerlink" href="#bh-molecule-cli-commands" title="Permanent link">&para;</a></h1>
-<p>The <strong>BH-Molecule</strong> package provides CLI tools for generating/plotting model spectra and for running BH batch fitting on VIS-1.33 m FITS data.</p>
-<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<p>To use the commands, you need to install the package. See the <a href="../#installation">Installation</a> section.</p>
-<p><strong>Batch fitting (FITS data):</strong></p>
+<h1 id="bh-batch-fitting-workflow">BH Batch Fitting Workflow<a class="headerlink" href="#bh-batch-fitting-workflow" title="Permanent link">&para;</a></h1>
+<p>This page gives a brief overview of the batch fitting code: where it lives, what it does, and how the pieces fit together.</p>
+<h2 id="location">Location<a class="headerlink" href="#location" title="Permanent link">&para;</a></h2>
 <ul>
-<li><code>bh batch</code> — run BH batch fitting from a YAML config (single file or folder)</li>
+<li><strong>Batch workflow:</strong> <code>bh_molecule.workflows.batch_fit</code></li>
+<li><strong>Signal detection:</strong> <code>bh_molecule.workflows.signal_scan</code></li>
 </ul>
-<p><strong>Model spectrum generation:</strong></p>
-<ul>
-<li><code>bh-spectra</code></li>
-<li><code>bh-spectra-csv</code></li>
-<li><code>bh-spectra-plot</code></li>
-</ul>
-<hr />
-<h2 id="batch-fitting-bh-batch">Batch fitting: <code>bh batch</code><a class="headerlink" href="#batch-fitting-bh-batch" title="Permanent link">&para;</a></h2>
-<p>Run BH batch fitting on VIS-1.33 m FITS data using a YAML config. Supports a single FITS file or a folder of <code>.fits</code> files. Frame and channel selection can be automatic (signal detection) or specified in the config.</p>
-<div class="highlight"><pre><span></span><code>bh<span class="w"> </span>batch<span class="w"> </span>--config<span class="w"> </span>fit_v3.yaml
+<p>The package exposes the main entry points at top level:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bh_molecule</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_bh_batch</span><span class="p">,</span> <span class="n">run_folder_batch</span>
 </code></pre></div>
-<p><strong>Options:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--config</code></td>
-<td><strong>(Required)</strong> Path to YAML config file.</td>
-</tr>
-<tr>
-<td><code>--run-fit-limit N</code></td>
-<td>Run only the first N fits (after frame/channel selection) for quick pipeline testing. Default: no limit (full batch).</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Example (limited run for testing):</strong></p>
-<div class="highlight"><pre><span></span><code>bh<span class="w"> </span>batch<span class="w"> </span>--config<span class="w"> </span>fit_v3.yaml<span class="w"> </span>--run-fit-limit<span class="w"> </span><span class="m">5</span>
-</code></pre></div>
-<p>With <code>--run-fit-limit 5</code>, the pipeline runs the same steps (selection, fitting, saving CSV, curves, grid plots, per-fit figures) but only for the first 5 (frame, channel) pairs. Output structure and filenames are unchanged; only fewer fits are executed.</p>
-<p><strong>Config file (YAML):</strong> Must contain either <code>folder</code> (path to directory of <code>.fits</code> files) or <code>fits_file</code> / <code>fits</code> (path to a single FITS). Other keys are passed as batch options, e.g. <code>cw</code>, <code>scale</code>, <code>out_dir</code>, <code>dark_frame</code>, <code>time_range</code>, <code>background_frames</code>, <code>band</code>, <code>threshold_sigma</code>, <code>bounds</code>, <code>fitter_kwargs</code>, <code>frames</code>, <code>channels</code>. See <a href="../instruments/">Instruments and calibration</a> and the batch workflow for details.</p>
-<hr />
-<h2 id="common-parameters">Common Parameters<a class="headerlink" href="#common-parameters" title="Permanent link">&para;</a></h2>
-<p>All three commands share a set of parameters controlling the generated spectrum:</p>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--xmin</code></td>
-<td>float</td>
-<td>432.8</td>
-<td>Minimum wavelength in nm</td>
-</tr>
-<tr>
-<td><code>--xmax</code></td>
-<td>float</td>
-<td>434.2</td>
-<td>Maximum wavelength in nm</td>
-</tr>
-<tr>
-<td><code>--points</code></td>
-<td>int</td>
-<td>4000</td>
-<td>Number of wavelength points</td>
-</tr>
-<tr>
-<td><code>--C</code></td>
-<td>float</td>
-<td>1.0</td>
-<td>Concentration factor</td>
-</tr>
-<tr>
-<td><code>--T_rot</code></td>
-<td>float</td>
-<td>2000.0</td>
-<td>Rotational temperature in K</td>
-</tr>
-<tr>
-<td><code>--dx</code></td>
-<td>float</td>
-<td>0.0</td>
-<td>Wavelength shift in nm</td>
-</tr>
-<tr>
-<td><code>--w_inst</code></td>
-<td>float</td>
-<td>0.02</td>
-<td>Instrumental FWHM in nm</td>
-</tr>
-<tr>
-<td><code>--base</code></td>
-<td>float</td>
-<td>0.0</td>
-<td>Baseline offset</td>
-</tr>
-<tr>
-<td><code>--I_R7</code></td>
-<td>float</td>
-<td>0.5</td>
-<td>Intensity of R₇ branch line</td>
-</tr>
-<tr>
-<td><code>--I_R8</code></td>
-<td>float</td>
-<td>0.3</td>
-<td>Intensity of R₈ branch line</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="generate-spectrum-data">Generate Spectrum Data<a class="headerlink" href="#generate-spectrum-data" title="Permanent link">&para;</a></h2>
-<h3 id="bh-spectra"><code>bh-spectra</code><a class="headerlink" href="#bh-spectra" title="Permanent link">&para;</a></h3>
-<p>Generates model spectrum and saves it as a compressed NumPy file (<code>.npz</code>).</p>
-<div class="highlight"><pre><span></span><code>bh-spectra<span class="w"> </span>--C<span class="w"> </span><span class="m">5</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3500</span><span class="w"> </span>--out<span class="w"> </span>spectrum.npz
-</code></pre></div>
-<p><strong>Options:</strong></p>
-<ul>
-<li><code>--out</code>: Output file name (default: <code>spectrum.npz</code>)</li>
-</ul>
-<p><strong>Example:</strong></p>
-<div class="highlight"><pre><span></span><code>bh-spectra<span class="w"> </span>--xmin<span class="w"> </span><span class="m">433</span>.0<span class="w"> </span>--xmax<span class="w"> </span><span class="m">434</span>.0<span class="w"> </span>--points<span class="w"> </span><span class="m">2000</span><span class="w"> </span>--C<span class="w"> </span><span class="m">2</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">2500</span><span class="w"> </span>--out<span class="w"> </span>my_spectrum.npz
-</code></pre></div>
-<hr />
-<h3 id="bh-spectra-csv"><code>bh-spectra-csv</code><a class="headerlink" href="#bh-spectra-csv" title="Permanent link">&para;</a></h3>
-<p>Same as <code>bh-spectra</code> but outputs a CSV file instead of NumPy.</p>
-<div class="highlight"><pre><span></span><code>bh-spectra-csv<span class="w"> </span>--C<span class="w"> </span><span class="m">5</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3500</span><span class="w"> </span>--out<span class="w"> </span>spectrum.csv
-</code></pre></div>
-<p><strong>Options:</strong></p>
-<ul>
-<li><code>--out</code>: Output CSV filename (default: <code>spectrum.csv</code>)</li>
-</ul>
-<p>The resulting CSV will have columns:</p>
-<ul>
-<li><code>x</code> — Wavelength (nm)</li>
-<li><code>y</code> — Intensity (a.u.)</li>
-</ul>
-<hr />
-<h2 id="plot-spectrum">Plot Spectrum<a class="headerlink" href="#plot-spectrum" title="Permanent link">&para;</a></h2>
-<p>Generates and displays a spectrum plot using Matplotlib.</p>
-<div class="highlight"><pre><span></span><code>bh-spectra-plot<span class="w"> </span>--C<span class="w"> </span><span class="m">5</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3500</span>
-</code></pre></div>
-<p><strong>Additional options:</strong></p>
-<ul>
-<li><code>--save</code>: Save plot to file (e.g. <code>plot.png</code>)</li>
-<li><code>--dpi</code>: Resolution when saving (default: 100)</li>
-<li><code>--figsize</code>: Width and height in inches (default: <code>10 6</code>)</li>
-</ul>
-<hr />
-<h2 id="example-workflow">Example Workflow<a class="headerlink" href="#example-workflow" title="Permanent link">&para;</a></h2>
+<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
+<p>The workflow runs BH A–X band fits over many <strong>(frame, channel)</strong> pairs from a VIS-1.33 m FITS cube. It:</p>
 <ol>
-<li>
-<p>Generate spectrum data
-<div class="highlight"><pre><span></span><code>bh-spectra<span class="w"> </span>--C<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3200</span><span class="w"> </span>--out<span class="w"> </span>data.npz
-</code></pre></div></p>
-</li>
-<li>
-<p>Export same parameters to CSV
-<div class="highlight"><pre><span></span><code>bh-spectra-csv<span class="w"> </span>--C<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3200</span><span class="w"> </span>--out<span class="w"> </span>data.csv
-</code></pre></div></p>
-</li>
-<li>
-<p>Visualize spectrum
-<div class="highlight"><pre><span></span><code>bh-spectra-plot<span class="w"> </span>--C<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>--T_rot<span class="w"> </span><span class="m">3200</span><span class="w"> </span>--save<span class="w"> </span>plot.png<span class="w"> </span>--dpi<span class="w"> </span><span class="m">200</span>
-</code></pre></div></p>
-</li>
+<li>Loads the cube and applies wavelength calibration (CW, scale, optional dark).</li>
+<li>Decides which frames and channels to fit (either from your input or via automatic signal detection).</li>
+<li>Fits the BH model for each selected (frame, channel), collects parameters and fit curves.</li>
+<li>Writes results (CSV, pickle, grid plots, per-fit figures) under a shot output directory.</li>
 </ol>
-<hr />
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
+<p>So you get a table of fit parameters per (frame, channel) plus diagnostic plots, without scripting the loop yourself.</p>
+<h2 id="main-entry-points">Main entry points<a class="headerlink" href="#main-entry-points" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>run_bh_batch</code></strong></td>
+<td>Single FITS file: load, calibrate, select frames/channels, run fits, save under <code>out_dir/&lt;shot_id&gt;/</code>.</td>
+</tr>
+<tr>
+<td><strong><code>run_folder_batch</code></strong></td>
+<td>Multiple FITS: for each <code>.fits</code> in a folder, call <code>run_bh_batch</code>; skip shots that already have <code>summary.csv</code> (resume).</td>
+</tr>
+</tbody>
+</table>
+<p>Both accept explicit <code>frames</code> and <code>channels</code> (or <code>None</code> for auto selection), plus options such as <code>cw</code>, <code>scale</code>, <code>dark_frame</code>, <code>time_range</code>, <code>band</code>, <code>threshold_sigma</code>, <code>bounds</code>, <code>out_dir</code>, and <strong><code>run_fit_limit</code></strong> (run only the first N fits for testing).</p>
+<h2 id="pipeline-steps-single-shot">Pipeline steps (single shot)<a class="headerlink" href="#pipeline-steps-single-shot" title="Permanent link">&para;</a></h2>
+<p>Inside <code>run_bh_batch</code> the flow is:</p>
+<ol>
+<li><strong>Load</strong> — <code>Vis133M.from_files(fits_path, scale=scale)</code> and apply CW via <code>vis.apply_cw(cw_nm)</code>.</li>
+<li><strong>Optional dark</strong> — If <code>dark_frame</code> is set, subtract that frame from the cube.</li>
+<li><strong>Baseline</strong> — <code>vis.set_baseline_zero(True)</code> and set time axis from <code>time_range</code>.</li>
+<li><strong>Background check</strong> — <code>check_background_flat(vis, background_frames)</code> to warn if background frames look non-flat.</li>
+<li><strong>Frame/channel selection</strong> — If <code>frames</code> or <code>channels</code> are <code>None</code>, <code>scan_signal_frames(vis, band=..., threshold_sigma=...)</code> returns lists of frames and channels with signal above threshold; otherwise the provided lists are used.</li>
+<li><strong>Fit loop</strong> — <code>_batch_with_progress(fitr, frames_list, channels_list, run_fit_limit=run_fit_limit)</code> builds (frame, channel) pairs (optionally truncated to the first N), runs <code>fitr.fit(f, ch)</code> for each, and aggregates rows and curves.</li>
+<li><strong>Save</strong> — Write <code>summary.csv</code>, <code>curves.pkl</code>, grid PDF/PNG via <code>_plot_normalized_grid_pages</code>, and per-fit PNGs in <code>frames/</code>.</li>
+</ol>
+<p>Selection logic is unchanged when <code>run_fit_limit</code> is set; only the number of fits executed is capped so you can test the pipeline quickly.</p>
+<h2 id="internal-helpers">Internal helpers<a class="headerlink" href="#internal-helpers" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Helper</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>_batch_with_progress</code></strong></td>
+<td>Iterates over (frame, channel) pairs (optionally limited by <code>run_fit_limit</code>), calls <code>BHFitter.fit</code>, builds a DataFrame of parameters and a dict of <code>(frame, channel) -&gt; (x, y, yfit)</code>. Uses tqdm for a progress bar.</td>
+</tr>
+<tr>
+<td><strong><code>_plot_normalized_grid_pages</code></strong></td>
+<td>Takes the curves dict and frame/channel lists; produces a multi-page PDF and a PNG of normalized spectra in a frames×channels grid.</td>
+</tr>
+</tbody>
+</table>
+<p>Signal selection lives in <strong><code>signal_scan</code></strong>:</p>
 <ul>
-<li>The BH-Spectra CLI tools (<code>bh-spectra</code>, <code>bh-spectra-csv</code>, <code>bh-spectra-plot</code>) are based on the <strong>BHModel</strong> class and use molecular constants loaded via <code>load_v00_wavelengths()</code>.</li>
-<li>Adjusting <code>C</code>, <code>T_rot</code>, and <code>w_inst</code> has the most visible effect on spectrum shape.</li>
-<li>The <strong>bh batch</strong> command uses <code>run_bh_batch</code> / <code>run_folder_batch</code> from the package; <code>--run-fit-limit</code> limits the number of fits per run for workflow testing without changing output structure or filenames.</li>
+<li><strong><code>scan_signal_frames</code></strong> — Builds a band image over the wavelength <code>band</code>, compares to background frames, returns frame and channel indices above <code>threshold_sigma</code>.</li>
+<li><strong><code>check_background_flat</code></strong> — Quick check that background frames look noise-like (peak/baseline ratio).</li>
 </ul>
+<h2 id="dependencies">Dependencies<a class="headerlink" href="#dependencies" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Vis133M</strong> — Load FITS, apply CW/scale/dark, expose <code>spectrum(frame, channel)</code> and band image.</li>
+<li><strong>BHModel</strong> — BH A–X spectrum model.</li>
+<li><strong>BHFitter</strong> — Wraps the model and Vis133M data; <code>fit(frame, channel)</code> returns parameters, errors, and fit curve.</li>
+</ul>
+<h2 id="output-layout">Output layout<a class="headerlink" href="#output-layout" title="Permanent link">&para;</a></h2>
+<p>For a single shot, output is under <code>out_dir/&lt;shot_id&gt;/</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>summary.csv</code></td>
+<td>One row per (frame, channel): frame, channel, fit parameters, errors, chi2_red, R2, npts.</td>
+</tr>
+<tr>
+<td><code>curves.pkl</code></td>
+<td>Pickle of <code>{(frame, channel): (x, y, yfit)}</code> for plotting.</td>
+</tr>
+<tr>
+<td><code>grid.pdf</code> / <code>grid.png</code></td>
+<td>Normalized spectra in a frames×channels grid (PDF multi-page by channel groups).</td>
+</tr>
+<tr>
+<td><code>frames/f&lt;frame&gt;_ch&lt;channel&gt;.png</code></td>
+<td>Single-spectrum fit plot per (frame, channel).</td>
+</tr>
+</tbody>
+</table>
+<p>The same structure is used for limited runs (<code>run_fit_limit</code>); only the number of rows and curves is smaller.</p>
+<h2 id="cli">CLI<a class="headerlink" href="#cli" title="Permanent link">&para;</a></h2>
+<p>The <strong><code>bh batch</code></strong> command runs this workflow from a YAML config: see <a href="../cli_commands/#batch-fitting-bh-batch">Command Line</a>. The config supplies <code>fits_file</code> or <code>folder</code>, plus <code>cw</code>, <code>scale</code>, and other options; <strong><code>--run-fit-limit N</code></strong> is passed through as <code>run_fit_limit</code> for quick tests.</p>
 
 
 
