@@ -233,6 +233,7 @@ def run_bh_batch(
     bounds: tuple[Any, Any] | Mapping[str, Any] | None = None,
     out_dir: str | Path = "results",
     run_fit_limit: int | None = None,
+    save_frames: bool = False,
 ):
     """Run BH batch fitting for a single VIS-1.33 m FITS file.
 
@@ -250,6 +251,8 @@ def run_bh_batch(
     run_fit_limit: if set, run only the first N (frame, channel) fits after
         selection (for quick pipeline testing). Saves results, CSV, and plots
         for those fits only.
+    save_frames: if True, save per-(frame, channel) fit plots in frames/
+        (zero-padded filenames fNN_chNN.png). Default False.
     """
     fits_path = Path(fits_file)
     if not fits_path.is_file():
@@ -356,23 +359,23 @@ def run_bh_batch(
         channels_per_page=6,
     )
 
-    # Save individual fit figures
-    frames_set = sorted(set(frames_list))
-    channels_set = sorted(set(channels_list))
-    per_fit_dir = shot_dir / "frames"
-    per_fit_dir.mkdir(exist_ok=True)
-    for f in frames_set:
-        for ch in channels_set:
-            key = (f, ch)
-            if key not in curves:
-                continue
-            x, y, yfit = curves[key]
-            res_single = {"x": x, "y": y, "yfit": yfit}
-            ax = fitr.plot_single(res_single, title=f"f{f} ch{ch}")
-            fig_single = ax.figure
-            out_path = per_fit_dir / f"f{f}_ch{ch}.png"
-            fig_single.savefig(out_path, dpi=200)
-            plt.close(fig_single)
+    if save_frames:
+        frames_set = sorted(set(frames_list))
+        channels_set = sorted(set(channels_list))
+        per_fit_dir = shot_dir / "frames"
+        per_fit_dir.mkdir(exist_ok=True)
+        for f in frames_set:
+            for ch in channels_set:
+                key = (f, ch)
+                if key not in curves:
+                    continue
+                x, y, yfit = curves[key]
+                res_single = {"x": x, "y": y, "yfit": yfit}
+                ax = fitr.plot_single(res_single, title=f"f{f} ch{ch}")
+                fig_single = ax.figure
+                out_path = per_fit_dir / f"f{f:02d}_ch{ch:02d}.png"
+                fig_single.savefig(out_path, dpi=200)
+                plt.close(fig_single)
 
     return resb, curves, shot_dir
 
