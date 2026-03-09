@@ -36,54 +36,65 @@ def _batch_with_progress(
     fitr: BHFitter,
     frames: list[int],
     channels: list[int],
+    run_fit_limit: int | None = None,
 ):
-    """Run fits with a progress bar over frames and channels."""
+    """Run fits with a progress bar over (frame, channel) pairs.
+
+    run_fit_limit: if set, run only the first N fits after selection (for testing).
+    """
     rows = []
     curves: dict[tuple[int, int], tuple[np.ndarray, np.ndarray, np.ndarray]] = {}
 
-    for f in _iter_with_tqdm(frames, desc="Frames"):
-        for ch in _iter_with_tqdm(channels, desc=f"Channels (frame={f})"):
-            try:
-                r = fitr.fit(f, ch, return_fit=True)
-                params, errs = r["params"], r["errors"]
-                x, y = r["x"], r["y"]
-                yfit = r.get("yfit", None)
-                dof = max(len(y) - len(params), 1)
-                chi2 = (
-                    float(np.sum((y - yfit) ** 2)) / dof
-                    if yfit is not None
-                    else np.nan
-                )
-                ss_res = (
-                    float(np.sum((y - yfit) ** 2)) if yfit is not None else np.nan
-                )
-                ss_tot = (
-                    float(np.sum((y - np.mean(y)) ** 2))
-                    if yfit is not None
-                    else np.nan
-                )
-                r2 = (
-                    1.0 - ss_res / ss_tot
-                    if yfit is not None and ss_tot > 0
-                    else np.nan
-                )
-                row = {
-                    "frame": f,
-                    "channel": ch,
-                    **{n: v for n, v in zip(fitr.param_names, params)},
-                    **{
-                        f"{n}_err": e
-                        for n, e in zip(fitr.param_names, errs)
-                    },
-                    "chi2_red": chi2,
-                    "R2": r2,
-                    "npts": len(y),
-                }
-                rows.append(row)
-                if yfit is not None:
-                    curves[(f, ch)] = (x, y, yfit)
-            except Exception as e:  # pragma: no cover - defensive
-                rows.append({"frame": f, "channel": ch, "error": repr(e)})
+    pairs = [(f, ch) for f in frames for ch in channels]
+    if run_fit_limit is not None:
+        pairs = pairs[:run_fit_limit]
+        if len(pairs) < run_fit_limit:
+            print(
+                f"Run limit {run_fit_limit} requested but only {len(pairs)} (frame, channel) pairs selected."
+            )
+
+    for f, ch in _iter_with_tqdm(pairs, desc="Fits"):
+        try:
+            r = fitr.fit(f, ch, return_fit=True)
+            params, errs = r["params"], r["errors"]
+            x, y = r["x"], r["y"]
+            yfit = r.get("yfit", None)
+            dof = max(len(y) - len(params), 1)
+            chi2 = (
+                float(np.sum((y - yfit) ** 2)) / dof
+                if yfit is not None
+                else np.nan
+            )
+            ss_res = (
+                float(np.sum((y - yfit) ** 2)) if yfit is not None else np.nan
+            )
+            ss_tot = (
+                float(np.sum((y - np.mean(y)) ** 2))
+                if yfit is not None
+                else np.nan
+            )
+            r2 = (
+                1.0 - ss_res / ss_tot
+                if yfit is not None and ss_tot > 0
+                else np.nan
+            )
+            row = {
+                "frame": f,
+                "channel": ch,
+                **{n: v for n, v in zip(fitr.param_names, params)},
+                **{
+                    f"{n}_err": e
+                    for n, e in zip(fitr.param_names, errs)
+                },
+                "chi2_red": chi2,
+                "R2": r2,
+                "npts": len(y),
+            }
+            rows.append(row)
+            if yfit is not None:
+                curves[(f, ch)] = (x, y, yfit)
+        except Exception as e:  # pragma: no cover - defensive
+            rows.append({"frame": f, "channel": ch, "error": repr(e)})
 
     df = pd.DataFrame(rows).sort_values(["frame", "channel"]).reset_index(drop=True)
     return df, curves
@@ -221,6 +232,7 @@ def run_bh_batch(
     fitter_kwargs: Mapping[str, Any] | None = None,
     bounds: tuple[Any, Any] | Mapping[str, Any] | None = None,
     out_dir: str | Path = "results",
+    run_fit_limit: int | None = None,
 ):
     """Run BH batch fitting for a single VIS-1.33 m FITS file.
 
@@ -234,6 +246,10 @@ def run_bh_batch(
     - Instantiate BHModel and BHFitter
     - Optionally update bounds
     - Run batch fitting and save results/figures under out_dir/<shot_id>/
+
+    run_fit_limit: if set, run only the first N (frame, channel) fits after
+        selection (for quick pipeline testing). Saves results, CSV, and plots
+        for those fits only.
     """
     fits_path = Path(fits_file)
     if not fits_path.is_file():
@@ -316,7 +332,12 @@ def run_bh_batch(
             fitr.set_bounds(lower=lower, upper=upper)
 
     # Run batch fit with progress bars over frames/channels
-    resb, curves = _batch_with_progress(fitr, frames_list, channels_list)
+    resb, curves = _batch_with_progress(
+        fitr, frames_list, channels_list, run_fit_limit=run_fit_limit
+    )
+
+    if run_fit_limit is not None:
+        print(f"Executed {len(resb)} fits (limited run).")
 
     # Save summary table
     resb.to_csv(summary_path, index=False)

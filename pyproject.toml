@@ -15,7 +15,8 @@ dependencies = [
   "plotly>=5.0",
   "nbformat>=5.10",
   "tqdm>=4.0",
-  "ipywidgets>=8.0"
+  "ipywidgets>=8.0",
+  "PyYAML>=6.0"
 ]
 
 [project.optional-dependencies]
@@ -41,6 +42,7 @@ build-backend = "setuptools.build_meta"
 
 
 [project.scripts]
+bh = "bh_molecule.cli:main_bh"
 bh-spectra = "bh_molecule.cli:main"
 bh-spectra-csv = "bh_molecule.cli:main_csv"
 bh-spectra-plot = "bh_molecule.cli:main_plot"

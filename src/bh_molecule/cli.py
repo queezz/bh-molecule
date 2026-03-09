@@ -1,7 +1,14 @@
-import argparse, numpy as np, pandas as pd
+import argparse
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
+import yaml
+
 from .dataio import load_v00_wavelengths
 from .physics import BHModel
+from .workflows.batch_fit import run_bh_batch, run_folder_batch
 
 
 def main():
@@ -123,3 +130,76 @@ def main_plot():
     print(
         f"Displayed spectrum with parameters: C={args.C}, T_rot={args.T_rot}K, dx={args.dx}, w_inst={args.w_inst}, base={args.base}, I_R7={args.I_R7}, I_R8={args.I_R8}"
     )
+
+
+def main_bh():
+    """Entry point for 'bh' CLI with subcommands (e.g. batch)."""
+    p = argparse.ArgumentParser(prog="bh")
+    sub = p.add_subparsers(dest="command", required=True)
+
+    batch_parser = sub.add_parser("batch", help="Run BH batch fitting from a YAML config")
+    batch_parser.add_argument(
+        "--config",
+        required=True,
+        type=Path,
+        help="Path to YAML config (fits_file or folder, cw, scale, out_dir, etc.)",
+    )
+    batch_parser.add_argument(
+        "--run-fit-limit",
+        type=int,
+        default=None,
+        metavar="N",
+        help="Run only the first N fits (after frame/channel selection) for testing",
+    )
+    args = p.parse_args()
+
+    if args.command == "batch":
+        config_path = Path(args.config)
+        if not config_path.is_file():
+            raise FileNotFoundError(f"Config file not found: {config_path}")
+        with config_path.open() as f:
+            config = yaml.safe_load(f)
+        if not config:
+            raise ValueError("Config file is empty")
+
+        # Build kwargs for run_bh_batch / run_folder_batch
+        kwargs = {}
+        for key in (
+            "cw",
+            "scale",
+            "out_dir",
+            "dark_frame",
+            "time_range",
+            "background_frames",
+            "band",
+            "threshold_sigma",
+            "bounds",
+            "fitter_kwargs",
+            "frames",
+            "channels",
+        ):
+            if key in config:
+                kwargs[key] = config[key]
+        if args.run_fit_limit is not None:
+            kwargs["run_fit_limit"] = args.run_fit_limit
+
+        if "folder" in config:
+            run_folder_batch(config["folder"], config.get("frames"), config.get("channels"), **kwargs)
+        elif "fits_file" in config:
+            run_bh_batch(
+                config["fits_file"],
+                config.get("frames"),
+                config.get("channels"),
+                **kwargs,
+            )
+        elif "fits" in config:
+            run_bh_batch(
+                config["fits"],
+                config.get("frames"),
+                config.get("channels"),
+                **kwargs,
+            )
+        else:
+            raise ValueError(
+                "Config must contain 'folder' or 'fits_file' (or 'fits') for input path"
+            )
