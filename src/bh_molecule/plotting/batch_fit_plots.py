@@ -3,6 +3,7 @@
 Used by workflows.batch_fit to save normalized (frame × channel) grid PDFs.
 Single-fit visualization remains in fit_plots.py.
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -19,12 +20,13 @@ def save_batch_fit_grid(
     *,
     pdf_path: str | Path,
     channels_per_page: int = 6,
+    rasterize_data: bool = True,
 ) -> None:
     """Plot normalized spectra in a (frames × channels) grid and save as multi-page PDF.
 
     - Rows correspond to frames, columns to channels (grouped into pages).
     - Each spectrum is normalized to [0, 1] for visualization.
-    - Data: markers only (no line). Fit: smooth line.
+    - Data: markers only (no line), optionally rasterized in PDF. Fit: smooth line (vector).
     - Axes are simplified for compact overview.
 
     Parameters
@@ -39,6 +41,9 @@ def save_batch_fit_grid(
         Output PDF path.
     channels_per_page : int, optional
         Number of channel columns per page. Default 6.
+    rasterize_data : bool, optional
+        If True (default), rasterize raw data points in the PDF to keep file size and
+        render time small; fit curves and axes remain vector.
     """
     frames_sorted = sorted(set(frames))
     channels_sorted = sorted(set(channels))
@@ -84,13 +89,24 @@ def save_batch_fit_grid(
                     vmax = float(np.max(all_vals)) if all_vals.size else 1.0
                     if vmax > vmin:
                         y_n = (y - vmin) / (vmax - vmin)
-                        yfit_n = (yfit - vmin) / (vmax - vmin) if yfit is not None else None
+                        yfit_n = (
+                            (yfit - vmin) / (vmax - vmin) if yfit is not None else None
+                        )
                     else:
                         y_n = np.zeros_like(y)
                         yfit_n = np.zeros_like(y) if yfit is not None else None
 
-                    # Data: markers only. Fit: smooth line.
-                    ax.plot(x, y_n, ".", ms=1.5, linestyle="none", color="k", alpha=0.7)
+                    # Data: markers only (rasterized in PDF). Fit: smooth line (vector).
+                    ax.plot(
+                        x,
+                        y_n,
+                        ".",
+                        ms=1.5,
+                        linestyle="none",
+                        color="k",
+                        alpha=0.7,
+                        rasterized=rasterize_data,
+                    )
                     if yfit_n is not None:
                         ax.plot(x, yfit_n, "-", lw=1.5, color="#7397de")
 
@@ -124,7 +140,7 @@ def save_batch_fit_grid(
                         )
 
             fig.tight_layout(rect=[0, 0, 1, 0.97])
-            pdf.savefig(fig, bbox_inches="tight")
+            pdf.savefig(fig, bbox_inches="tight", dpi=200)
             plt.close(fig)
 
 
