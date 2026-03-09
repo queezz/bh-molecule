@@ -5,6 +5,7 @@ from typing import Iterable, Mapping, Any
 import pickle
 
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
 import numpy as np
 import pandas as pd
 
@@ -86,6 +87,123 @@ def _batch_with_progress(
 
     df = pd.DataFrame(rows).sort_values(["frame", "channel"]).reset_index(drop=True)
     return df, curves
+
+
+def _plot_normalized_grid_pages(
+    curves: dict[tuple[int, int], tuple[np.ndarray, np.ndarray, np.ndarray]],
+    frames: list[int],
+    channels: list[int],
+    grid_png_path: Path,
+    grid_pdf_path: Path,
+    channels_per_page: int = 6,
+) -> None:
+    """Plot normalized spectra in a structured (frames × channels) grid.
+
+    - Rows correspond to frames.
+    - Columns correspond to channels (grouped into pages).
+    - Each spectrum is normalized to [0, 1] for visualization.
+    - Axes are simplified for compact overview.
+    """
+    frames_sorted = sorted(set(frames))
+    channels_sorted = sorted(set(channels))
+    if not frames_sorted or not channels_sorted:
+        return
+
+    first_page_saved = False
+
+    with PdfPages(str(grid_pdf_path)) as pdf:
+        for i_start in range(0, len(channels_sorted), channels_per_page):
+            page_channels = channels_sorted[i_start : i_start + channels_per_page]
+            if not page_channels:
+                continue
+
+            nrows = len(frames_sorted)
+            ncols = len(page_channels)
+            fig, axes = plt.subplots(
+                nrows,
+                ncols,
+                figsize=(2.4 * ncols, 1.8 * nrows),
+                squeeze=False,
+            )
+
+            # Global title for the page
+            fig.suptitle("BH band spectra (normalized)", y=0.995)
+
+            for r, frame in enumerate(frames_sorted):
+                for c, ch in enumerate(page_channels):
+                    ax = axes[r, c]
+                    key = (frame, ch)
+                    if key not in curves:
+                        ax.set_axis_off()
+                        continue
+
+                    x, y, yfit = curves[key]
+                    x = np.asarray(x, dtype=float)
+                    y = np.asarray(y, dtype=float)
+                    yfit = np.asarray(yfit, dtype=float) if yfit is not None else None
+
+                    # Normalize to [0, 1]
+                    vals = [y]
+                    if yfit is not None:
+                        vals.append(yfit)
+                    all_vals = np.concatenate(vals)
+                    vmin = float(np.min(all_vals)) if all_vals.size else 0.0
+                    vmax = float(np.max(all_vals)) if all_vals.size else 1.0
+                    if vmax > vmin:
+                        y_n = (y - vmin) / (vmax - vmin)
+                        yfit_n = (yfit - vmin) / (vmax - vmin) if yfit is not None else None
+                    else:
+                        y_n = np.zeros_like(y)
+                        yfit_n = np.zeros_like(y) if yfit is not None else None
+
+                    ax.plot(x, y_n, lw=1.0, color="k")
+                    if yfit_n is not None:
+                        ax.plot(x, yfit_n, lw=1.2, color="#7397de")
+
+                    # Simplify axes
+                    ax.set_xlabel("")
+                    ax.set_ylabel("")
+                    ax.set_ylim(-0.05, 1.05)
+                    ax.set_yticks([0.0, 1.0])
+                    ax.set_yticklabels(["0", "1"], fontsize=7)
+
+                    # Keep a few coarse x ticks
+                    if x.size > 1:
+                        xticks = np.linspace(x.min(), x.max(), 3)
+                        ax.set_xticks(xticks)
+                        ax.set_xticklabels([f"{t:.2f}" for t in xticks], fontsize=7)
+                    else:
+                        ax.set_xticks([])
+
+                    ax.legend_.remove() if getattr(ax, "legend_", None) else None
+
+                    # Channel labels at top of each column
+                    if r == 0:
+                        ax.set_title(f"ch {ch}", fontsize=9)
+
+                    # Frame labels on the left side of each row
+                    if c == 0:
+                        ax.text(
+                            -0.1,
+                            0.5,
+                            f"f {frame}",
+                            transform=ax.transAxes,
+                            ha="right",
+                            va="center",
+                            fontsize=9,
+                        )
+
+            fig.tight_layout(rect=[0, 0, 1, 0.97])
+
+            # Save into the multi-page PDF
+            pdf.savefig(fig, bbox_inches="tight")
+
+            # Save first page as PNG preview
+            if not first_page_saved:
+                fig.savefig(grid_png_path, dpi=200, bbox_inches="tight")
+                first_page_saved = True
+
+            plt.close(fig)
 
 
 def run_bh_batch(
@@ -207,11 +325,15 @@ def run_bh_batch(
     with curves_path.open("wb") as f:
         pickle.dump(curves, f)
 
-    # Save grid plots
-    fig, _ = fitr.plot_grid(curves, frames=frames_list, channels=channels_list)
-    fig.savefig(grid_png_path, dpi=200)
-    fig.savefig(grid_pdf_path)
-    plt.close(fig)
+    # Save grid plots (normalized, structured by frames×channels, paged by channel)
+    _plot_normalized_grid_pages(
+        curves,
+        frames_list,
+        channels_list,
+        grid_png_path=grid_png_path,
+        grid_pdf_path=grid_pdf_path,
+        channels_per_page=6,
+    )
 
     # Save individual fit figures
     frames_set = sorted(set(frames_list))
