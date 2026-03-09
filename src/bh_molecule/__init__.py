@@ -9,6 +9,7 @@ from .calibration import (
 )
 
 from .instruments.vis133m import Vis133M
+from .workflows.batch_fit import run_bh_batch, run_folder_batch
 
 from . import plotting
 from .plotting import use_dark, reset_light, dark_theme
@@ -24,6 +25,8 @@ __all__ = [
     "plot_linearity_summary",
     "plot_fiber_line_fits",
     "Vis133M",
+    "run_bh_batch",
+    "run_folder_batch",
     "plotting",
     "use_dark",
     "reset_light",
