@@ -26,8 +26,10 @@ def _default_channels(s, n: int = 5) -> List[int]:
 def check_background_flat(s, frames: Iterable[int] | int, channels: Iterable[int] | int | None = None) -> None:
     """Sanity check that background frames look noise-like.
 
-    For each (frame, channel) pair, compute peak/baseline where baseline is
-    the median of the spectrum. If the overall max ratio is >~3, print a warning.
+    For each (frame, channel) pair, compute spread/baseline where baseline is
+    the median and spread is (95th - 5th) percentile. Uses percentiles instead
+    of max to be robust to hot pixels. If the overall max ratio is >~3, print
+    a warning.
     """
     frames_list = _normalize_indices(frames)
     if channels is None:
@@ -46,19 +48,21 @@ def check_background_flat(s, frames: Iterable[int] | int, channels: Iterable[int
             baseline = float(np.median(spec))
             if baseline <= 0:
                 continue
-            peak = float(np.max(spec))
-            ratio = peak / baseline if baseline != 0 else np.inf
+            p5 = float(np.percentile(spec, 5))
+            p95 = float(np.percentile(spec, 95))
+            spread = p95 - p5
+            ratio = spread / baseline if baseline != 0 else np.inf
             if np.isfinite(ratio):
                 max_ratio = max(max_ratio, ratio)
 
     if max_ratio == 0.0:
-        print("Background check: could not compute a finite peak/baseline ratio.")
+        print("Background check: could not compute a finite spread/baseline ratio.")
         return
 
     if max_ratio > 3.0:
         print(
             f"WARNING: background frames may contain signal "
-            f"(peak/baseline ratio = {max_ratio:.2f})"
+            f"(spread/baseline ratio = {max_ratio:.2f})"
         )
     else:
         print(f"Background frames look flat (ratio = {max_ratio:.2f})")
