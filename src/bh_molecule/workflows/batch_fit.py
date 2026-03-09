@@ -104,7 +104,6 @@ def _plot_normalized_grid_pages(
     curves: dict[tuple[int, int], tuple[np.ndarray, np.ndarray, np.ndarray]],
     frames: list[int],
     channels: list[int],
-    grid_png_path: Path,
     grid_pdf_path: Path,
     channels_per_page: int = 6,
 ) -> None:
@@ -119,8 +118,6 @@ def _plot_normalized_grid_pages(
     channels_sorted = sorted(set(channels))
     if not frames_sorted or not channels_sorted:
         return
-
-    first_page_saved = False
 
     with PdfPages(str(grid_pdf_path)) as pdf:
         for i_start in range(0, len(channels_sorted), channels_per_page):
@@ -209,11 +206,6 @@ def _plot_normalized_grid_pages(
             # Save into the multi-page PDF
             pdf.savefig(fig, bbox_inches="tight")
 
-            # Save first page as PNG preview
-            if not first_page_saved:
-                fig.savefig(grid_png_path, dpi=200, bbox_inches="tight")
-                first_page_saved = True
-
             plt.close(fig)
 
 
@@ -268,7 +260,6 @@ def run_bh_batch(
 
     summary_path = shot_dir / "summary.csv"
     curves_path = shot_dir / "curves.pkl"
-    grid_png_path = shot_dir / "grid.png"
     grid_pdf_path = shot_dir / "grid.pdf"
 
     # Load VIS data
@@ -354,7 +345,6 @@ def run_bh_batch(
         curves,
         frames_list,
         channels_list,
-        grid_png_path=grid_png_path,
         grid_pdf_path=grid_pdf_path,
         channels_per_page=6,
     )

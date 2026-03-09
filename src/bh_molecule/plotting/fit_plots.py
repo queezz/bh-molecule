@@ -30,9 +30,9 @@ def plot_single(res, *, nm_window, xlim=None, ylim=None, title=None, ax=None):
     x, y = res["x"], res["y"]
     yfit = res.get("yfit", None)
     ax = ax or plt.subplots(figsize=(6, 5))[1]
-    ax.scatter(x, y, s=6, label="data", zorder=2, color="k")
+    ax.plot(x, y, ".", ms=3, linestyle="none", label="data", zorder=2, color="k")
     if yfit is not None:
-        ax.plot(x, yfit, lw=2.5, label="fit", zorder=1, color="#7397de")
+        ax.plot(x, yfit, "-", lw=1.2, label="fit", zorder=1, color="#7397de")
     ax.set_xlabel("wavelength [nm]")
     ax.set_ylabel("intensity [arb]")
     ax.set_xlim(*(xlim or nm_window))
