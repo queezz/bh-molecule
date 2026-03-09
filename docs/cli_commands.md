@@ -1,14 +1,47 @@
 # BH-Molecule CLI Commands
 
-The **BH-Molecule** package provides three main command-line tools for generating, exporting, and plotting model spectra of the boron hydride (BH) A–X band.
+The **BH-Molecule** package provides CLI tools for generating/plotting model spectra and for running BH batch fitting on VIS-1.33 m FITS data.
 
 ## Installation
 
 To use the commands, you need to install the package. See the [Installation](index.md#installation) section.
 
+**Batch fitting (FITS data):**
+
+* `bh batch` — run BH batch fitting from a YAML config (single file or folder)
+
+**Model spectrum generation:**
+
 * `bh-spectra`
 * `bh-spectra-csv`
 * `bh-spectra-plot`
+
+---
+
+## Batch fitting: `bh batch`
+
+Run BH batch fitting on VIS-1.33 m FITS data using a YAML config. Supports a single FITS file or a folder of `.fits` files. Frame and channel selection can be automatic (signal detection) or specified in the config.
+
+```bash
+bh batch --config fit_v3.yaml
+```
+
+**Options:**
+
+| Option | Description |
+|--------|-------------|
+| `--config` | **(Required)** Path to YAML config file. |
+| `--run-fit-limit N` | Run only the first N fits (after frame/channel selection) for quick pipeline testing. Default: no limit (full batch). |
+
+**Example (limited run for testing):**
+
+```bash
+bh batch --config fit_v3.yaml --run-fit-limit 5
+```
+
+With `--run-fit-limit 5`, the pipeline runs the same steps (selection, fitting, saving CSV, curves, grid plots, per-fit figures) but only for the first 5 (frame, channel) pairs. Output structure and filenames are unchanged; only fewer fits are executed.
+
+**Config file (YAML):** Must contain either `folder` (path to directory of `.fits` files) or `fits_file` / `fits` (path to a single FITS). Other keys are passed as batch options, e.g. `cw`, `scale`, `out_dir`, `dark_frame`, `time_range`, `background_frames`, `band`, `threshold_sigma`, `bounds`, `fitter_kwargs`, `frames`, `channels`. See [Instruments and calibration](instruments.md) and the batch workflow for details.
 
 ---
 
@@ -108,5 +141,6 @@ bh-spectra-plot --C 4.0 --T_rot 3200 --save plot.png --dpi 200
 
 ## Notes
 
-* The BH-Spectra CLI tools are based on the **BHModel** class and use molecular constants loaded via `load_v00_wavelengths()`.
+* The BH-Spectra CLI tools (`bh-spectra`, `bh-spectra-csv`, `bh-spectra-plot`) are based on the **BHModel** class and use molecular constants loaded via `load_v00_wavelengths()`.
 * Adjusting `C`, `T_rot`, and `w_inst` has the most visible effect on spectrum shape.
+* The **bh batch** command uses `run_bh_batch` / `run_folder_batch` from the package; `--run-fit-limit` limits the number of fits per run for workflow testing without changing output structure or filenames.

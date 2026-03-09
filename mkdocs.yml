@@ -80,6 +80,7 @@ nav:
   - Home: index.md
   - Physics: phys.md
   - Instruments: instruments.md
+  - Batch fit: batch_fit.md
   - API:
       - physics.py: api/physics.md
       - constants.py: api/constants.md
