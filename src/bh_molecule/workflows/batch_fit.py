@@ -5,6 +5,8 @@ from typing import Iterable, Mapping, Any
 import pickle
 
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 from bh_molecule.instruments.vis133m import Vis133M
 from bh_molecule.physics import BHModel
@@ -17,6 +19,73 @@ def _normalize_indices(values: Iterable[int] | int) -> list[int]:
     if isinstance(values, int):
         return [values]
     return [int(v) for v in values]
+
+
+def _iter_with_tqdm(seq, desc: str):
+    """Wrap an iterable with tqdm when available, else return as-is."""
+    try:
+        from tqdm.auto import tqdm  # type: ignore[import]
+
+        return tqdm(seq, desc=desc)
+    except Exception:
+        return seq
+
+
+def _batch_with_progress(
+    fitr: BHFitter,
+    frames: list[int],
+    channels: list[int],
+):
+    """Run fits with a progress bar over frames and channels."""
+    rows = []
+    curves: dict[tuple[int, int], tuple[np.ndarray, np.ndarray, np.ndarray]] = {}
+
+    for f in _iter_with_tqdm(frames, desc="Frames"):
+        for ch in _iter_with_tqdm(channels, desc=f"Channels (frame={f})"):
+            try:
+                r = fitr.fit(f, ch, return_fit=True)
+                params, errs = r["params"], r["errors"]
+                x, y = r["x"], r["y"]
+                yfit = r.get("yfit", None)
+                dof = max(len(y) - len(params), 1)
+                chi2 = (
+                    float(np.sum((y - yfit) ** 2)) / dof
+                    if yfit is not None
+                    else np.nan
+                )
+                ss_res = (
+                    float(np.sum((y - yfit) ** 2)) if yfit is not None else np.nan
+                )
+                ss_tot = (
+                    float(np.sum((y - np.mean(y)) ** 2))
+                    if yfit is not None
+                    else np.nan
+                )
+                r2 = (
+                    1.0 - ss_res / ss_tot
+                    if yfit is not None and ss_tot > 0
+                    else np.nan
+                )
+                row = {
+                    "frame": f,
+                    "channel": ch,
+                    **{n: v for n, v in zip(fitr.param_names, params)},
+                    **{
+                        f"{n}_err": e
+                        for n, e in zip(fitr.param_names, errs)
+                    },
+                    "chi2_red": chi2,
+                    "R2": r2,
+                    "npts": len(y),
+                }
+                rows.append(row)
+                if yfit is not None:
+                    curves[(f, ch)] = (x, y, yfit)
+            except Exception as e:  # pragma: no cover - defensive
+                rows.append({"frame": f, "channel": ch, "error": repr(e)})
+
+    df = pd.DataFrame(rows).sort_values(["frame", "channel"]).reset_index(drop=True)
+    return df, curves
 
 
 def run_bh_batch(
@@ -128,8 +197,8 @@ def run_bh_batch(
             lower, upper = bounds
             fitr.set_bounds(lower=lower, upper=upper)
 
-    # Run batch fit
-    resb, curves = fitr.batch(frames_list, channels_list, return_curves=True)
+    # Run batch fit with progress bars over frames/channels
+    resb, curves = _batch_with_progress(fitr, frames_list, channels_list)
 
     # Save summary table
     resb.to_csv(summary_path, index=False)
