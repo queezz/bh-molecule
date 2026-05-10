@@ -7,6 +7,8 @@ synthetic BH model and the small batch helpers in
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import numpy as np
 import pytest
 from scipy.optimize import curve_fit
@@ -14,7 +16,11 @@ from scipy.optimize import curve_fit
 from bh_molecule.dataio import load_v00_wavelengths
 from bh_molecule.fit import BHFitter, DEFAULT_DX_TOL_NM
 from bh_molecule.physics import BHModel
-from bh_molecule.workflows.batch_fit import frame_plot_filename, run_bh_batch
+from bh_molecule.workflows.batch_fit import (
+    frame_plot_filename,
+    run_bh_batch,
+    run_folder_batch,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -338,6 +344,56 @@ def test_run_bh_batch_save_frames_default_is_true(monkeypatch, tmp_path):
 # ---------------------------------------------------------------------------
 # Pretty-formatter must not blow up when an error term is large.
 # ---------------------------------------------------------------------------
+
+
+def test_run_folder_batch_filters_by_shots(monkeypatch, tmp_path):
+    """`run_folder_batch(shots=...)` must process only the requested IDs."""
+
+    import bh_molecule.workflows.batch_fit as batch_fit_mod
+
+    folder = tmp_path / "shots"
+    folder.mkdir()
+    for stem in ("193787", "193788", "193789", "193790"):
+        (folder / f"{stem}.fits").write_bytes(b"")
+
+    seen: list[str] = []
+
+    def _fake_run_bh_batch(fits_path, frames, channels, **kwargs):  # noqa: ARG001
+        seen.append(Path(fits_path).stem)
+        return None, None, None
+
+    monkeypatch.setattr(batch_fit_mod, "run_bh_batch", _fake_run_bh_batch)
+
+    run_folder_batch(
+        folder,
+        frames=None,
+        channels=None,
+        shots=[193788, "193790"],
+        out_dir=tmp_path / "out",
+    )
+    assert seen == ["193788", "193790"]
+
+
+def test_run_folder_batch_warns_on_missing_shots(monkeypatch, tmp_path, capsys):
+    import bh_molecule.workflows.batch_fit as batch_fit_mod
+
+    folder = tmp_path / "shots"
+    folder.mkdir()
+    (folder / "193788.fits").write_bytes(b"")
+
+    monkeypatch.setattr(
+        batch_fit_mod, "run_bh_batch", lambda *a, **k: (None, None, None)
+    )
+
+    run_folder_batch(
+        folder,
+        frames=None,
+        channels=None,
+        shots=[193788, 999999],
+        out_dir=tmp_path / "out",
+    )
+    out = capsys.readouterr().out
+    assert "999999" in out
 
 
 def test_format_table_handles_large_errors():

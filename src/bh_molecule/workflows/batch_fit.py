@@ -163,6 +163,7 @@ def run_bh_batch(
     shot_id = fits_path.stem
     shot_dir = base_out / shot_id
     shot_dir.mkdir(parents=True, exist_ok=True)
+    print(f"[{shot_id}] starting batch fit (save_frames={save_frames})")
 
     summary_path = shot_dir / "summary.csv"
     curves_path = shot_dir / "curves.pkl"
@@ -263,23 +264,29 @@ def run_bh_batch(
         channels_set = sorted(set(channels_list))
         per_fit_dir = shot_dir / "frames"
         per_fit_dir.mkdir(exist_ok=True)
-        for f in frames_set:
-            for ch in channels_set:
-                key = (f, ch)
-                if key not in curves:
-                    continue
-                x, y, yfit = curves[key]
-                res_single = {"x": x, "y": y, "yfit": yfit}
-                out_path = per_fit_dir / frame_plot_filename(f, ch)
-                try:
-                    ax = fitr.plot_single(res_single, title=f"f{f} ch{ch}")
-                    fig_single = ax.figure
-                    fig_single.savefig(out_path, dpi=200)
-                    plt.close(fig_single)
-                except Exception as exc:  # pragma: no cover - defensive
-                    print(f"Failed to save per-fit plot {out_path.name}: {exc!r}")
-                    plt.close("all")
+        png_pairs = [
+            (f, ch)
+            for f in frames_set
+            for ch in channels_set
+            if (f, ch) in curves
+        ]
+        n_saved = 0
+        for f, ch in _iter_with_tqdm(png_pairs, desc=f"[{shot_id}] PNGs"):
+            x, y, yfit = curves[(f, ch)]
+            res_single = {"x": x, "y": y, "yfit": yfit}
+            out_path = per_fit_dir / frame_plot_filename(f, ch)
+            try:
+                ax = fitr.plot_single(res_single, title=f"f{f} ch{ch}")
+                fig_single = ax.figure
+                fig_single.savefig(out_path, dpi=200)
+                plt.close(fig_single)
+                n_saved += 1
+            except Exception as exc:  # pragma: no cover - defensive
+                print(f"Failed to save per-fit plot {out_path.name}: {exc!r}")
+                plt.close("all")
+        print(f"[{shot_id}] saved {n_saved} per-fit PNGs to {per_fit_dir}")
 
+    print(f"[{shot_id}] saved results to {shot_dir}")
     return resb, curves, shot_dir
 
 
@@ -287,12 +294,30 @@ def run_folder_batch(
     folder: str | Path,
     frames: Iterable[int] | int | None,
     channels: Iterable[int] | int | None,
+    *,
+    shots: Iterable[int | str] | None = None,
     **kwargs,
 ):
-    """Run BH batch fitting for all .fits files in a folder.
+    """Run BH batch fitting for ``.fits`` files in a folder.
 
-    Respects resume semantics: if ``summary.csv`` already exists for a shot,
-    that FITS file is skipped.
+    Parameters
+    ----------
+    folder : path-like
+        Directory containing the FITS files.
+    frames, channels : int, iterable, or None
+        Forwarded to :func:`run_bh_batch` (None enables auto signal detection).
+    shots : iterable of int or str, optional
+        If given, only process FITS files whose stem (e.g. ``"193788"``) is
+        in this list. Useful for running a small subset of a large folder.
+        IDs are coerced to ``str``; missing matches print a warning.
+    **kwargs
+        Forwarded to :func:`run_bh_batch` (``cw``, ``scale``, ``out_dir``,
+        ``save_frames``, ``run_fit_limit``, ...).
+
+    Notes
+    -----
+    Resume semantics: shots whose ``summary.csv`` already exists under
+    ``out_dir/<shot_id>/`` are skipped.
     """
     folder_path = Path(folder)
     if not folder_path.is_dir():
@@ -302,16 +327,33 @@ def run_folder_batch(
     frames_list = None if frames is None else _normalize_indices(frames)
     channels_list = None if channels is None else _normalize_indices(channels)
 
+    all_fits = sorted(folder_path.glob("*.fits"))
+    if shots is not None:
+        wanted = {str(s) for s in shots}
+        selected = [p for p in all_fits if p.stem in wanted]
+        missing = wanted - {p.stem for p in selected}
+        if missing:
+            print(
+                f"WARNING: shots {sorted(missing)} not found under {folder_path}"
+            )
+        fits_paths = selected
+    else:
+        fits_paths = all_fits
+
+    print(f"Processing {len(fits_paths)} shot(s) under {folder_path}")
+
     results: dict[str, Any] = {}
 
-    for fits_path in sorted(folder_path.glob("*.fits")):
+    n = len(fits_paths)
+    for i, fits_path in enumerate(fits_paths, start=1):
         shot_id = fits_path.stem
         shot_dir = base_out / shot_id
         summary_path = shot_dir / "summary.csv"
         if summary_path.is_file():
-            # Resume: skip already processed shots
+            print(f"[{shot_id}] ({i}/{n}) skipping (summary.csv already exists)")
             continue
 
+        print(f"--- [{shot_id}] ({i}/{n}) ---")
         resb, curves, _ = run_bh_batch(
             fits_path,
             frames_list,

@@ -187,9 +187,12 @@ def main_bh():
 
         frames_cfg = config.get("frames")
         channels_cfg = config.get("channels")
+        shots_cfg = config.get("shots")
 
         if "folder" in config:
             folder = Path(config["folder"]).expanduser()
+            if shots_cfg is not None:
+                kwargs["shots"] = shots_cfg
             run_folder_batch(folder, frames_cfg, channels_cfg, **kwargs)
         elif "fits_file" in config or "fits" in config:
             fits_path = Path(config.get("fits_file", config.get("fits"))).expanduser()
