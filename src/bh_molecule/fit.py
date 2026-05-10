@@ -3,6 +3,14 @@ import pandas as pd
 from scipy.optimize import curve_fit
 
 
+# Half-width of the allowed wavelength shift `dx` [nm].
+# The fit uses `bounds = [-DEFAULT_DX_TOL_NM, +DEFAULT_DX_TOL_NM]` so the model
+# can compensate small CW / dispersion mismatches in either direction. ±0.3 nm
+# comfortably covers the BH band region near 433 nm without permitting absurd
+# shifts that would drift onto neighbouring features.
+DEFAULT_DX_TOL_NM: float = 0.3
+
+
 class BHFitter:
     """Blackbody-Hydrogen molecular spectrum fitter.
 
@@ -26,7 +34,9 @@ class BHFitter:
     bounds : tuple, optional
         Lower and upper bounds for parameters. Should be ``(lower, upper)``
         where each is array-like. Defaults to
-        ``([0, 0, 0, 0, -10, 0, 0], [10, 10000, 1, 0.1, 10, 1, 1])``.
+        ``([0, 0, -DEFAULT_DX_TOL_NM, 0, -10, 0, 0],
+        [10, 10000, +DEFAULT_DX_TOL_NM, 0.1, 10, 1, 1])`` so the wavelength
+        shift ``dx`` may go either positive or negative.
     maxfev : int, optional
         Maximum function evaluations passed to the underlying optimizer.
     weight : {'none', 'poisson'} or callable, optional
@@ -52,8 +62,11 @@ class BHFitter:
         nm_window=(433.05, 433.90),
         # Parameter order for p0 / bounds:
         # [C, T_rot (K), dx (nm), w_inst (nm), base, I_R7, I_R8]
-        p0=(1.0, 4000.0, 0.01, 0.025, 0.0, 1e-3, 1e-3),
-        bounds=([0, 0, 0, 0, -10, 0, 0], [10, 10000, 1, 0.1, 10, 1, 1]),
+        p0=(1.0, 4000.0, 0.0, 0.025, 0.0, 1e-3, 1e-3),
+        bounds=(
+            [0, 0, -DEFAULT_DX_TOL_NM, 0, -10, 0, 0],
+            [10, 10000, +DEFAULT_DX_TOL_NM, 0.1, 10, 1, 1],
+        ),
         maxfev=40000,
         weight="none",  # "none" | "poisson" | callable(x,y)->sigma
         warm_start=False,  # reuse last params across channels/frames
@@ -454,6 +467,8 @@ class BHFitter:
 
                     decimals = -int(np.floor(np.log10(e_rounded)))
                     v_rounded = round(v_raw, decimals)
+                    # Clamp for f-string precision (must be a non-negative int).
+                    fmt_dec = max(decimals, 0)
 
                     if abs(v_rounded) < 1e-2 or abs(v_rounded) >= 1e3:
                         scale = 10.0**exp
@@ -469,7 +484,7 @@ class BHFitter:
                         e_scaled = round(e_scaled, d)
                         disp = f"({v_scaled:.{d}f} ± {e_scaled:.{d}f})e{exp:+d} {u}".strip()
                     else:
-                        disp = f"{v_rounded:.{decimals}f} ± {e_rounded:.{decimals}f} {u}".strip()
+                        disp = f"{v_rounded:.{fmt_dec}f} ± {e_rounded:.{fmt_dec}f} {u}".strip()
 
             rows.append({"Parameter": n, "Value": disp})
 

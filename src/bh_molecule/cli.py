@@ -162,7 +162,10 @@ def main_bh():
         if not config:
             raise ValueError("Config file is empty")
 
-        # Build kwargs for run_bh_batch / run_folder_batch
+        # Build kwargs for run_bh_batch / run_folder_batch.
+        # `frames` and `channels` are passed POSITIONALLY below, so they are
+        # intentionally NOT included here (passing them both ways would raise
+        # ``TypeError: got multiple values for argument 'frames'``).
         kwargs = {}
         for key in (
             "cw",
@@ -175,30 +178,22 @@ def main_bh():
             "threshold_sigma",
             "bounds",
             "fitter_kwargs",
-            "frames",
-            "channels",
+            "save_frames",
         ):
             if key in config:
                 kwargs[key] = config[key]
         if args.run_fit_limit is not None:
             kwargs["run_fit_limit"] = args.run_fit_limit
 
+        frames_cfg = config.get("frames")
+        channels_cfg = config.get("channels")
+
         if "folder" in config:
-            run_folder_batch(config["folder"], config.get("frames"), config.get("channels"), **kwargs)
-        elif "fits_file" in config:
-            run_bh_batch(
-                config["fits_file"],
-                config.get("frames"),
-                config.get("channels"),
-                **kwargs,
-            )
-        elif "fits" in config:
-            run_bh_batch(
-                config["fits"],
-                config.get("frames"),
-                config.get("channels"),
-                **kwargs,
-            )
+            folder = Path(config["folder"]).expanduser()
+            run_folder_batch(folder, frames_cfg, channels_cfg, **kwargs)
+        elif "fits_file" in config or "fits" in config:
+            fits_path = Path(config.get("fits_file", config.get("fits"))).expanduser()
+            run_bh_batch(fits_path, frames_cfg, channels_cfg, **kwargs)
         else:
             raise ValueError(
                 "Config must contain 'folder' or 'fits_file' (or 'fits') for input path"

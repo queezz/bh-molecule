@@ -1,0 +1,69 @@
+# BH Batch Fitting Configuration Example
+# ========================================
+# Use with: bh batch --config fit_batch_example.yaml
+#
+# This config demonstrates fitting all .fits files in a folder using
+# automatic BH signal detection. For a quick test, add --run-fit-limit 5
+# to the command line.
+
+# --- Input: folder of FITS files OR a single file ---
+# Use exactly ONE of: folder, fits_file, or fits
+folder: "~/Dropbox/Experiments/2025-LHD-BH/133mORCA"
+# fits_file: "path/to/single/shot.fits"
+# fits: "path/to/single/shot.fits"  # alias for fits_file
+
+# --- Required calibration parameters ---
+cw: 431.91          # Center wavelength (nm) from CW calibration
+scale: 1.0          # Pixel-to-nm scale factor (nm/pixel)
+
+# --- Output directory ---
+out_dir: "./bh_batch_results"
+
+# --- Per-fit PNG plots ---
+# Save individual fitted-frame plots in <out_dir>/<shot_id>/frames/
+# named f{frame:02d}_ch{channel:02d}.png. Default: True.
+# save_frames: true
+
+# --- Optional: time axis ---
+time_range: [0.0, 10.0]  # [start_s, stop_s] for frame time axis
+
+# --- Optional: dark subtraction ---
+# dark_frame: 0  # Frame index to use as dark reference (subtracted from all frames)
+
+# --- Background frames for noise estimation ---
+background_frames: [0, 1, 2, 3]
+
+# --- Signal detection band (nm) ---
+# Wavelength range used to detect BH emission above background.
+band: [433.0, 433.4]
+
+# --- Signal detection threshold ---
+# Frames/channels with intensity > (baseline + threshold_sigma * noise) are selected.
+threshold_sigma: 5.0
+
+# --- Manual frame/channel selection (optional) ---
+# If omitted or null, automatic signal detection is used.
+# frames: [9, 10, 11]
+# channels: [30, 31, 32]
+
+# --- Fitter bounds (optional) ---
+# Constrain fit parameters: [C, T_rot, dx, w_inst, base, I_R7, I_R8]
+# `dx` is the wavelength shift (nm). Default bounds allow ±0.3 nm so the
+# fitter can compensate small CW / dispersion mismatches in either direction
+# (see DEFAULT_DX_TOL_NM in bh_molecule.fit). Override only if you have
+# data with larger mismatches.
+# bounds:
+#   lower: [0, 0, -0.3, 0, -10, 0, 0]
+#   upper: [10, 10000,  0.3, 0.1, 10, 1, 1]
+
+# --- Fitter kwargs (optional) ---
+# Additional arguments passed to BHFitter (e.g., nm_window, weight, warm_start)
+# fitter_kwargs:
+#   nm_window: [433.05, 433.90]
+#   weight: "none"
+#   warm_start: false
+
+# --- Testing: limit number of fits (command-line preferred) ---
+# For quick tests, use: bh batch --config this.yaml --run-fit-limit 5
+# You can also set run_fit_limit here, but --run-fit-limit overrides it.
+# run_fit_limit: 5

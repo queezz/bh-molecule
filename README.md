@@ -60,6 +60,31 @@ x = np.linspace(432.8, 434.2, 4000)
 y = model.full_fit_model(x, C=1.0, T_rot=2000, dx=0.0, w_inst=0.02)
 ```
 
+## Batch fitting
+
+Run the BH fitter over a single FITS file or a folder of `.fits` files via the
+`bh batch` CLI:
+
+```bash
+bh batch --config examples/fit_batch_example.yaml
+bh batch --config examples/fit_batch_small_example.yaml --run-fit-limit 6
+```
+
+Outputs land under `<out_dir>/<shot_id>/`:
+
+| File | Content |
+|------|---------|
+| `summary.csv` | one row per `(frame, channel)` with fit parameters and errors |
+| `curves.pkl` | raw `(x, y, yfit)` triples for replotting |
+| `grid.pdf` | normalized BH-band grid plot, one page per channel group |
+| `frames/f{frame:02d}_ch{channel:02d}.png` | per-fit data + fit overlay (set `save_frames: false` to skip) |
+
+The fitter parameter `dx` (wavelength shift, nm) is bounded symmetrically by
+`bh_molecule.fit.DEFAULT_DX_TOL_NM` (default ±0.3 nm) so the fit can absorb
+small CW / dispersion mismatches in either direction. See
+[`docs/batch_fit.md`](docs/batch_fit.md) for details on the batch workflow,
+including the YAML schema and how to override bounds.
+
 ## Fits Viewer
 
 For fast browsing of FITS files, install [fits-viewer](https://github.com/queezz/fits-viewer) directly from GitHub:

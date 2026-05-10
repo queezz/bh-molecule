@@ -96,6 +96,7 @@ nav:
       - Load spectral data: examples/03_load_spectral_data.ipynb
       - BH fit example: examples/04_bh_fit.ipynb
   - Command Line: cli_commands.md
+  - Operator Guide: operator_guide.md
   - Setup Guide:
       - Dev Install: dev-install-guide.md
       - Venv & Sync: venv-outside-synced-folders.md

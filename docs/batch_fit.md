@@ -43,9 +43,25 @@ Inside `run_bh_batch` the flow is:
 4. **Background check** — `check_background_flat(vis, background_frames)` to warn if background frames look non-flat.
 5. **Frame/channel selection** — If `frames` or `channels` are `None`, `scan_signal_frames(vis, band=..., threshold_sigma=...)` returns lists of frames and channels with signal above threshold; otherwise the provided lists are used.
 6. **Fit loop** — `_batch_with_progress(fitr, frames_list, channels_list, run_fit_limit=run_fit_limit)` builds (frame, channel) pairs (optionally truncated to the first N), runs `fitr.fit(f, ch)` for each, and aggregates rows and curves.
-7. **Save** — Write `summary.csv`, `curves.pkl`, grid PDF/PNG via `_plot_normalized_grid_pages`, and per-fit PNGs in `frames/`.
+7. **Save** — Write `summary.csv`, `curves.pkl`, grid PDF via `save_batch_fit_grid`, and (when `save_frames=True`, the default) per-fit PNGs in `frames/` named via `frame_plot_filename(frame, channel)` (e.g. `f06_ch28.png`).
 
 Selection logic is unchanged when `run_fit_limit` is set; only the number of fits executed is capped so you can test the pipeline quickly.
+
+### Wavelength-shift tolerance
+
+The fit parameter `dx` (in nm) absorbs small mismatches between the data wavelength axis (set by `cw`) and the model. Defaults live in `bh_molecule.fit.DEFAULT_DX_TOL_NM` (currently **0.3 nm**) and the fitter is initialised with symmetric bounds `[-DEFAULT_DX_TOL_NM, +DEFAULT_DX_TOL_NM]` so the fit can shift the model in either direction. Override via the YAML config's `bounds:` block when an experiment needs a different tolerance:
+
+```yaml
+bounds:
+  lower: [0, 0, -0.5, 0, -10, 0, 0]
+  upper: [10, 10000,  0.5, 0.1, 10, 1, 1]
+```
+
+A previous regression set the lower `dx` bound to `0`, which silently locked the fit to one side of the model; symptoms were "compressed" fits with all amplitude pushed onto narrow lines. If you see that pattern, check the `dx` bounds first.
+
+### Per-fit PNGs
+
+`save_frames=True` (default) writes `<out>/<shot>/frames/f{frame:02d}_ch{channel:02d}.png`. Set `save_frames: false` in the YAML config (or the Python kwarg) to skip per-fit plots and keep only the summary CSV / grid PDF. The directory is created automatically; failed plots are skipped without aborting the batch.
 
 ## Internal helpers
 
@@ -81,3 +97,13 @@ The same structure is used for limited runs (`run_fit_limit`); only the number o
 ## CLI
 
 The **`bh batch`** command runs this workflow from a YAML config: see [Command Line](cli_commands.md#batch-fitting-bh-batch). The config supplies `fits_file` or `folder`, plus `cw`, `scale`, and other options; **`--run-fit-limit N`** is passed through as `run_fit_limit` for quick tests.
+
+### Quick subset run
+
+For developer/manual testing, point at a single FITS and limit the fits:
+
+```bash
+bh batch --config examples/fit_batch_small_example.yaml --run-fit-limit 6
+```
+
+The example config (`examples/fit_batch_small_example.yaml`) targets shot `193788` from the LHD BH dataset and uses an explicit `frames`/`channels` selection so the full run completes in seconds. To exercise shots `193788`, `193789`, and `193790`, copy the file three times (one per `fits_file`) or place those three FITS files in a folder and use the `folder:` key — `run_folder_batch` skips shots whose `summary.csv` already exists, so the three runs can chain via the same `out_dir`.

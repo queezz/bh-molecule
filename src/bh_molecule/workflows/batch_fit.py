@@ -96,8 +96,20 @@ def _batch_with_progress(
         except Exception as e:  # pragma: no cover - defensive
             rows.append({"frame": f, "channel": ch, "error": repr(e)})
 
-    df = pd.DataFrame(rows).sort_values(["frame", "channel"]).reset_index(drop=True)
+    df = pd.DataFrame(rows)
+    if not df.empty:
+        df = df.sort_values(["frame", "channel"]).reset_index(drop=True)
     return df, curves
+
+
+def frame_plot_filename(frame: int, channel: int) -> str:
+    """Return the canonical per-fit PNG filename for ``(frame, channel)``.
+
+    Filenames are zero-padded to two digits to keep ``ls`` ordering sensible
+    (e.g. ``f06_ch08.png``).  This helper exists so tests and external
+    scripts can rely on the same convention.
+    """
+    return f"f{int(frame):02d}_ch{int(channel):02d}.png"
 
 
 def run_bh_batch(
@@ -116,7 +128,7 @@ def run_bh_batch(
     bounds: tuple[Any, Any] | Mapping[str, Any] | None = None,
     out_dir: str | Path = "results",
     run_fit_limit: int | None = None,
-    save_frames: bool = False,
+    save_frames: bool = True,
 ):
     """Run BH batch fitting for a single VIS-1.33 m FITS file.
 
@@ -134,8 +146,11 @@ def run_bh_batch(
     run_fit_limit: if set, run only the first N (frame, channel) fits after
         selection (for quick pipeline testing). Saves results, CSV, and plots
         for those fits only.
-    save_frames: if True, save per-(frame, channel) fit plots in frames/
-        (zero-padded filenames fNN_chNN.png). Default False.
+    save_frames: if True (default), save per-(frame, channel) fit plots in
+        ``<shot_dir>/frames/`` using zero-padded filenames produced by
+        :func:`frame_plot_filename` (e.g. ``f06_ch08.png``). Set to False
+        from the YAML config or Python API to skip per-fit PNG generation
+        when only the summary CSV / grid plots are needed.
     """
     fits_path = Path(fits_file)
     if not fits_path.is_file():
@@ -198,6 +213,9 @@ def run_bh_batch(
     if frames_list is None or channels_list is None:
         raise ValueError("Could not determine frames/channels for batch fitting.")
 
+    if not frames_list or not channels_list:
+        print(f"WARNING: No BH signal detected in {fits_path.name} (frames={frames_list}, channels={channels_list})")
+
     print(f"Using frames {sorted(set(frames_list))}")
     print(f"Using channels {sorted(set(channels_list))}")
 
@@ -252,11 +270,15 @@ def run_bh_batch(
                     continue
                 x, y, yfit = curves[key]
                 res_single = {"x": x, "y": y, "yfit": yfit}
-                ax = fitr.plot_single(res_single, title=f"f{f} ch{ch}")
-                fig_single = ax.figure
-                out_path = per_fit_dir / f"f{f:02d}_ch{ch:02d}.png"
-                fig_single.savefig(out_path, dpi=200)
-                plt.close(fig_single)
+                out_path = per_fit_dir / frame_plot_filename(f, ch)
+                try:
+                    ax = fitr.plot_single(res_single, title=f"f{f} ch{ch}")
+                    fig_single = ax.figure
+                    fig_single.savefig(out_path, dpi=200)
+                    plt.close(fig_single)
+                except Exception as exc:  # pragma: no cover - defensive
+                    print(f"Failed to save per-fit plot {out_path.name}: {exc!r}")
+                    plt.close("all")
 
     return resb, curves, shot_dir
 
@@ -301,5 +323,5 @@ def run_folder_batch(
     return results
 
 
-__all__ = ["run_bh_batch", "run_folder_batch"]
+__all__ = ["run_bh_batch", "run_folder_batch", "frame_plot_filename"]
 

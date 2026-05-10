@@ -41,7 +41,15 @@ bh batch --config fit_v3.yaml --run-fit-limit 5
 
 With `--run-fit-limit 5`, the pipeline runs the same steps (selection, fitting, saving CSV, curves, grid plots, per-fit figures) but only for the first 5 (frame, channel) pairs. Output structure and filenames are unchanged; only fewer fits are executed.
 
-**Config file (YAML):** Must contain either `folder` (path to directory of `.fits` files) or `fits_file` / `fits` (path to a single FITS). Other keys are passed as batch options, e.g. `cw`, `scale`, `out_dir`, `dark_frame`, `time_range`, `background_frames`, `band`, `threshold_sigma`, `bounds`, `fitter_kwargs`, `frames`, `channels`. See [Instruments and calibration](instruments.md) and the batch workflow for details.
+**Config file (YAML):** Must contain either `folder` (path to directory of `.fits` files) or `fits_file` / `fits` (path to a single FITS). Paths may use `~` for the user home. Other keys are passed as batch options, e.g. `cw`, `scale`, `out_dir`, `dark_frame`, `time_range`, `background_frames`, `band`, `threshold_sigma`, `bounds`, `fitter_kwargs`, `frames`, `channels`, `save_frames`. See [Instruments and calibration](instruments.md) and [Batch fitting](batch_fit.md) for details.
+
+**Common toggles:**
+
+| Key | Effect |
+|-----|--------|
+| `save_frames` | When `true` (default), writes per-fit PNGs to `<out_dir>/<shot>/frames/f{frame:02d}_ch{channel:02d}.png`. Set to `false` to skip them. |
+| `bounds` | Override fitter bounds; the third entry in `lower`/`upper` is the wavelength-shift `dx` (nm). The default is symmetric (`±DEFAULT_DX_TOL_NM = ±0.3 nm`) so the fit can compensate small CW mismatches in either direction. |
+| `frames`, `channels` | Explicit (frame, channel) selection. When omitted, automatic signal detection (`scan_signal_frames`) is used. |
 
 ---
 

@@ -1,0 +1,44 @@
+# BH Batch Fitting — small developer-test config
+# ================================================
+# Use with:
+#   bh batch --config fit_batch_small_example.yaml
+#   bh batch --config fit_batch_small_example.yaml --run-fit-limit 5
+#
+# Processes a SINGLE shot (default 193788). To run shots 193788, 193789,
+# 193790 for a quick manual check, copy this config and change `fits_file`
+# (or use a tiny folder containing only those .fits files with the `folder:`
+# key instead). `run_folder_batch` resumes by skipping shots that already
+# have a `summary.csv` in the output dir.
+
+# --- Single FITS input (one of the LHD test shots with bright BH band) ---
+fits_file: "~/Dropbox/Experiments/2025-LHD-BH/133mORCA/193788.fits"
+
+# --- Calibration ---
+cw: 431.91          # central wavelength (nm) from CW calibration
+scale: 0.0001837    # flux/intensity calibration scale (counts -> arb)
+
+# --- Output ---
+out_dir: "./bh_batch_results"
+save_frames: true   # write per-(frame, channel) PNGs to <out>/<shot>/frames/
+
+# --- Time axis ---
+time_range: [0.0, 10.0]
+
+# --- Background frames for noise estimation ---
+background_frames: [0, 1, 2, 3]
+
+# --- Signal detection band & threshold ---
+band: [433.0, 433.4]
+threshold_sigma: 5.0
+
+# --- Manual frame/channel selection for a quick small run ---
+# Comment these out to use automatic signal detection.
+frames: [6, 8, 10]
+channels: [10, 20, 28, 35]
+
+# --- Fitter bounds (optional override) ---
+# Default `dx` bounds are ±DEFAULT_DX_TOL_NM (0.3 nm) — enough to absorb
+# small central-wavelength mismatches.
+# bounds:
+#   lower: [0, 0, -0.3, 0, -10, 0, 0]
+#   upper: [10, 10000,  0.3, 0.1, 10, 1, 1]

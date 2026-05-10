@@ -15,6 +15,8 @@ from bh_molecule.physics import BHModel, Branch
 def load_original_module():
     repo_root = Path(__file__).resolve().parents[1]
     mod_path = repo_root / "examples" / "bh_spectrum.py"
+    if not mod_path.is_file():
+        pytest.skip(f"original bh_spectrum.py prototype not at {mod_path}")
     spec = importlib.util.spec_from_file_location("bh_orig", mod_path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)  # type: ignore
