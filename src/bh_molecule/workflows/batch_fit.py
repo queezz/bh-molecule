@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import gc
 from pathlib import Path
 from typing import Iterable, Mapping, Any
 import pickle
@@ -11,7 +12,7 @@ import pandas as pd
 from bh_molecule.instruments.vis133m import Vis133M
 from bh_molecule.physics import BHModel
 from bh_molecule.fit import BHFitter
-from bh_molecule.plotting.batch_fit_plots import save_batch_fit_grid
+from bh_molecule.plotting.batch_fit_plots import _log_rss, save_batch_fit_grid
 from .preprocessing import (
     BH_FIT_WAVELENGTH_RANGE_NM,
     BH_SCALE_WAVELENGTH_RANGE_NM,
@@ -381,6 +382,7 @@ def run_bh_batch(
     with curves_path.open("wb") as f:
         pickle.dump(curves, f)
 
+    _log_rss(f"[{shot_id}] before save_batch_fit_grid")
     save_batch_fit_grid(
         curves,
         frames_list,
@@ -388,6 +390,7 @@ def run_bh_batch(
         pdf_path=grid_pdf_path,
         channels_per_page=6,
     )
+    _log_rss(f"[{shot_id}] after save_batch_fit_grid")
 
     if save_frames:
         frames_set = sorted(set(frames_list))
@@ -486,13 +489,25 @@ def run_folder_batch(
             continue
 
         print(f"--- [{shot_id}] ({i}/{n}) ---")
+        _log_rss(f"[{shot_id}] before run_bh_batch")
         resb, curves, _ = run_bh_batch(
             fits_path,
             frames_list,
             channels_list,
             **kwargs,
         )
+        # Keep only the lightweight per-shot summary DataFrame in RAM.
+        # ``curves`` is by far the heaviest per-shot object — a dict of
+        # (x, y, yfit) numpy arrays for every (frame, channel) pair, easily
+        # tens of MB — and was previously kept alive in the caller's local
+        # ``curves`` variable until the next loop iteration reassigned it.
+        # Drop it eagerly, close any stray matplotlib figures, and run a
+        # collection cycle so the next shot starts from a clean baseline.
         results[shot_id] = resb
+        del resb, curves
+        plt.close("all")
+        gc.collect()
+        _log_rss(f"[{shot_id}] end of shot (after cleanup)")
 
     return results
 

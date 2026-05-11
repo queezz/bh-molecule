@@ -6,11 +6,44 @@ Single-fit visualization remains in fit_plots.py.
 
 from __future__ import annotations
 
+import gc
+import os
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 import numpy as np
+
+
+# Optional process-memory diagnostics.  ``psutil`` is an optional dependency:
+# if it is missing (or RSS lookup fails), ``_log_rss`` becomes a silent no-op
+# so batch runs keep working in minimal environments.  Set
+# ``BH_BATCH_MEM_LOG=0`` to silence the prints when psutil is available.
+_MEM_LOG_ENABLED = os.environ.get("BH_BATCH_MEM_LOG", "1").lower() not in (
+    "",
+    "0",
+    "false",
+    "no",
+    "off",
+)
+try:
+    import psutil as _psutil  # type: ignore[import]
+
+    _MEM_PROC = _psutil.Process(os.getpid())
+except Exception:  # pragma: no cover - psutil truly optional
+    _psutil = None
+    _MEM_PROC = None
+
+
+def _log_rss(label: str) -> None:
+    """Print a one-line RSS snapshot of the current process if possible."""
+    if not _MEM_LOG_ENABLED or _MEM_PROC is None:
+        return
+    try:
+        rss_gb = _MEM_PROC.memory_info().rss / 1024**3
+        print(f"[MEM] {label}: RSS = {rss_gb:.2f} GB")
+    except Exception:  # pragma: no cover - diagnostics must never crash
+        pass
 
 
 def normalize_curves_for_grid(
@@ -94,6 +127,8 @@ def save_batch_fit_grid(
     if not frames_sorted or not channels_sorted:
         return
 
+    _log_rss(f"save_batch_fit_grid start: {Path(pdf_path).name}")
+
     with PdfPages(str(pdf_path)) as pdf:
         for i_start in range(0, len(channels_sorted), channels_per_page):
             page_channels = channels_sorted[i_start : i_start + channels_per_page]
@@ -171,9 +206,30 @@ def save_batch_fit_grid(
                             fontsize=9,
                         )
 
-            fig.tight_layout(rect=[0, 0, 1, 0.97])
-            pdf.savefig(fig, bbox_inches="tight", dpi=200)
+            # NOTE: avoid ``tight_layout`` + ``bbox_inches="tight"`` + explicit
+            # ``dpi=200`` here.  In long batch runs that combination forces an
+            # extra full-figure RendererAgg allocation per page just to
+            # measure ink bounds, which fragments process memory and
+            # eventually triggers ``MemoryError: bad allocation`` inside
+            # ``RendererAgg(int(width), int(height), dpi)`` after dozens of
+            # shots.  A fixed ``subplots_adjust`` layout plus a plain
+            # ``pdf.savefig(fig)`` keeps the output visually equivalent (PDFs
+            # are vector anyway) while drastically lowering peak RAM.
+            fig.subplots_adjust(
+                left=0.06,
+                right=0.98,
+                bottom=0.05,
+                top=0.95,
+                hspace=0.25,
+                wspace=0.15,
+            )
+            pdf.savefig(fig)
+            _log_rss(f"page {1 + i_start // channels_per_page} after pdf.savefig")
             plt.close(fig)
+            gc.collect()
+            _log_rss(f"page {1 + i_start // channels_per_page} after plt.close+gc")
+
+    _log_rss(f"save_batch_fit_grid done: {Path(pdf_path).name}")
 
 
 __all__ = ["save_batch_fit_grid", "normalize_curves_for_grid"]

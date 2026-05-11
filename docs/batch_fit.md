@@ -64,6 +64,12 @@ Parameter `dx` (nm) absorbs small CW / dispersion mismatches. Default half-width
 
 `bh batch --config ...` mirrors these kwargs from YAML. See [Command Line](cli_commands.md#batch-fitting-bh-batch). Prefer validating once in [workflow notebooks](workflow_batch_notebooks.md) before long headless runs.
 
+## Memory behavior on long runs
+
+Long folder runs are now memory-safe by construction: `save_batch_fit_grid` uses a fixed `subplots_adjust` layout plus a plain `pdf.savefig(fig)` (no `bbox_inches="tight"`, no explicit `dpi`), and `run_folder_batch` drops the per-shot `curves` dict + `plt.close("all")` + `gc.collect()` between shots. Optional `psutil`-based RSS diagnostics print one line at each shot / page boundary; set `BH_BATCH_MEM_LOG=0` to silence them.
+
+Full story (symptom, root cause, A/B numbers, opt-out, recommendations): [Batch fit memory behavior (long runs)](batch_fit_memory.md).
+
 ## Internal helpers
 
 | Helper | Role |
@@ -73,5 +79,6 @@ Parameter `dx` (nm) absorbs small CW / dispersion mismatches. Default half-width
 
 ## See also
 
+- [Batch fit memory behavior (long runs)](batch_fit_memory.md)
 - [workflows.preprocessing API](api/preprocessing.md)
 - [fit.py API](api/fit.md)

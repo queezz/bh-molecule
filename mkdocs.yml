@@ -80,6 +80,7 @@ nav:
       - Overview (notebooks & CLI): workflow_batch_notebooks.md
       - Preprocessing: preprocessing_bh_fits.md
       - Pipeline & outputs: batch_fit.md
+      - Memory behavior (long runs): batch_fit_memory.md
       - Fitter constraints: fitter_constraints.md
   - API:
       - physics.py: api/physics.md
