@@ -10,6 +10,14 @@ from scipy.optimize import curve_fit
 # shifts that would drift onto neighbouring features.
 DEFAULT_DX_TOL_NM: float = 0.3
 
+# Default tight bound on the model's constant baseline / offset `base`
+# parameter when fitting *background-subtracted, BH-window-normalized* data
+# produced by `bh_molecule.workflows.preprocessing.prepare_bh_fit_arrays`.
+# Such input is already on a scale where the BH peak ~= 1 inside the scale
+# window and the continuum sits near 0, so the optimizer should not be
+# allowed to absorb the BH band by freely raising the baseline.
+DEFAULT_BASE_TIGHT_NM: float = 0.03
+
 
 class BHFitter:
     """Blackbody-Hydrogen molecular spectrum fitter.
@@ -70,18 +78,43 @@ class BHFitter:
         maxfev=40000,
         weight="none",  # "none" | "poisson" | callable(x,y)->sigma
         warm_start=False,  # reuse last params across channels/frames
+        preprocess=None,
+        base_tight=False,
+        base_bound=DEFAULT_BASE_TIGHT_NM,
     ):
         self.vis = vis
         self.model = model
         self.nm_window = tuple(map(float, nm_window))
-        self.p0 = np.asarray(p0, float)
-        self.bounds = (np.asarray(bounds[0], float), np.asarray(bounds[1], float))
+        self.p0 = np.asarray(p0, float).copy()
+        self.bounds = (
+            np.asarray(bounds[0], float).copy(),
+            np.asarray(bounds[1], float).copy(),
+        )
         self.maxfev = int(maxfev)
         self.weight = weight
         self.warm_start = bool(warm_start)
         self._last_params = None
         self.param_names = ["C", "T_rot", "dx", "w_inst", "base", "I_R7", "I_R8"]
         self.param_units = ["", "K", "nm", "nm", "", "", ""]
+
+        # Optional shared preprocessing callable (see
+        # `bh_molecule.workflows.preprocessing.make_bh_fit_preprocessor`).
+        # When set, `_window_data` delegates to it so batch and single-shot
+        # debug paths use identical fitting inputs.
+        self._preprocess = preprocess
+
+        # Tight `base` bound is the right default after preprocessing has
+        # already normalized the BH peak to ~1 (continuum near 0); a wide
+        # `[-10, +10]` lets the optimizer absorb the BH band and flatten
+        # the fit.
+        if base_tight:
+            base_idx = self.param_names.index("base")
+            tol = float(abs(base_bound))
+            self.bounds[0][base_idx] = -tol
+            self.bounds[1][base_idx] = +tol
+            self.p0[base_idx] = 0.0
+        self._base_tight = bool(base_tight)
+        self._base_bound = float(abs(base_bound))
 
     def _sigma(self, x, y):
         """Compute per-point uncertainties (sigma) for weighting the fit.
@@ -116,27 +149,34 @@ class BHFitter:
         return None
 
     def _window_data(self, frame, channel):
-        """Retrieve and window the spectrum from the `vis` data source.
+        """Retrieve and window the spectrum from the ``vis`` data source.
 
-        Pulls the wavelength and spectrum arrays for a given ``frame`` and
-        ``channel`` via ``self.vis.spectrum(frame, channel)`` and returns the
-        subset that falls inside ``self.nm_window``. Ensures the returned
-        arrays are finite and sorted by wavelength.
-
-        Parameters
-        ----------
-        frame : int
-            Frame index to retrieve from the ``vis`` object.
-        channel : int
-            Channel index to retrieve from the ``vis`` object.
+        When ``self._preprocess`` is set (e.g. via
+        :func:`bh_molecule.workflows.preprocessing.make_bh_fit_preprocessor`),
+        the callable owns the entire pipeline (background subtraction,
+        wavelength windowing, normalization) and ``self.nm_window`` is
+        ignored.  Otherwise the legacy behaviour kicks in: call
+        ``self.vis.spectrum(frame, channel)`` and crop to ``self.nm_window``.
 
         Returns
         -------
         x : ndarray
-            Wavelength values inside ``nm_window`` (sorted, float dtype).
+            Wavelength values used for the fit (sorted, float dtype).
         y : ndarray
             Corresponding spectrum values (float dtype).
         """
+        if self._preprocess is not None:
+            x_raw, y_raw = self._preprocess(self.vis, frame, channel)
+            x = np.asarray(x_raw, dtype=float)
+            y = np.asarray(y_raw, dtype=float)
+            m = np.isfinite(x) & np.isfinite(y)
+            x = x[m]
+            y = y[m]
+            if x.size >= 2 and np.any(np.diff(x) < 0):
+                idx = np.argsort(x)
+                x, y = x[idx], y[idx]
+            return x, y
+
         wl, spec = self.vis.spectrum(frame, channel)
         lo, hi = self.nm_window
         m = (wl >= lo) & (wl <= hi) & np.isfinite(wl) & np.isfinite(spec)

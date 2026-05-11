@@ -12,6 +12,11 @@ from bh_molecule.instruments.vis133m import Vis133M
 from bh_molecule.physics import BHModel
 from bh_molecule.fit import BHFitter
 from bh_molecule.plotting.batch_fit_plots import save_batch_fit_grid
+from .preprocessing import (
+    BH_FIT_WAVELENGTH_RANGE_NM,
+    BH_SCALE_WAVELENGTH_RANGE_NM,
+    make_bh_fit_preprocessor,
+)
 from .signal_scan import check_background_flat, scan_signal_frames
 
 
@@ -28,7 +33,6 @@ def prepare_vis_for_bh_batch(
     Steps: ``Vis133M.from_files`` → :meth:`~bh_molecule.instruments.vis133m.Vis133M.apply_cw`
     → :meth:`~bh_molecule.instruments.vis133m.Vis133M.set_scale` → optional
     ``dark_frame`` subtraction from the cube →
-    :meth:`~bh_molecule.instruments.vis133m.Vis133M.set_baseline_zero` (``True``) →
     :meth:`~bh_molecule.instruments.vis133m.Vis133M.set_time_linspace`.
 
     Notes
@@ -36,13 +40,14 @@ def prepare_vis_for_bh_batch(
     Frame and channel indices are **0-based** everywhere (FITS time slice 0 is
     the first frame).
 
-    The ``background_frames`` argument to :func:`run_bh_batch` is **not** used
-    here. Those indices only feed :func:`~bh_molecule.workflows.signal_scan.check_background_flat`
-    and :func:`~bh_molecule.workflows.signal_scan.scan_signal_frames` (noise level
-    for thresholding in the band image). They are **not** subtracted from
-    per-channel spectra; the only default spectral preprocessing is
-    *per-row minimum subtraction* when baseline-zero mode is on (see
-    :meth:`~bh_molecule.instruments.vis133m.Vis133M.spectrum`).
+    The actual fitting preprocessing (background subtraction over
+    ``background_frames``, BH fit-window crop, and BH-scale-window
+    normalization) is owned by
+    :func:`bh_molecule.workflows.preprocessing.prepare_bh_fit_arrays` and
+    pulls directly from ``vis.cube``.  ``baseline_zero`` is intentionally
+    **left off** here so that ``vis.spectrum`` returns the raw scaled row
+    in inspection notebooks and matches what the fitter sees (modulo
+    background subtraction).
     """
     fits_path = Path(fits_file)
     if not fits_path.is_file():
@@ -60,7 +65,7 @@ def prepare_vis_for_bh_batch(
         dark_img = vis.cube[f_idx]
         vis.cube = vis.cube - dark_img[None, :, :]
 
-    vis.set_baseline_zero(True)
+    vis.set_baseline_zero(False)
     t_start, t_stop = map(float, time_range)
     vis.set_time_linspace(t_start, t_stop)
     return vis
@@ -173,6 +178,8 @@ def run_bh_batch(
     dark_frame: int | None = None,
     time_range: tuple[float, float] = (0.0, 10.0),
     background_frames: Iterable[int] | tuple[int, ...] = (0, 1, 2, 3),
+    bh_fit_range: tuple[float, float] = BH_FIT_WAVELENGTH_RANGE_NM,
+    bh_scale_range: tuple[float, float] = BH_SCALE_WAVELENGTH_RANGE_NM,
     band: tuple[float, float] = (433.0, 433.4),
     threshold_sigma: float = 5.0,
     fitter_kwargs: Mapping[str, Any] | None = None,
@@ -183,29 +190,40 @@ def run_bh_batch(
 ):
     """Run BH batch fitting for a single VIS-1.33 m FITS file.
 
-    Steps:
-    - Load data with Vis133M.from_files
-    - Apply CW calibration
-    - Apply scale factor
-    - Optionally apply dark subtraction using a reference frame
-    - Enable baseline_zero
-    - Set the time axis
-    - Instantiate BHModel and BHFitter
-    - Optionally update bounds
-    - Run batch fitting and save results/figures under out_dir/<shot_id>/
+    Preprocessing for fitting is owned by
+    :func:`bh_molecule.workflows.preprocessing.prepare_bh_fit_arrays`:
 
-    run_fit_limit: if set, run only the first N (frame, channel) fits after
-        selection (for quick pipeline testing). Saves results, CSV, and plots
-        for those fits only.
-    save_frames: if True (default), save per-(frame, channel) fit plots in
-        ``<shot_dir>/frames/`` using zero-padded filenames produced by
-        :func:`frame_plot_filename` (e.g. ``f06_ch08.png``). Set to False
-        from the YAML config or Python API to skip per-fit PNG generation
-        when only the summary CSV / grid plots are needed.
+    - subtract mean of ``background_frames`` from the raw cube row;
+    - crop to ``bh_fit_range``;
+    - divide by the maximum positive value inside ``bh_scale_range`` so
+      bright lines outside that sub-window cannot dominate the BH scale;
+    - negative values are preserved.
+
+    The fitter's ``base`` parameter is tightly bounded by default
+    (``[-0.03, +0.03]``) because preprocessing already places the BH peak
+    near 1 and the continuum near 0.
+
+    Parameters
+    ----------
+    bh_fit_range, bh_scale_range : (float, float)
+        BH fit and scale wavelength windows [nm].
+    run_fit_limit : int or None
+        If set, run only the first N (frame, channel) fits after selection
+        (for quick pipeline testing).
+    save_frames : bool
+        Save per-(frame, channel) fit plots under ``<shot_dir>/frames/``
+        using zero-padded filenames from :func:`frame_plot_filename`.
     """
     fits_path = Path(fits_file)
     if not fits_path.is_file():
         raise FileNotFoundError(f"FITS file not found: {fits_path}")
+
+    try:
+        from tqdm.auto import tqdm as _tqdm  # type: ignore[import]
+
+        _emit = _tqdm.write
+    except Exception:  # pragma: no cover - tqdm always available in tests
+        _emit = print
 
     frames_list = None if frames is None else _normalize_indices(frames)
     channels_list = None if channels is None else _normalize_indices(channels)
@@ -214,17 +232,23 @@ def run_bh_batch(
     shot_id = fits_path.stem
     shot_dir = base_out / shot_id
     shot_dir.mkdir(parents=True, exist_ok=True)
-    print(f"[{shot_id}] starting batch fit (save_frames={save_frames})")
 
     summary_path = shot_dir / "summary.csv"
     curves_path = shot_dir / "curves.pkl"
     grid_pdf_path = shot_dir / "grid.pdf"
 
     bg_tuple = tuple(_normalize_indices(background_frames))
-    print(
-        f"[{shot_id}] background_frames={bg_tuple} "
-        "(flat-check + signal detection; not subtracted from spectra)"
-    )
+    fit_w = (float(bh_fit_range[0]), float(bh_fit_range[1]))
+    sc_w = (float(bh_scale_range[0]), float(bh_scale_range[1]))
+
+    _emit(f"Processing shot {shot_id}: {fits_path}")
+    _emit(f"Output: {shot_dir}")
+    _emit(f"background_frames: {bg_tuple}")
+    _emit(f"save_frames: {save_frames}")
+    _emit(f"BH fit window: [{fit_w[0]}, {fit_w[1]}] nm")
+    _emit(f"BH scale window: [{sc_w[0]}, {sc_w[1]}] nm")
+    if not save_frames:
+        _emit("Frame PNG saving disabled.")
 
     vis = prepare_vis_for_bh_batch(
         fits_path,
@@ -234,10 +258,8 @@ def run_bh_batch(
         time_range=time_range,
     )
 
-    # Step 1: background validation on the requested background frames
     check_background_flat(vis, background_frames)
 
-    # Step 2: automatic signal detection if frames/channels not provided
     if frames_list is None or channels_list is None:
         auto_frames, auto_channels, _ = scan_signal_frames(
             vis,
@@ -254,17 +276,33 @@ def run_bh_batch(
         raise ValueError("Could not determine frames/channels for batch fitting.")
 
     if not frames_list or not channels_list:
-        print(f"WARNING: No BH signal detected in {fits_path.name} (frames={frames_list}, channels={channels_list})")
+        _emit(
+            f"WARNING: No BH signal detected in {fits_path.name} "
+            f"(frames={frames_list}, channels={channels_list})"
+        )
 
-    print(f"Using frames {sorted(set(frames_list))}")
-    print(f"Using channels {sorted(set(channels_list))}")
+    _emit(f"Using frames {sorted(set(frames_list))}")
+    _emit(f"Using channels {sorted(set(channels_list))}")
 
-    # Model and fitter
     model = BHModel()
     fitter_kwargs = dict(fitter_kwargs or {})
+
+    # Build the shared BH preprocessor (background subtraction + BH-window
+    # crop + BH-scale-window normalization) and inject it into the fitter
+    # unless the caller already provided one.
+    fitter_kwargs.setdefault(
+        "preprocess",
+        make_bh_fit_preprocessor(
+            background_frames=bg_tuple,
+            fit_window=fit_w,
+            scale_window=sc_w,
+        ),
+    )
+    fitter_kwargs.setdefault("base_tight", True)
+    fitter_kwargs.setdefault("nm_window", fit_w)
+
     fitr = BHFitter(vis=vis, model=model, **fitter_kwargs)
 
-    # Apply bounds if provided
     if bounds is not None:
         if isinstance(bounds, Mapping):
             lower = bounds.get("lower")
@@ -274,22 +312,18 @@ def run_bh_batch(
             lower, upper = bounds
             fitr.set_bounds(lower=lower, upper=upper)
 
-    # Run batch fit with progress bars over frames/channels
     resb, curves = _batch_with_progress(
         fitr, frames_list, channels_list, run_fit_limit=run_fit_limit
     )
 
     if run_fit_limit is not None:
-        print(f"Executed {len(resb)} fits (limited run).")
+        _emit(f"Executed {len(resb)} fits (limited run).")
 
-    # Save summary table
     resb.to_csv(summary_path, index=False)
 
-    # Save curves as pickle
     with curves_path.open("wb") as f:
         pickle.dump(curves, f)
 
-    # Save grid plots (normalized, structured by frames×channels, paged by channel)
     save_batch_fit_grid(
         curves,
         frames_list,
@@ -321,11 +355,13 @@ def run_bh_batch(
                 plt.close(fig_single)
                 n_saved += 1
             except Exception as exc:  # pragma: no cover - defensive
-                print(f"Failed to save per-fit plot {out_path.name}: {exc!r}")
+                _emit(f"Failed to save per-fit plot {out_path.name}: {exc!r}")
                 plt.close("all")
-        print(f"[{shot_id}] saved {n_saved} per-fit PNGs to {per_fit_dir}")
+        _emit(f"Saved {n_saved} frame plots to {per_fit_dir}")
 
-    print(f"[{shot_id}] saved results to {shot_dir}")
+    _emit(f"Finished shot {shot_id}")
+    _emit(f"Summary: {summary_path}")
+    _emit(f"Grid: {grid_pdf_path}")
     return resb, curves, shot_dir
 
 

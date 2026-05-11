@@ -30,8 +30,18 @@ time_range: [0.0, 10.0]  # [start_s, stop_s] for frame time axis
 # --- Optional: dark subtraction ---
 # dark_frame: 0  # Frame index to use as dark reference (subtracted from all frames)
 
-# --- Background frames for noise estimation ---
+# --- Background frames ---
+# Averaged per (channel) and subtracted from each (frame, channel) row
+# before BH-window cropping and normalization (run_bh_batch).
 background_frames: [0, 1, 2, 3]
+
+# --- BH fit / scale wavelength windows (nm) ---
+# `bh_fit_range` is cropped before fitting; `bh_scale_range` controls
+# the BH-only sub-window used to compute the normalization scale so
+# unrelated bright lines (e.g. H-gamma in the full detector range)
+# cannot dominate the BH scale.
+bh_fit_range:   [433.05, 433.90]
+bh_scale_range: [433.08, 433.30]
 
 # --- Signal detection band (nm) ---
 # Wavelength range used to detect BH emission above background.

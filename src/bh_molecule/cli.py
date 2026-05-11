@@ -174,6 +174,8 @@ def main_bh():
             "dark_frame",
             "time_range",
             "background_frames",
+            "bh_fit_range",
+            "bh_scale_range",
             "band",
             "threshold_sigma",
             "bounds",
