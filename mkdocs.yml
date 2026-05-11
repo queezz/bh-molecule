@@ -51,21 +51,17 @@ markdown_extensions:
   - attr_list
   - def_list
   - footnotes
-  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
   - pymdownx.superfences
-  - pymdownx.arithmatex:   # for LaTeX
-      generic: true  
+  - pymdownx.details
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.critic
   - mdx_truly_sane_lists:
       nested_indent: 4
   - toc:
       permalink: true
-  - pymdownx.arithmatex:
-      generic: true
-  - pymdownx.superfences
-  - pymdownx.highlight
-  - pymdownx.critic
-  - pymdownx.details
-  - pymdownx.inlinehilite
 extra_javascript:
   - javascripts/mathjax.js
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
@@ -81,7 +77,7 @@ nav:
   - Physics: phys.md
   - Instruments: instruments.md
   - BH batch workflow:
-      - Overview (notebooks): workflow_batch_notebooks.md
+      - Overview (notebooks & CLI): workflow_batch_notebooks.md
       - Preprocessing: preprocessing_bh_fits.md
       - Pipeline & outputs: batch_fit.md
       - Fitter constraints: fitter_constraints.md

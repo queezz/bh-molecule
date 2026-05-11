@@ -1,6 +1,11 @@
-# Batch fitting workflow (notebooks)
+# Batch fitting workflow
 
-For VIS-1.33 m BH A–X work, the practical path is **Jupyter first**: validate preprocessing and constraints visually, then scale to many shots. The YAML / `bh batch` CLI is a supported, reproducible alternative—useful for frozen configs and automation—not the day-to-day interface described here.
+For VIS-1.33 m BH A–X work there are two supported entry points:
+
+* **Notebooks 12–14** — exploratory debugging, visual validation, and constraint calibration before trusting large batches.
+* **`bh batch` + YAML** — the same `run_bh_batch` / `run_folder_batch` pipeline with a checked-in config; best once preprocessing windows and fitter constraints are settled, or when you want unattended / reproducible reruns.
+
+The sections below emphasize the **notebook path** because that is where preprocessing and `w_inst` choices are usually vetted; the [Operator Guide](operator_guide.md) and [Command Line](cli_commands.md) document the CLI path end-to-end.
 
 Canonical notebooks in the repository (open from a clone of [queezz/bh-molecule](https://github.com/queezz/bh-molecule)):
 
@@ -19,7 +24,7 @@ Canonical notebooks in the repository (open from a clone of [queezz/bh-molecule]
 
 3. **Visual inspection** — Per-fit PNGs and `summary.csv` are not a substitute for looking at a few raw rows: H-γ outside the BH scale window, bad background frames, or wavelength quirks show up immediately in single-spectrum plots.
 
-4. **CLI last** — Once windows, `background_frames`, and fitter constraints are frozen, mirroring them in YAML gives reproducibility and CI-style reruns without changing the scientific workflow above.
+4. **YAML / CLI when stable** — The same knobs (`bh_fit_range`, `bh_scale_range`, `w_inst_*`, …) appear in `examples/fit_batch_example.yaml`. Use `bh batch --config ...` for reproducible full-folder runs, automation, or sharing configs with collaborators—after steps 1–3 have justified those values.
 
 ## Terminology: notebooks vs API / YAML
 

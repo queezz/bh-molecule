@@ -2,7 +2,7 @@
 
 This project provides tools to model and fit the A–X band spectra of boron hydride (BH). It began life as a set of Jupyter notebooks and has since been refactored into a Python package.
 
-**Batch fitting on VIS-1.33 m data** is documented as a **notebook-led** workflow (debug → batch → constraint calibration); YAML and `bh batch` are supported for reproducible reruns. Start at [Batch fitting workflow (notebooks)](workflow_batch_notebooks.md).
+**Batch fitting on VIS-1.33 m data** is documented for a **notebook-led** exploratory path (examples 12–14) and a **YAML + `bh batch` CLI** path for reproducible runs—the same code under the hood. Start at [Batch fitting workflow](workflow_batch_notebooks.md).
 
 ## Installation
 

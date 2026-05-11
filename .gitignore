@@ -4,7 +4,8 @@ examples/out/
 examples/bh_calibration_results/
 # MkDocs build output
 site/
-
+.cache/mkdocs-jupyter/
+.cache/
 # Python venv and dev install
 .venv/
 build/
