@@ -180,6 +180,11 @@ def main_bh():
             "threshold_sigma",
             "bounds",
             "fitter_kwargs",
+            "w_inst_default",
+            "w_inst_bounds",
+            "fix_w_inst",
+            "dx_tol_nm",
+            "base_bound",
             "save_frames",
         ):
             if key in config:

@@ -81,6 +81,10 @@ class BHFitter:
         preprocess=None,
         base_tight=False,
         base_bound=DEFAULT_BASE_TIGHT_NM,
+        w_inst_default=None,
+        w_inst_bounds=None,
+        fix_w_inst=False,
+        dx_tol_nm=None,
     ):
         self.vis = vis
         self.model = model
@@ -103,6 +107,41 @@ class BHFitter:
         # debug paths use identical fitting inputs.
         self._preprocess = preprocess
 
+        # ------------------------------------------------------------------
+        # Explicit, reproducible bound overrides.  All None-default kwargs
+        # preserve the previous behaviour exactly; any non-None value is a
+        # deliberate, inspectable production constraint (no hidden
+        # heuristics, no per-spectrum adaptation).
+        # ------------------------------------------------------------------
+        w_idx = self.param_names.index("w_inst")
+        dx_idx = self.param_names.index("dx")
+
+        if w_inst_default is not None:
+            self.p0[w_idx] = float(w_inst_default)
+
+        if w_inst_bounds is not None:
+            lo, hi = (float(w_inst_bounds[0]), float(w_inst_bounds[1]))
+            if not (lo < hi):
+                raise ValueError(
+                    f"w_inst_bounds={w_inst_bounds!r} must satisfy lo < hi"
+                )
+            if lo < 0:
+                raise ValueError(
+                    f"w_inst_bounds lower bound must be >= 0, got {lo}"
+                )
+            self.bounds[0][w_idx] = lo
+            self.bounds[1][w_idx] = hi
+            # Keep p0 inside its (possibly tightened) bound window.
+            if not (lo <= self.p0[w_idx] <= hi):
+                self.p0[w_idx] = 0.5 * (lo + hi)
+
+        if dx_tol_nm is not None:
+            tol = float(abs(dx_tol_nm))
+            self.bounds[0][dx_idx] = -tol
+            self.bounds[1][dx_idx] = +tol
+            if not (-tol <= self.p0[dx_idx] <= tol):
+                self.p0[dx_idx] = 0.0
+
         # Tight `base` bound is the right default after preprocessing has
         # already normalized the BH peak to ~1 (continuum near 0); a wide
         # `[-10, +10]` lets the optimizer absorb the BH band and flatten
@@ -115,6 +154,31 @@ class BHFitter:
             self.p0[base_idx] = 0.0
         self._base_tight = bool(base_tight)
         self._base_bound = float(abs(base_bound))
+
+        # ------------------------------------------------------------------
+        # Fixed `w_inst`: implemented via *parameter elimination*.  The
+        # curve_fit search runs on 6 parameters; the fixed value is
+        # re-inserted into `params`/`errors`/`cov` after the fit so the
+        # rest of the package (summary tables, batch CSV columns, plots)
+        # keeps seeing the full 7-parameter shape.
+        # ------------------------------------------------------------------
+        self._fix_w_inst = bool(fix_w_inst)
+        self._w_inst_idx = w_idx
+        if self._fix_w_inst:
+            w_fixed = float(self.p0[w_idx])
+            if not np.isfinite(w_fixed) or w_fixed < 0:
+                raise ValueError(
+                    f"fix_w_inst=True requires a finite, non-negative w_inst "
+                    f"value (got w_inst_default={w_inst_default!r}, "
+                    f"p0[w_inst]={self.p0[w_idx]!r})"
+                )
+            # Make the stored bounds reflect the fixed value for
+            # introspection (matches what `describe_constraints` reports).
+            self.bounds[0][w_idx] = w_fixed
+            self.bounds[1][w_idx] = w_fixed
+            self._w_inst_fixed_value = w_fixed
+        else:
+            self._w_inst_fixed_value = None
 
     def _sigma(self, x, y):
         """Compute per-point uncertainties (sigma) for weighting the fit.
@@ -204,6 +268,73 @@ class BHFitter:
         """
         return self.model.full_fit_model(x, C, T_rot, dx, w_inst, base, I_R7, I_R8)
 
+    def _f_w_fixed(self, x, C, T_rot, dx, base, I_R7, I_R8):
+        """Reduced model used when ``fix_w_inst=True``.
+
+        ``w_inst`` is held at ``self._w_inst_fixed_value``; ``curve_fit``
+        sees only six free parameters.
+        """
+        return self.model.full_fit_model(
+            x,
+            C,
+            T_rot,
+            dx,
+            self._w_inst_fixed_value,
+            base,
+            I_R7,
+            I_R8,
+        )
+
+    def _expand_fixed_w_inst(self, params_reduced, cov_reduced):
+        """Re-insert the fixed ``w_inst`` value into params / cov.
+
+        Returns
+        -------
+        params_full : ndarray, shape (7,)
+        cov_full : ndarray, shape (7, 7)
+            Row and column at ``w_inst`` are zero (fixed parameter).
+        """
+        idx = self._w_inst_idx
+        params_full = np.empty(len(self.param_names), dtype=float)
+        params_full[:idx] = params_reduced[:idx]
+        params_full[idx] = self._w_inst_fixed_value
+        params_full[idx + 1 :] = params_reduced[idx:]
+
+        n = len(self.param_names)
+        cov_full = np.zeros((n, n), dtype=float)
+        active = [i for i in range(n) if i != idx]
+        cov_full[np.ix_(active, active)] = cov_reduced
+        return params_full, cov_full
+
+    def describe_constraints(self) -> dict:
+        """Return active fit constraints (for logging / debugging).
+
+        The dictionary is JSON-serializable and is what ``run_bh_batch``
+        prints in its per-shot header so users can reproduce a run from
+        the log alone.
+        """
+        names = list(self.param_names)
+        lo, hi = self.bounds
+        return {
+            "param_names": names,
+            "p0": [float(v) for v in self.p0],
+            "bounds_lower": [float(v) for v in lo],
+            "bounds_upper": [float(v) for v in hi],
+            "w_inst_default": float(self.p0[self._w_inst_idx]),
+            "w_inst_bounds": (
+                float(lo[self._w_inst_idx]),
+                float(hi[self._w_inst_idx]),
+            ),
+            "fix_w_inst": bool(self._fix_w_inst),
+            "dx_tol_nm": float(hi[names.index("dx")]),
+            "base_tight": bool(self._base_tight),
+            "base_bound": float(self._base_bound),
+            "nm_window": tuple(self.nm_window),
+            "preprocess": (
+                "callable" if self._preprocess is not None else None
+            ),
+        }
+
     # MARK: Fit
     def fit(self, frame, channel, return_fit=True, p0=None):
         """Fit the model to a single frame/channel spectrum.
@@ -245,16 +376,37 @@ class BHFitter:
                 else self.p0
             )
         sigma = self._sigma(x, y)
-        params, cov = curve_fit(
-            self._f,
-            x,
-            y,
-            p0=p0,
-            bounds=self.bounds,
-            maxfev=self.maxfev,
-            sigma=sigma,
-            absolute_sigma=bool(sigma is not None),
-        )
+
+        if self._fix_w_inst:
+            # Parameter elimination: drop the w_inst slot.
+            p0_arr = np.asarray(p0, float)
+            idx = self._w_inst_idx
+            p0_reduced = np.concatenate([p0_arr[:idx], p0_arr[idx + 1 :]])
+            lo, hi = self.bounds
+            lo_red = np.concatenate([lo[:idx], lo[idx + 1 :]])
+            hi_red = np.concatenate([hi[:idx], hi[idx + 1 :]])
+            params_red, cov_red = curve_fit(
+                self._f_w_fixed,
+                x,
+                y,
+                p0=p0_reduced,
+                bounds=(lo_red, hi_red),
+                maxfev=self.maxfev,
+                sigma=sigma,
+                absolute_sigma=bool(sigma is not None),
+            )
+            params, cov = self._expand_fixed_w_inst(params_red, cov_red)
+        else:
+            params, cov = curve_fit(
+                self._f,
+                x,
+                y,
+                p0=p0,
+                bounds=self.bounds,
+                maxfev=self.maxfev,
+                sigma=sigma,
+                absolute_sigma=bool(sigma is not None),
+            )
         self._last_params = params.copy()
         res = {
             "frame": frame,

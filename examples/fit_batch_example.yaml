@@ -56,15 +56,40 @@ threshold_sigma: 5.0
 # frames: [9, 10, 11]
 # channels: [30, 31, 32]
 
-# --- Fitter bounds (optional) ---
+# --- Fitter bounds (optional, low-level) ---
 # Constrain fit parameters: [C, T_rot, dx, w_inst, base, I_R7, I_R8]
-# `dx` is the wavelength shift (nm). Default bounds allow ±0.3 nm so the
-# fitter can compensate small CW / dispersion mismatches in either direction
-# (see DEFAULT_DX_TOL_NM in bh_molecule.fit). Override only if you have
-# data with larger mismatches.
+# Prefer the high-level keys below (`w_inst_default`, `w_inst_bounds`,
+# `fix_w_inst`, `dx_tol_nm`, `base_bound`) over the raw 7-element vectors.
+# `bounds`, if provided, is applied AFTER the fitter is constructed and
+# OVERRIDES the high-level keys.
 # bounds:
 #   lower: [0, 0, -0.3, 0, -10, 0, 0]
 #   upper: [10, 10000,  0.3, 0.1, 10, 1, 1]
+
+# --- Explicit, reproducible fitter constraints (recommended) ---
+# Each key below is OPTIONAL and *only* applies when set; unset keeps the
+# fitter default.  These keys are explicit, inspectable production
+# constraints — no per-spectrum auto-bounding, no hidden heuristics.
+#
+# `w_inst_default` is the initial guess (and the fixed value when
+# `fix_w_inst: true`) for the instrumental Gaussian FWHM [nm].  This is
+# mostly spectrometer/slit dependent, not a free per-frame parameter; run
+# the `examples/14_w_inst_calibration.ipynb` notebook on representative
+# spectra before adopting production values.
+#
+# Use `w_inst_bounds` to tightly constrain the optimizer to a calibrated
+# range (recommended), or `fix_w_inst: true` to pin it exactly.
+#
+# w_inst_default: 0.022
+# w_inst_bounds: [0.020, 0.024]
+# fix_w_inst: false
+#
+# `dx_tol_nm` is the half-width [nm] of the allowed wavelength shift; the
+# fitter default (0.3) comfortably covers small CW/dispersion mismatches.
+# `base_bound` is the half-width of the tight `base` constraint applied
+# after the background-subtracted, BH-window-normalized preprocessing.
+# dx_tol_nm: 0.3
+# base_bound: 0.03
 
 # --- Fitter kwargs (optional) ---
 # Additional arguments passed to BHFitter (e.g., nm_window, weight, warm_start)

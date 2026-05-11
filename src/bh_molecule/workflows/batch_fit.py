@@ -184,6 +184,11 @@ def run_bh_batch(
     threshold_sigma: float = 5.0,
     fitter_kwargs: Mapping[str, Any] | None = None,
     bounds: tuple[Any, Any] | Mapping[str, Any] | None = None,
+    w_inst_default: float | None = None,
+    w_inst_bounds: tuple[float, float] | Iterable[float] | None = None,
+    fix_w_inst: bool = False,
+    dx_tol_nm: float | None = None,
+    base_bound: float | None = None,
     out_dir: str | Path = "results",
     run_fit_limit: int | None = None,
     save_frames: bool = True,
@@ -207,6 +212,23 @@ def run_bh_batch(
     ----------
     bh_fit_range, bh_scale_range : (float, float)
         BH fit and scale wavelength windows [nm].
+    w_inst_default : float or None
+        Initial guess (and, when ``fix_w_inst=True``, the fixed value) for
+        the instrumental width [nm].  ``None`` keeps the fitter default.
+    w_inst_bounds : (lo, hi) or None
+        Bounds on the instrumental width [nm].  Must satisfy ``0 <= lo < hi``.
+        ``None`` keeps the fitter default.
+    fix_w_inst : bool
+        When ``True``, ``w_inst`` is held at ``w_inst_default`` via
+        parameter elimination — the optimizer searches only 6 parameters
+        and the reported ``w_inst`` is exactly the supplied value
+        (``w_inst_err == 0``).
+    dx_tol_nm : float or None
+        Half-width of the allowed wavelength shift ``dx`` [nm].  ``None``
+        keeps the fitter default (``DEFAULT_DX_TOL_NM = 0.3``).
+    base_bound : float or None
+        Half-width of the tight ``base`` bound applied after preprocessing.
+        ``None`` keeps the fitter default (``DEFAULT_BASE_TIGHT_NM``).
     run_fit_limit : int or None
         If set, run only the first N (frame, channel) fits after selection
         (for quick pipeline testing).
@@ -301,6 +323,25 @@ def run_bh_batch(
     fitter_kwargs.setdefault("base_tight", True)
     fitter_kwargs.setdefault("nm_window", fit_w)
 
+    # Forward the explicit fitter constraints (w_inst handling, dx
+    # tolerance, base bound).  Each is a deliberate, inspectable choice;
+    # passing None leaves the corresponding fitter default unchanged.
+    if w_inst_default is not None:
+        fitter_kwargs.setdefault("w_inst_default", float(w_inst_default))
+    if w_inst_bounds is not None:
+        wb = tuple(float(v) for v in w_inst_bounds)
+        if len(wb) != 2:
+            raise ValueError(
+                f"w_inst_bounds must be a (lo, hi) pair, got {w_inst_bounds!r}"
+            )
+        fitter_kwargs.setdefault("w_inst_bounds", wb)
+    if fix_w_inst:
+        fitter_kwargs.setdefault("fix_w_inst", True)
+    if dx_tol_nm is not None:
+        fitter_kwargs.setdefault("dx_tol_nm", float(dx_tol_nm))
+    if base_bound is not None:
+        fitter_kwargs.setdefault("base_bound", float(base_bound))
+
     fitr = BHFitter(vis=vis, model=model, **fitter_kwargs)
 
     if bounds is not None:
@@ -311,6 +352,22 @@ def run_bh_batch(
         else:
             lower, upper = bounds
             fitr.set_bounds(lower=lower, upper=upper)
+
+    # Report active fitter constraints (explicit + inspectable).  Guarded
+    # for fitter subclasses / test stubs that may not implement
+    # `describe_constraints`.
+    if hasattr(fitr, "describe_constraints"):
+        constraints = fitr.describe_constraints()
+        _emit(
+            "Fitter constraints: "
+            f"w_inst_default={constraints['w_inst_default']:.4f} nm, "
+            f"w_inst_bounds=[{constraints['w_inst_bounds'][0]:.4f}, "
+            f"{constraints['w_inst_bounds'][1]:.4f}] nm, "
+            f"fix_w_inst={constraints['fix_w_inst']}, "
+            f"dx_tol_nm={constraints['dx_tol_nm']:.4f}, "
+            f"base_bound={constraints['base_bound']:.4f}, "
+            f"base_tight={constraints['base_tight']}"
+        )
 
     resb, curves = _batch_with_progress(
         fitr, frames_list, channels_list, run_fit_limit=run_fit_limit

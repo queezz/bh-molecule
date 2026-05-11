@@ -81,6 +81,7 @@ nav:
   - Physics: phys.md
   - Instruments: instruments.md
   - Batch fit: batch_fit.md
+  - Fitter constraints: fitter_constraints.md
   - API:
       - physics.py: api/physics.md
       - constants.py: api/constants.md

@@ -24,8 +24,12 @@ save_frames: true   # write per-(frame, channel) PNGs to <out>/<shot>/frames/
 # --- Time axis ---
 time_range: [0.0, 10.0]
 
-# --- Background frames for noise estimation ---
+# --- Background frames (averaged & subtracted per channel before fitting) ---
 background_frames: [0, 1, 2, 3]
+
+# --- BH fit/scale wavelength windows ---
+bh_fit_range:   [433.05, 433.90]
+bh_scale_range: [433.08, 433.30]
 
 # --- Signal detection band & threshold ---
 band: [433.0, 433.4]
@@ -36,9 +40,16 @@ threshold_sigma: 5.0
 frames: [6, 8, 10]
 channels: [10, 20, 28, 35]
 
-# --- Fitter bounds (optional override) ---
-# Default `dx` bounds are ±DEFAULT_DX_TOL_NM (0.3 nm) — enough to absorb
-# small central-wavelength mismatches.
+# --- Explicit, reproducible fitter constraints ---
+# Run the calibration notebook (`examples/14_w_inst_calibration.ipynb`) on
+# representative spectra before adopting production values for w_inst.
+# w_inst_default: 0.022
+# w_inst_bounds: [0.020, 0.024]
+# fix_w_inst: false
+# dx_tol_nm: 0.3
+# base_bound: 0.03
+
+# --- Fitter bounds (optional, low-level override) ---
 # bounds:
 #   lower: [0, 0, -0.3, 0, -10, 0, 0]
 #   upper: [10, 10000,  0.3, 0.1, 10, 1, 1]
