@@ -1,6 +1,7 @@
 local/
 examples/bh_batch_results/
 examples/out/
+examples/bh_calibration_results/
 # MkDocs build output
 site/
 
