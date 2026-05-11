@@ -9,28 +9,28 @@
       
       
       
-        <link rel="prev" href="../preprocessing_bh_fits/">
+        <link rel="prev" href="../calibration/">
       
       
-        <link rel="next" href="../fitter_constraints/">
+        <link rel="next" href="../dataio/">
       
       
         
       
       
-      <link rel="icon" href="../assets/h2icon.svg">
+      <link rel="icon" href="../../assets/h2icon.svg">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Pipeline & outputs - BH Molecule</title>
+        <title>fit-distribution helpers - BH Molecule</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -49,11 +49,11 @@
       
     
     
-      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../styles/brand.css">
+      <link rel="stylesheet" href="../../styles/brand.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#batch-fitting-pipeline" class="md-skip">
+        <a href="#workflowscalibration-api" class="md-skip">
           Skip to content
         </a>
       
@@ -92,9 +92,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="BH Molecule" class="md-header__button md-logo" aria-label="BH Molecule" data-md-component="logo">
+    <a href="../.." title="BH Molecule" class="md-header__button md-logo" aria-label="BH Molecule" data-md-component="logo">
       
-  <img src="../assets/h2icon.svg" alt="logo">
+  <img src="../../assets/h2icon.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -111,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Pipeline & outputs
+              fit-distribution helpers
             
           </span>
         </div>
@@ -222,7 +222,7 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -241,7 +241,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../phys/" class="md-tabs__link">
+      <a href="../../phys/" class="md-tabs__link">
         
   
   
@@ -260,7 +260,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../instruments/" class="md-tabs__link">
+      <a href="../../instruments/" class="md-tabs__link">
         
   
   
@@ -277,13 +277,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../workflow_batch_notebooks/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../workflow_batch_notebooks/" class="md-tabs__link">
           
   
   
@@ -299,11 +297,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../api/physics/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../physics/" class="md-tabs__link">
           
   
   
@@ -323,7 +323,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../examples/bh-fitting/" class="md-tabs__link">
+        <a href="../../examples/bh-fitting/" class="md-tabs__link">
           
   
   
@@ -343,7 +343,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../cli_commands/" class="md-tabs__link">
+        <a href="../../cli_commands/" class="md-tabs__link">
           
   
   
@@ -363,7 +363,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../dev-install-guide/" class="md-tabs__link">
+        <a href="../../dev-install-guide/" class="md-tabs__link">
           
   
   
@@ -397,9 +397,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="BH Molecule" class="md-nav__button md-logo" aria-label="BH Molecule" data-md-component="logo">
+    <a href="../.." title="BH Molecule" class="md-nav__button md-logo" aria-label="BH Molecule" data-md-component="logo">
       
-  <img src="../assets/h2icon.svg" alt="logo">
+  <img src="../../assets/h2icon.svg" alt="logo">
 
     </a>
     BH Molecule
@@ -426,7 +426,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -453,7 +453,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../phys/" class="md-nav__link">
+      <a href="../../phys/" class="md-nav__link">
         
   
   
@@ -480,7 +480,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../instruments/" class="md-nav__link">
+      <a href="../../instruments/" class="md-nav__link">
         
   
   
@@ -504,29 +504,24 @@
       
   
   
-    
   
   
-  
     
     
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -544,7 +539,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -562,7 +557,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../workflow_batch_notebooks/" class="md-nav__link">
+      <a href="../../workflow_batch_notebooks/" class="md-nav__link">
         
   
   
@@ -590,7 +585,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../preprocessing_bh_fits/" class="md-nav__link">
+      <a href="../../preprocessing_bh_fits/" class="md-nav__link">
         
   
   
@@ -598,6 +593,264 @@
     
   
     Preprocessing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../batch_fit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline & outputs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../fitter_constraints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fitter constraints
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    physics.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../constants/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    constants.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    fit.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../preprocessing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    preprocessing (batch)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    calibration (wavelength)
   
 
     
@@ -634,7 +887,7 @@
   <span class="md-ellipsis">
     
   
-    Pipeline & outputs
+    fit-distribution helpers
   
 
     
@@ -652,7 +905,7 @@
   <span class="md-ellipsis">
     
   
-    Pipeline & outputs
+    fit-distribution helpers
   
 
     
@@ -678,112 +931,86 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#bh_molecule.workflows.calibration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;calibration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" calibration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.workflows.calibration-attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attributes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attributes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.workflows.calibration.DEFAULT_CALIBRATION_PARAMS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;DEFAULT_CALIBRATION_PARAMS
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#entry-points" class="md-nav__link">
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.workflows.calibration-functions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Entry points
+        Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.workflows.calibration.plot_fit_distributions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;plot_fit_distributions
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#preprocessing-for-fitting-authoritative" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.workflows.calibration.summarize_fit_distribution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Preprocessing for fitting (authoritative)
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;summarize_fit_distribution
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#loader-vs-fitter-prepare_vis_for_bh_batch" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Loader vs fitter: prepare_vis_for_bh_batch
-      
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#pipeline-steps-single-shot" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pipeline steps (single shot)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#wavelength-shift-dx" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Wavelength shift dx
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#output-layout-out_dirshot_id" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output layout (&lt;out_dir&gt;/&lt;shot_id&gt;/)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cli-secondary-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CLI (secondary workflow)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#internal-helpers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Internal helpers
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#see-also" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        See also
-      
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -803,260 +1030,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../fitter_constraints/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Fitter constraints
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    API
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    API
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../api/physics/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    physics.py
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../api/constants/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    constants.py
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../api/fit/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    fit.py
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../api/preprocessing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    preprocessing (batch)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../api/calibration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    calibration (wavelength)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../api/workflows_calibration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    fit-distribution helpers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../api/dataio/" class="md-nav__link">
+      <a href="../dataio/" class="md-nav__link">
         
   
   
@@ -1084,7 +1058,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/vis133m/" class="md-nav__link">
+      <a href="../vis133m/" class="md-nav__link">
         
   
   
@@ -1112,7 +1086,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/wavecal/" class="md-nav__link">
+      <a href="../wavecal/" class="md-nav__link">
         
   
   
@@ -1140,7 +1114,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/plotting/" class="md-nav__link">
+      <a href="../plotting/" class="md-nav__link">
         
   
   
@@ -1225,7 +1199,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/bh-fitting/" class="md-nav__link">
+      <a href="../../examples/bh-fitting/" class="md-nav__link">
         
   
   
@@ -1253,7 +1227,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/02_quickstart/" class="md-nav__link">
+      <a href="../../examples/02_quickstart/" class="md-nav__link">
         
   
   
@@ -1281,7 +1255,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/03_load_spectral_data/" class="md-nav__link">
+      <a href="../../examples/03_load_spectral_data/" class="md-nav__link">
         
   
   
@@ -1309,7 +1283,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/04_bh_fit/" class="md-nav__link">
+      <a href="../../examples/04_bh_fit/" class="md-nav__link">
         
   
   
@@ -1394,7 +1368,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli_commands/" class="md-nav__link">
+      <a href="../../cli_commands/" class="md-nav__link">
         
   
   
@@ -1422,7 +1396,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../operator_guide/" class="md-nav__link">
+      <a href="../../operator_guide/" class="md-nav__link">
         
   
   
@@ -1507,7 +1481,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../dev-install-guide/" class="md-nav__link">
+      <a href="../../dev-install-guide/" class="md-nav__link">
         
   
   
@@ -1535,7 +1509,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../venv-outside-synced-folders/" class="md-nav__link">
+      <a href="../../venv-outside-synced-folders/" class="md-nav__link">
         
   
   
@@ -1590,112 +1564,86 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#bh_molecule.workflows.calibration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;calibration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" calibration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.workflows.calibration-attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attributes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attributes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.workflows.calibration.DEFAULT_CALIBRATION_PARAMS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;DEFAULT_CALIBRATION_PARAMS
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#entry-points" class="md-nav__link">
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.workflows.calibration-functions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Entry points
+        Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.workflows.calibration.plot_fit_distributions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;plot_fit_distributions
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#preprocessing-for-fitting-authoritative" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.workflows.calibration.summarize_fit_distribution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Preprocessing for fitting (authoritative)
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;summarize_fit_distribution
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#loader-vs-fitter-prepare_vis_for_bh_batch" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Loader vs fitter: prepare_vis_for_bh_batch
-      
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#pipeline-steps-single-shot" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pipeline steps (single shot)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#wavelength-shift-dx" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Wavelength shift dx
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#output-layout-out_dirshot_id" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output layout (&lt;out_dir&gt;/&lt;shot_id&gt;/)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cli-secondary-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CLI (secondary workflow)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#internal-helpers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Internal helpers
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#see-also" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        See also
-      
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1719,109 +1667,364 @@
   
 
 
-<h1 id="batch-fitting-pipeline">Batch fitting pipeline<a class="headerlink" href="#batch-fitting-pipeline" title="Permanent link">&para;</a></h1>
-<p>Code: <code>bh_molecule.workflows.batch_fit</code>. Entry points:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bh_molecule</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_bh_batch</span><span class="p">,</span> <span class="n">run_folder_batch</span>
-</code></pre></div>
-<p>For <strong>how this is used in practice</strong> (notebook order, constraint calibration), start with <a href="../workflow_batch_notebooks/">Batch fitting workflow (notebooks)</a>.</p>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Run BH A–X fits over many <code>(frame, channel)</code> pairs from a VIS-1.33 m FITS cube: wavelength calibration, optional signal-based selection, fitting with shared preprocessing, then CSV / curves / grid artifacts under each shot directory.</p>
-<h2 id="entry-points">Entry points<a class="headerlink" href="#entry-points" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Function</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong><code>run_bh_batch</code></strong></td>
-<td>One FITS file → fits → <code>&lt;out_dir&gt;/&lt;shot_id&gt;/</code>.</td>
-</tr>
-<tr>
-<td><strong><code>run_folder_batch</code></strong></td>
-<td>Every <code>.fits</code> in a folder; skips shots whose <code>summary.csv</code> already exists (resume).</td>
-</tr>
-</tbody>
-</table>
-<p>Shared options include <code>cw</code>, <code>scale</code>, <code>dark_frame</code>, <code>time_range</code>, <code>background_frames</code>, <strong><code>bh_fit_range</code></strong>, <strong><code>bh_scale_range</code></strong>, <strong><code>w_inst_default</code></strong>, <strong><code>w_inst_bounds</code></strong>, <strong><code>fix_w_inst</code></strong>, <strong><code>dx_tol_nm</code></strong>, <strong><code>base_bound</code></strong>, <code>frames</code>, <code>channels</code>, automatic detection (<code>band</code>, <code>threshold_sigma</code>), <code>bounds</code>, <code>fitter_kwargs</code>, <code>out_dir</code>, <strong><code>run_fit_limit</code></strong>, <code>save_frames</code>.</p>
-<h2 id="preprocessing-for-fitting-authoritative">Preprocessing for fitting (authoritative)<a class="headerlink" href="#preprocessing-for-fitting-authoritative" title="Permanent link">&para;</a></h2>
-<p><code>run_bh_batch</code> attaches a <strong><code>preprocess</code></strong> callable to <code>BHFitter</code> built by <code>make_bh_fit_preprocessor</code>. Under the hood this is <code>prepare_bh_fit_arrays</code>:</p>
-<ul>
-<li>subtract the <strong>mean</strong> of <code>background_frames</code> for the same channel from the raw cube row;</li>
-<li>crop to <strong><code>bh_fit_range</code></strong>;</li>
-<li>compute a <strong>positive</strong> normalization scale from <strong><code>bh_scale_range</code></strong> only (default: max of positive samples);</li>
-<li>divide; <strong>negatives are not clipped</strong> and there is no per-row <code>y - y.min()</code> shift.</li>
-</ul>
-<p>Rationale: <a href="../preprocessing_bh_fits/">Preprocessing for BH batch fits</a>.</p>
-<h2 id="loader-vs-fitter-prepare_vis_for_bh_batch">Loader vs fitter: <code>prepare_vis_for_bh_batch</code><a class="headerlink" href="#loader-vs-fitter-prepare_vis_for_bh_batch" title="Permanent link">&para;</a></h2>
-<p><code>prepare_vis_for_bh_batch</code> loads the cube, applies <code>cw</code>, <code>scale</code>, optional dark subtraction, sets the time axis, and sets <strong><code>set_baseline_zero(False)</code></strong> so <code>vis.spectrum</code> stays comparable to the raw cube row in inspection notebooks. <strong>Fitting</strong> does not use <code>spectrum</code> directly; it uses the preprocessor on <code>vis.cube</code> as described above.</p>
-<h2 id="pipeline-steps-single-shot">Pipeline steps (single shot)<a class="headerlink" href="#pipeline-steps-single-shot" title="Permanent link">&para;</a></h2>
-<ol>
-<li><strong>Load</strong> — <code>prepare_vis_for_bh_batch</code> (or equivalent steps inline in <code>run_bh_batch</code>).</li>
-<li><strong>Background sanity</strong> — <code>check_background_flat(vis, background_frames)</code>.</li>
-<li><strong>Frame/channel selection</strong> — explicit lists or <code>scan_signal_frames</code> (band image vs background noise).</li>
-<li><strong>Fitter</strong> — <code>BHFitter(..., preprocess=make_bh_fit_preprocessor(...), base_tight=True, nm_window=bh_fit_range, ...)</code> plus optional <code>bounds</code> / constraint kwargs; see <a href="../fitter_constraints/">Fitter constraints</a>.</li>
-<li><strong>Fit loop</strong> — <code>_batch_with_progress</code> (optional <code>run_fit_limit</code>).</li>
-<li><strong>Save</strong> — <code>summary.csv</code>, <code>curves.pkl</code>, <code>grid.pdf</code> / <code>grid.png</code> via <code>save_batch_fit_grid</code>, optional <code>frames/f{frame:02d}_ch{channel:02d}.png</code>.</li>
+<h1 id="workflowscalibration-api">workflows.calibration API<a class="headerlink" href="#workflowscalibration-api" title="Permanent link">&para;</a></h1>
+<p>Helpers for inspecting fit-parameter distributions when calibrating production constraints (used from <a href="https://github.com/queezz/bh-molecule/blob/main/examples/14_w_inst_calibration.ipynb"><code>examples/14_w_inst_calibration.ipynb</code></a>).</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="bh_molecule.workflows.calibration" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <code>bh_molecule.workflows.calibration</code>
+
+
+<a href="#bh_molecule.workflows.calibration" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+        <p>Lightweight helpers for <em>manual</em> fit-constraint calibration.</p>
+<p>These helpers summarize and visualize the <em>distribution</em> of fitted
+parameters (<code>w_inst</code>, <code>dx</code>, <code>base</code>, ...) across a small set of
+representative spectra so a human can pick production constraints by
+inspection.  They intentionally <strong>do not</strong> auto-pick bounds: the goal is
+explicit, inspectable, reproducible fitting constraints (no per-spectrum
+auto-bounding, no hidden heuristics).</p>
+
+
+<details class="workflow" open>
+  <summary>Workflow</summary>
+  <ol>
+<li>Run :func:<code>bh_molecule.workflows.batch_fit.run_bh_batch</code> (or
+   :class:<code>bh_molecule.fit.BHFitter</code>) with <strong>loose</strong> bounds on a few
+   representative shots / frames / channels.</li>
+<li>Pass the resulting summary <code>DataFrame</code> to
+   :func:<code>summarize_fit_distribution</code> and inspect the percentile table.</li>
+<li>Use :func:<code>plot_fit_distributions</code> to visualize histograms vs. proposed
+   bounds (overlaid as vertical lines) before adopting them.</li>
+<li>Adopt bounds explicitly via <code>w_inst_default</code> / <code>w_inst_bounds</code> /
+   <code>fix_w_inst</code> / <code>dx_tol_nm</code> / <code>base_bound</code> in the YAML or Python
+   API.</li>
 </ol>
-<p>Grid PDFs use <strong>display</strong> normalization for layout; the fitted curves in <code>curves.pkl</code> follow the preprocessing pipeline above.</p>
-<h2 id="wavelength-shift-dx">Wavelength shift <code>dx</code><a class="headerlink" href="#wavelength-shift-dx" title="Permanent link">&para;</a></h2>
-<p>Parameter <code>dx</code> (nm) absorbs small CW / dispersion mismatches. Default half-width is <code>DEFAULT_DX_TOL_NM</code> (0.3 nm). Override with <strong><code>dx_tol_nm</code></strong> in Python/YAML or the <code>bounds</code> block. If the lower bound for <code>dx</code> is accidentally nonnegative, the fit can lock to one side and compress the spectrum—check bounds first.</p>
-<h2 id="output-layout-out_dirshot_id">Output layout (<code>&lt;out_dir&gt;/&lt;shot_id&gt;/</code>)<a class="headerlink" href="#output-layout-out_dirshot_id" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Path</th>
-<th>Content</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>summary.csv</code></td>
-<td>One row per fit: frame, channel, parameters, errors, <code>chi2_red</code>, <code>R2</code>, <code>npts</code>.</td>
-</tr>
-<tr>
-<td><code>curves.pkl</code></td>
-<td><code>{(frame, channel): (x, y, yfit)}</code> from the <strong>fit</strong> preprocessing.</td>
-</tr>
-<tr>
-<td><code>grid.pdf</code> / <code>grid.png</code></td>
-<td>Normalized grid for quick review.</td>
-</tr>
-<tr>
-<td><code>frames/*.png</code></td>
-<td>Per-fit overlays when <code>save_frames=True</code>.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="cli-secondary-workflow">CLI (secondary workflow)<a class="headerlink" href="#cli-secondary-workflow" title="Permanent link">&para;</a></h2>
-<p><code>bh batch --config ...</code> mirrors these kwargs from YAML. See <a href="../cli_commands/#batch-fitting-bh-batch">Command Line</a>. Prefer validating once in <a href="../workflow_batch_notebooks/">workflow notebooks</a> before long headless runs.</p>
-<h2 id="internal-helpers">Internal helpers<a class="headerlink" href="#internal-helpers" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Helper</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong><code>_batch_with_progress</code></strong></td>
-<td><code>(frame, channel)</code> iteration, tqdm, DataFrame + curves dict.</td>
-</tr>
-<tr>
-<td><strong><code>scan_signal_frames</code></strong> / <strong><code>check_background_flat</code></strong></td>
-<td>Selection and background checks (<code>signal_scan</code>).</td>
-</tr>
-</tbody>
-</table>
-<h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="../api/preprocessing/">workflows.preprocessing API</a></li>
-<li><a href="../api/fit/">fit.py API</a></li>
-</ul>
+</details>
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+<h3 id="bh_molecule.workflows.calibration-attributes">Attributes<a href="#bh_molecule.workflows.calibration-attributes" class="headerlink" title="Permanent link">&para;</a></h3>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="bh_molecule.workflows.calibration.DEFAULT_CALIBRATION_PARAMS" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">DEFAULT_CALIBRATION_PARAMS</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;w_inst&#39;</span><span class="p">,</span> <span class="s1">&#39;dx&#39;</span><span class="p">,</span> <span class="s1">&#39;base&#39;</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+<a href="#bh_molecule.workflows.calibration.DEFAULT_CALIBRATION_PARAMS" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+
+<h3 id="bh_molecule.workflows.calibration-functions">Functions<a href="#bh_molecule.workflows.calibration-functions" class="headerlink" title="Permanent link">&para;</a></h3>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bh_molecule.workflows.calibration.plot_fit_distributions" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">plot_fit_distributions</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_CALIBRATION_PARAMS</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">suggested_bounds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">bins</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="n">r2_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span></code>
+
+<a href="#bh_molecule.workflows.calibration.plot_fit_distributions" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Histogram one or more fit parameters with optional overlaid bounds.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>df</code>
+            </td>
+            <td>
+                  <code><span title="DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Batch fit summary table.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>params</code>
+            </td>
+            <td>
+                  <code>sequence of str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Columns to plot.  One subplot per parameter.</p>
+              </div>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="            DEFAULT_CALIBRATION_PARAMS: tuple[str, ...] = ('w_inst', 'dx', 'base')
+
+  
+      module-attribute
+   (bh_molecule.workflows.calibration.DEFAULT_CALIBRATION_PARAMS)" href="#bh_molecule.workflows.calibration.DEFAULT_CALIBRATION_PARAMS">DEFAULT_CALIBRATION_PARAMS</a></code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>suggested_bounds</code>
+            </td>
+            <td>
+                  <code><span title="mapping">mapping</span> or None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Map <code>param_name -&gt; (lo, hi)</code> to overlay as vertical lines on
+the histogram — useful when iterating toward production bounds.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>bins</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Histogram bin count.</p>
+              </div>
+            </td>
+            <td>
+                  <code>30</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>r2_min</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span> or None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Optional <code>R2</code> quality cut (passed to
+:func:<code>summarize_fit_distribution</code>'s convention).</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>fig, axes : matplotlib Figure and list of Axes</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bh_molecule.workflows.calibration.summarize_fit_distribution" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">summarize_fit_distribution</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_CALIBRATION_PARAMS</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">r2_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">extra_quality_filter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></code>
+
+<a href="#bh_molecule.workflows.calibration.summarize_fit_distribution" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return per-parameter summary statistics across fits in <code>df</code>.</p>
+<p>Statistics: <code>n</code>, <code>median</code>, <code>mad</code> (median absolute deviation),
+<code>p05</code>, <code>p16</code>, <code>p50</code>, <code>p84</code>, <code>p95</code>, <code>min</code>, <code>max</code>.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>df</code>
+            </td>
+            <td>
+                  <code><span title="DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Output of a batch run, e.g. <code>run_bh_batch(...)[0]</code> or
+<code>BHFitter.batch(...)</code>.  Must contain a column per parameter name.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>params</code>
+            </td>
+            <td>
+                  <code>sequence of str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Parameter columns to summarize.</p>
+              </div>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="            DEFAULT_CALIBRATION_PARAMS: tuple[str, ...] = ('w_inst', 'dx', 'base')
+
+  
+      module-attribute
+   (bh_molecule.workflows.calibration.DEFAULT_CALIBRATION_PARAMS)" href="#bh_molecule.workflows.calibration.DEFAULT_CALIBRATION_PARAMS">DEFAULT_CALIBRATION_PARAMS</a></code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>r2_min</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span> or None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Optionally drop rows with <code>R2 &lt; r2_min</code> before computing stats.
+<code>None</code> keeps every row (useful when the column is absent).</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>extra_quality_filter</code>
+            </td>
+            <td>
+                  <code><span title="pandas.Series">Series</span> or None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Optional boolean mask aligned with <code>df.index</code>; only <code>True</code>
+rows are used.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Index = parameter name, columns = the statistics listed above.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
 
 
 
@@ -1871,12 +2074,12 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
-        <script src="../javascripts/mathjax.js"></script>
+        <script src="../../javascripts/mathjax.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       

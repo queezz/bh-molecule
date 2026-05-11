@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../preprocessing/">
+        <link rel="prev" href="../fit/">
       
       
-        <link rel="next" href="../workflows_calibration/">
+        <link rel="next" href="../calibration/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>calibration (wavelength) - BH Molecule</title>
+        <title>preprocessing (batch) - BH Molecule</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#calibrationpy-api" class="md-skip">
+        <a href="#bh_moleculeworkflowspreprocessing" class="md-skip">
           Skip to content
         </a>
       
@@ -111,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              calibration (wavelength)
+              preprocessing (batch)
             
           </span>
         </div>
@@ -812,34 +812,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../preprocessing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    preprocessing (batch)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -859,7 +831,7 @@
   <span class="md-ellipsis">
     
   
-    calibration (wavelength)
+    preprocessing (batch)
   
 
     
@@ -877,7 +849,7 @@
   <span class="md-ellipsis">
     
   
-    calibration (wavelength)
+    preprocessing (batch)
   
 
     
@@ -903,19 +875,58 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#bh_molecule.calibration" class="md-nav__link">
+  <a href="#bh_molecule.workflows.preprocessing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;calibration
+        <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;preprocessing
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label=" calibration">
+    <nav class="md-nav" aria-label=" preprocessing">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#bh_molecule.calibration-functions" class="md-nav__link">
+  <a href="#bh_molecule.workflows.preprocessing-attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attributes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attributes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.workflows.preprocessing.BH_FIT_WAVELENGTH_RANGE_NM" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;BH_FIT_WAVELENGTH_RANGE_NM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.workflows.preprocessing.BH_SCALE_WAVELENGTH_RANGE_NM" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;BH_SCALE_WAVELENGTH_RANGE_NM
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.workflows.preprocessing-functions" class="md-nav__link">
     <span class="md-ellipsis">
       
         Functions
@@ -927,10 +938,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#bh_molecule.calibration.analyze_wavelength_linearity" class="md-nav__link">
+  <a href="#bh_molecule.workflows.preprocessing.make_bh_fit_preprocessor" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;analyze_wavelength_linearity
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;make_bh_fit_preprocessor
       
     </span>
   </a>
@@ -938,10 +949,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bh_molecule.calibration.linear_fit_residuals" class="md-nav__link">
+  <a href="#bh_molecule.workflows.preprocessing.mean_background_spectrum" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;linear_fit_residuals
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;mean_background_spectrum
       
     </span>
   </a>
@@ -949,10 +960,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bh_molecule.calibration.plot_fiber_line_fits" class="md-nav__link">
+  <a href="#bh_molecule.workflows.preprocessing.prepare_bh_fit_arrays" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;plot_fiber_line_fits
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;prepare_bh_fit_arrays
       
     </span>
   </a>
@@ -960,10 +971,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bh_molecule.calibration.plot_linearity_summary" class="md-nav__link">
+  <a href="#bh_molecule.workflows.preprocessing.subtract_background_from_row" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;plot_linearity_summary
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;subtract_background_from_row
       
     </span>
   </a>
@@ -984,6 +995,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    calibration (wavelength)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1558,19 +1597,58 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#bh_molecule.calibration" class="md-nav__link">
+  <a href="#bh_molecule.workflows.preprocessing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;calibration
+        <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;preprocessing
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label=" calibration">
+    <nav class="md-nav" aria-label=" preprocessing">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#bh_molecule.calibration-functions" class="md-nav__link">
+  <a href="#bh_molecule.workflows.preprocessing-attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attributes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attributes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.workflows.preprocessing.BH_FIT_WAVELENGTH_RANGE_NM" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;BH_FIT_WAVELENGTH_RANGE_NM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.workflows.preprocessing.BH_SCALE_WAVELENGTH_RANGE_NM" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;BH_SCALE_WAVELENGTH_RANGE_NM
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_molecule.workflows.preprocessing-functions" class="md-nav__link">
     <span class="md-ellipsis">
       
         Functions
@@ -1582,10 +1660,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#bh_molecule.calibration.analyze_wavelength_linearity" class="md-nav__link">
+  <a href="#bh_molecule.workflows.preprocessing.make_bh_fit_preprocessor" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;analyze_wavelength_linearity
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;make_bh_fit_preprocessor
       
     </span>
   </a>
@@ -1593,10 +1671,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bh_molecule.calibration.linear_fit_residuals" class="md-nav__link">
+  <a href="#bh_molecule.workflows.preprocessing.mean_background_spectrum" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;linear_fit_residuals
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;mean_background_spectrum
       
     </span>
   </a>
@@ -1604,10 +1682,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bh_molecule.calibration.plot_fiber_line_fits" class="md-nav__link">
+  <a href="#bh_molecule.workflows.preprocessing.prepare_bh_fit_arrays" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;plot_fiber_line_fits
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;prepare_bh_fit_arrays
       
     </span>
   </a>
@@ -1615,10 +1693,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bh_molecule.calibration.plot_linearity_summary" class="md-nav__link">
+  <a href="#bh_molecule.workflows.preprocessing.subtract_background_from_row" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;plot_linearity_summary
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;subtract_background_from_row
       
     </span>
   </a>
@@ -1655,22 +1733,43 @@
   
 
 
-<h1 id="calibrationpy-api">calibration.py API<a class="headerlink" href="#calibrationpy-api" title="Permanent link">&para;</a></h1>
+<h1 id="bh_moleculeworkflowspreprocessing"><code>bh_molecule.workflows.preprocessing</code><a class="headerlink" href="#bh_moleculeworkflowspreprocessing" title="Permanent link">&para;</a></h1>
 
 
 <div class="doc doc-object doc-module">
 
 
 
-<h2 id="bh_molecule.calibration" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <code>bh_molecule.calibration</code>
+<h2 id="bh_molecule.workflows.preprocessing" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <code>bh_molecule.workflows.preprocessing</code>
 
 
-<a href="#bh_molecule.calibration" class="headerlink" title="Permanent link">&para;</a></h2>
+<a href="#bh_molecule.workflows.preprocessing" class="headerlink" title="Permanent link">&para;</a></h2>
 
     <div class="doc doc-contents first">
 
-        <p>Wavelength calibration linearity analysis and diagnostics.</p>
+        <p>Shared VIS preprocessing helpers for BH batch / single-spectrum workflows.</p>
+<p>This module provides the canonical <em>fitting</em> preprocessing path used by both
+:func:<code>bh_molecule.workflows.batch_fit.run_bh_batch</code> and the
+single-spectrum debug notebook.  The pipeline is:</p>
+<ol>
+<li>Load the raw row from <code>vis.cube[frame, channel]</code> (no scale, no min
+   subtraction).</li>
+<li>Optionally subtract a mean background spectrum computed from
+   <code>BACKGROUND_FRAMES</code> for the same channel.</li>
+<li>Crop to the BH <strong>fit</strong> wavelength window
+   (:data:<code>BH_FIT_WAVELENGTH_RANGE_NM</code>).</li>
+<li>Compute a robust positive scale <strong>inside the BH scale window</strong>
+   (:data:<code>BH_SCALE_WAVELENGTH_RANGE_NM</code>) — by default the maximum positive
+   value in that window — so bright lines outside the BH band (e.g. H-γ
+   on the full detector) cannot dominate the normalization.</li>
+<li>Divide by that scale.  <strong>Negative values are preserved</strong>; no
+   <code>y - y.min()</code> shift is ever applied.</li>
+</ol>
+<p>Display normalization (<code>normalize_curves_for_grid</code>) is intentionally a
+separate concept — it lives in :mod:<code>bh_molecule.plotting.batch_fit_plots</code>
+and may use min/max of the data, but the arrays handed to the fitter must
+come from :func:<code>prepare_bh_fit_arrays</code>.</p>
 
 
 
@@ -1687,23 +1786,66 @@
 
 
 
+<h3 id="bh_molecule.workflows.preprocessing-attributes">Attributes<a href="#bh_molecule.workflows.preprocessing-attributes" class="headerlink" title="Permanent link">&para;</a></h3>
+
+<div class="doc doc-object doc-attribute">
 
 
 
-<h3 id="bh_molecule.calibration-functions">Functions<a href="#bh_molecule.calibration-functions" class="headerlink" title="Permanent link">&para;</a></h3>
+<h4 id="bh_molecule.workflows.preprocessing.BH_FIT_WAVELENGTH_RANGE_NM" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">BH_FIT_WAVELENGTH_RANGE_NM</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">433.05</span><span class="p">,</span> <span class="mf">433.9</span><span class="p">)</span></code>
 
-<div class="doc doc-object doc-function">
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
 
-
-<h4 id="bh_molecule.calibration.analyze_wavelength_linearity" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">analyze_wavelength_linearity</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span></code>
-
-<a href="#bh_molecule.calibration.analyze_wavelength_linearity" class="headerlink" title="Permanent link">&para;</a></h4>
+<a href="#bh_molecule.workflows.preprocessing.BH_FIT_WAVELENGTH_RANGE_NM" class="headerlink" title="Permanent link">&para;</a></h4>
 
 
     <div class="doc doc-contents ">
 
-        <p>Analyze wavelength linearity per fiber.</p>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="bh_molecule.workflows.preprocessing.BH_SCALE_WAVELENGTH_RANGE_NM" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">BH_SCALE_WAVELENGTH_RANGE_NM</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">433.08</span><span class="p">,</span> <span class="mf">433.3</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+<a href="#bh_molecule.workflows.preprocessing.BH_SCALE_WAVELENGTH_RANGE_NM" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+
+<h3 id="bh_molecule.workflows.preprocessing-functions">Functions<a href="#bh_molecule.workflows.preprocessing-functions" class="headerlink" title="Permanent link">&para;</a></h3>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bh_molecule.workflows.preprocessing.make_bh_fit_preprocessor" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">make_bh_fit_preprocessor</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">background_frames</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">fit_window</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">BH_FIT_WAVELENGTH_RANGE_NM</span><span class="p">,</span> <span class="n">scale_window</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">BH_SCALE_WAVELENGTH_RANGE_NM</span><span class="p">,</span> <span class="n">scale_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="n">metadata_sink</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">object</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span></code>
+
+<a href="#bh_molecule.workflows.preprocessing.make_bh_fit_preprocessor" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Build a <code>(vis, frame, channel) -&gt; (x_fit, y_fit)</code> callable.</p>
+<p>Intended for :class:<code>bh_molecule.fit.BHFitter</code>'s <code>preprocess</code> argument
+so batch and single-spectrum debug paths share <em>exactly</em> the same
+preprocessing (see :func:<code>prepare_bh_fit_arrays</code>).</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -1719,18 +1861,296 @@
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>m</code>
+                <code>metadata_sink</code>
             </td>
             <td>
-                  <code>(<span title="ndarray">ndarray</span>, <span title="shape">shape</span>(<span title="n_fibers">n_fibers</span>, <span title="n_pixels">n_pixels</span>))</code>
+                  <code><span title="dict">dict</span> or None</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Wavelength calibration matrix.</p>
+                <p>If provided, the metadata dict for each call is stored under
+<code>metadata_sink[(frame, channel)]</code>.  Useful for diagnostics.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bh_molecule.workflows.preprocessing.mean_background_spectrum" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">mean_background_spectrum</span><span class="p">(</span><span class="n">cube</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">background_frames</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">channel</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></code>
+
+<a href="#bh_molecule.workflows.preprocessing.mean_background_spectrum" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Average raw counts along selected frames for one channel.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>cube</code>
+            </td>
+            <td>
+                  <code>(<span title="ndarray">ndarray</span>, <span title="shape">shape</span>(<span title="F">F</span>, <span title="C">C</span>, <span title="P">P</span>))</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Data cube <strong>before</strong> multiplicative <code>scale</code> (same layout as
+<code>Vis133M.cube</code>).</p>
               </div>
             </td>
             <td>
                 <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>background_frames</code>
+            </td>
+            <td>
+                  <code>iterable of int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Frame indices (<strong>0-based</strong>, same as <code>Vis133M.spectrum</code>).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>channel</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Channel index (<strong>0-based</strong>).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>(<span title="ndarray">ndarray</span>, <span title="shape">shape</span>(<span title="P">P</span>))</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Mean spectrum in raw cube units (multiply by <code>vis.scale</code> to match
+<code>spectrum()</code> intensity units).</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bh_molecule.workflows.preprocessing.prepare_bh_fit_arrays" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">prepare_bh_fit_arrays</span><span class="p">(</span><span class="n">vis</span><span class="p">,</span> <span class="n">frame</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">background_frames</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">fit_window</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">BH_FIT_WAVELENGTH_RANGE_NM</span><span class="p">,</span> <span class="n">scale_window</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">BH_SCALE_WAVELENGTH_RANGE_NM</span><span class="p">,</span> <span class="n">scale_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;max&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span></code>
+
+<a href="#bh_molecule.workflows.preprocessing.prepare_bh_fit_arrays" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Build the (x, y) arrays handed to :class:<code>BHFitter</code> for one spectrum.</p>
+
+
+<details class="pipeline" open>
+  <summary>Pipeline</summary>
+  <ol>
+<li><code>row = vis.cube[frame, channel]</code> (raw counts; ignores
+   <code>vis.scale</code> and <code>_baseline_zero</code>).</li>
+<li>If <code>background_frames</code> is given, subtract
+   <code>mean(vis.cube[bg, channel])</code>.</li>
+<li>Crop to <code>fit_window</code>.</li>
+<li>Compute a positive scale from values <strong>inside</strong> <code>scale_window</code>
+   only (<code>scale_method="max"</code> -&gt; <code>max(positive values)</code>;
+   <code>"p99"</code> -&gt; 99th percentile of positive values).</li>
+<li>Divide by that scale (no minimum shift; negatives preserved).</li>
+</ol>
+</details>
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>vis</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="            Vis133M (bh_molecule.instruments.vis133m.Vis133M)" href="../vis133m/#bh_molecule.instruments.vis133m.Vis133M">Vis133M</a> - <span title="like">like</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Object exposing <code>cube</code> (shape <code>(F, C, P)</code>) and <code>wl_nm</code>
+(shape <code>(C, P)</code>) attributes.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>frame</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>0-based indices.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>channel</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>0-based indices.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>background_frames</code>
+            </td>
+            <td>
+                  <code>iterable of int or None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Frame indices averaged to estimate the per-channel background.
+<code>None</code> disables background subtraction.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>fit_window</code>
+            </td>
+            <td>
+                  <code>(<span title="float">float</span>, <span title="float">float</span>)</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Wavelength range cropped before fitting [nm].</p>
+              </div>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="            BH_FIT_WAVELENGTH_RANGE_NM: tuple[float, float] = (433.05, 433.9)
+
+  
+      module-attribute
+   (bh_molecule.workflows.preprocessing.BH_FIT_WAVELENGTH_RANGE_NM)" href="#bh_molecule.workflows.preprocessing.BH_FIT_WAVELENGTH_RANGE_NM">BH_FIT_WAVELENGTH_RANGE_NM</a></code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>scale_window</code>
+            </td>
+            <td>
+                  <code>(<span title="float">float</span>, <span title="float">float</span>)</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Sub-window used to compute the normalization scale [nm].</p>
+              </div>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="            BH_SCALE_WAVELENGTH_RANGE_NM: tuple[float, float] = (433.08, 433.3)
+
+  
+      module-attribute
+   (bh_molecule.workflows.preprocessing.BH_SCALE_WAVELENGTH_RANGE_NM)" href="#bh_molecule.workflows.preprocessing.BH_SCALE_WAVELENGTH_RANGE_NM">BH_SCALE_WAVELENGTH_RANGE_NM</a></code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>scale_method</code>
+            </td>
+            <td>
+                  <code>(&#39;max&#39;, &#39;p99&#39;)</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>How to reduce positive values inside <code>scale_window</code> to a single
+scale.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#34;max&#34;</code>
             </td>
           </tr>
       </tbody>
@@ -1747,15 +2167,58 @@
       </thead>
       <tbody>
           <tr class="doc-section-item">
-<td><code>result</code></td>            <td>
-                  <code>dict with keys:</code>
+<td><code>x_fit</code></td>            <td>
+                  <code><span title="ndarray">ndarray</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>slopes      : (n_fibers,) ndarray
-intercepts  : (n_fibers,) ndarray
-r2          : (n_fibers,) ndarray
-rmse        : (n_fibers,) ndarray</p>
+                <p>Wavelength grid inside <code>fit_window</code> (sorted).</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+<td><code>y_fit</code></td>            <td>
+                  <code><span title="ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Background-subtracted, normalized intensity (negatives preserved,
+peak ~1 inside <code>scale_window</code>).</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+<td><code>meta</code></td>            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Diagnostic metadata — see source for keys.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>When <code>fit_window</code> is empty, <code>scale_window</code> does not overlap the
+fit window after cropping, or the computed scale is not finite and
+positive.</p>
               </div>
             </td>
           </tr>
@@ -1770,53 +2233,15 @@ rmse        : (n_fibers,) ndarray</p>
 <div class="doc doc-object doc-function">
 
 
-<h4 id="bh_molecule.calibration.linear_fit_residuals" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">linear_fit_residuals</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">slopes</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">intercepts</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></code>
+<h4 id="bh_molecule.workflows.preprocessing.subtract_background_from_row" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">subtract_background_from_row</span><span class="p">(</span><span class="n">row_signal</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">row_background</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></code>
 
-<a href="#bh_molecule.calibration.linear_fit_residuals" class="headerlink" title="Permanent link">&para;</a></h4>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Return residual array Δλ = λ - (a*x + b).</p>
-<p>Shape: same as m (n_fibers, n_pixels).</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h4 id="bh_molecule.calibration.plot_fiber_line_fits" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">plot_fiber_line_fits</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">slopes</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">intercepts</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">fiber_indices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ncols</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span></code>
-
-<a href="#bh_molecule.calibration.plot_fiber_line_fits" class="headerlink" title="Permanent link">&para;</a></h4>
+<a href="#bh_molecule.workflows.preprocessing.subtract_background_from_row" class="headerlink" title="Permanent link">&para;</a></h4>
 
 
     <div class="doc doc-contents ">
 
-        <p>Plot data + linear fit for selected fibers in a grid.</p>
-<p>If fiber_indices is None, select worst RMSE fibers.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h4 id="bh_molecule.calibration.plot_linearity_summary" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">plot_linearity_summary</span><span class="p">(</span><span class="n">slopes</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">r2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">rmse</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span></code>
-
-<a href="#bh_molecule.calibration.plot_linearity_summary" class="headerlink" title="Permanent link">&para;</a></h4>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Summary plots: slope vs fiber, RMSE distribution.</p>
+        <p>Return <code>row_signal - row_background</code> (signal minus background).</p>
 
 
     </div>
@@ -1829,7 +2254,7 @@ rmse        : (n_fibers,) ndarray</p>
 
     </div>
 
-</div><p>Wavelength calibration linearity analysis and diagnostics for multi-fiber spectrographs.</p>
+</div><p>Shared preparation of <code>(x, y)</code> arrays for <code>BHFitter</code> in batch and debug workflows. Narrative: <a href="../../preprocessing_bh_fits/">Preprocessing for BH batch fits</a>.</p>
 
 
 

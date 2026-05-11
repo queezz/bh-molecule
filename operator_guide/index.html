@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../preprocessing_bh_fits/">
+        <link rel="prev" href="../cli_commands/">
       
       
-        <link rel="next" href="../fitter_constraints/">
+        <link rel="next" href="../dev-install-guide/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>Pipeline & outputs - BH Molecule</title>
+        <title>Operator Guide - BH Molecule</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#batch-fitting-pipeline" class="md-skip">
+        <a href="#bh-batch-fitting-operator-quick-start-guide" class="md-skip">
           Skip to content
         </a>
       
@@ -111,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Pipeline & outputs
+              Operator Guide
             
           </span>
         </div>
@@ -277,12 +277,10 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
+      <li class="md-tabs__item">
         <a href="../workflow_batch_notebooks/" class="md-tabs__link">
           
   
@@ -339,10 +337,12 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../cli_commands/" class="md-tabs__link">
           
   
@@ -504,29 +504,24 @@
       
   
   
-    
   
   
-  
     
     
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -544,7 +539,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -615,37 +610,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Pipeline & outputs
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../batch_fit/" class="md-nav__link">
         
   
   
@@ -661,136 +629,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Purpose
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#entry-points" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Entry points
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#preprocessing-for-fitting-authoritative" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Preprocessing for fitting (authoritative)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#loader-vs-fitter-prepare_vis_for_bh_batch" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Loader vs fitter: prepare_vis_for_bh_batch
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pipeline-steps-single-shot" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pipeline steps (single shot)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#wavelength-shift-dx" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Wavelength shift dx
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#output-layout-out_dirshot_id" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output layout (&lt;out_dir&gt;/&lt;shot_id&gt;/)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cli-secondary-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CLI (secondary workflow)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#internal-helpers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Internal helpers
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#see-also" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        See also
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1341,24 +1179,29 @@
       
   
   
+    
   
   
+  
     
     
     
     
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
             
   
   
@@ -1376,7 +1219,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1419,10 +1262,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../operator_guide/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operator Guide
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1438,6 +1308,114 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-test-limited-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Test (Limited Run)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#full-batch-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Batch Run
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-automatic-signal-detection-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Automatic Signal Detection Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#config-file-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config File Keys
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resume-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resume Behavior
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1590,10 +1568,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Setup
       
     </span>
   </a>
@@ -1601,10 +1579,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#entry-points" class="md-nav__link">
+  <a href="#quick-test-limited-run" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Entry points
+        Quick Test (Limited Run)
       
     </span>
   </a>
@@ -1612,10 +1590,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#preprocessing-for-fitting-authoritative" class="md-nav__link">
+  <a href="#full-batch-run" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Preprocessing for fitting (authoritative)
+        Full Batch Run
       
     </span>
   </a>
@@ -1623,10 +1601,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#loader-vs-fitter-prepare_vis_for_bh_batch" class="md-nav__link">
+  <a href="#how-automatic-signal-detection-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Loader vs fitter: prepare_vis_for_bh_batch
+        How Automatic Signal Detection Works
       
     </span>
   </a>
@@ -1634,10 +1612,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pipeline-steps-single-shot" class="md-nav__link">
+  <a href="#config-file-keys" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pipeline steps (single shot)
+        Config File Keys
       
     </span>
   </a>
@@ -1645,10 +1623,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#wavelength-shift-dx" class="md-nav__link">
+  <a href="#output-layout" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Wavelength shift dx
+        Output Layout
       
     </span>
   </a>
@@ -1656,10 +1634,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#output-layout-out_dirshot_id" class="md-nav__link">
+  <a href="#resume-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output layout (&lt;out_dir&gt;/&lt;shot_id&gt;/)
+        Resume Behavior
       
     </span>
   </a>
@@ -1667,32 +1645,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cli-secondary-workflow" class="md-nav__link">
+  <a href="#troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CLI (secondary workflow)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#internal-helpers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Internal helpers
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#see-also" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        See also
+        Troubleshooting
       
     </span>
   </a>
@@ -1719,108 +1675,199 @@
   
 
 
-<h1 id="batch-fitting-pipeline">Batch fitting pipeline<a class="headerlink" href="#batch-fitting-pipeline" title="Permanent link">&para;</a></h1>
-<p>Code: <code>bh_molecule.workflows.batch_fit</code>. Entry points:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bh_molecule</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_bh_batch</span><span class="p">,</span> <span class="n">run_folder_batch</span>
+<h1 id="bh-batch-fitting-operator-quick-start-guide">BH Batch Fitting: Operator Quick-Start Guide<a class="headerlink" href="#bh-batch-fitting-operator-quick-start-guide" title="Permanent link">&para;</a></h1>
+<p>For development and analysis, the usual path is the repository notebooks (<a href="../workflow_batch_notebooks/">overview</a>): single-spectrum debug, folder batch, then <code>w_inst</code> calibration before freezing settings.</p>
+<p>This page documents <strong><code>bh batch</code></strong> for <strong>reproducible</strong> runs from a YAML file—after you have already validated preprocessing and fitter constraints interactively.</p>
+<h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h2>
+<p>Activate the virtual environment (created outside the synced folder):</p>
+<p><strong>Windows PowerShell:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">&amp;</span> <span class="s2">&quot;$env:USERPROFILE/.venvs/bh-molecule/Scripts/Activate.ps1&quot;</span>
 </code></pre></div>
-<p>For <strong>how this is used in practice</strong> (notebook order, constraint calibration), start with <a href="../workflow_batch_notebooks/">Batch fitting workflow (notebooks)</a>.</p>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Run BH A–X fits over many <code>(frame, channel)</code> pairs from a VIS-1.33 m FITS cube: wavelength calibration, optional signal-based selection, fitting with shared preprocessing, then CSV / curves / grid artifacts under each shot directory.</p>
-<h2 id="entry-points">Entry points<a class="headerlink" href="#entry-points" title="Permanent link">&para;</a></h2>
+<p><strong>Linux / macOS:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nb">source</span><span class="w"> </span>~/.venvs/bh-molecule/bin/activate
+</code></pre></div>
+<p>Install or update the package:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+</code></pre></div>
+<h2 id="quick-test-limited-run">Quick Test (Limited Run)<a class="headerlink" href="#quick-test-limited-run" title="Permanent link">&para;</a></h2>
+<p>Run a fast pipeline check with <code>--run-fit-limit</code>:</p>
+<div class="highlight"><pre><span></span><code>bh<span class="w"> </span>batch<span class="w"> </span>--config<span class="w"> </span>examples/fit_batch_example.yaml<span class="w"> </span>--run-fit-limit<span class="w"> </span><span class="m">5</span>
+</code></pre></div>
+<p>This executes only the first 5 (frame, channel) fits, producing valid outputs (<code>summary.csv</code>, <code>curves.pkl</code>, <code>grid.pdf</code>) with fewer rows. Use this to verify calibration and detection before committing to a full run.</p>
+<h2 id="full-batch-run">Full Batch Run<a class="headerlink" href="#full-batch-run" title="Permanent link">&para;</a></h2>
+<p>Run all detected fits:</p>
+<div class="highlight"><pre><span></span><code>bh<span class="w"> </span>batch<span class="w"> </span>--config<span class="w"> </span>examples/fit_batch_example.yaml
+</code></pre></div>
+<p>For a folder of FITS files, the workflow processes each <code>.fits</code> file sequentially. Shots with existing <code>summary.csv</code> in the output directory are skipped (resume behavior).</p>
+<h2 id="how-automatic-signal-detection-works">How Automatic Signal Detection Works<a class="headerlink" href="#how-automatic-signal-detection-works" title="Permanent link">&para;</a></h2>
+<p>When <code>frames</code> or <code>channels</code> are not specified in the config (or set to <code>null</code>), the workflow uses <code>scan_signal_frames()</code> to automatically find frames and channels with BH emission:</p>
+<ol>
+<li>
+<p><strong>Band image extraction</strong> — A 2D image (frames × channels) is created by integrating each spectrum over the <code>band</code> wavelength range (default: 433.0–433.4 nm, the BH A–X Q-branch region).</p>
+</li>
+<li>
+<p><strong>Noise estimation</strong> — The median and standard deviation are computed from the <code>background_frames</code> (default: frames 0, 1, 2, 3), which should contain no plasma signal.</p>
+</li>
+<li>
+<p><strong>Threshold detection</strong> — Pixels in the band image exceeding <code>baseline + threshold_sigma × noise</code> are marked as signal. Default <code>threshold_sigma</code> is 5.0.</p>
+</li>
+<li>
+<p><strong>Frame/channel selection</strong> — Frames with signal in more than 2 channels, and channels with signal in more than 2 frames, are selected for fitting.</p>
+</li>
+</ol>
+<p>If no signal is detected (empty frame/channel lists), the workflow continues without error but produces empty outputs. Check console messages for "Detected frames" and "Detected channels" lists.</p>
+<h2 id="config-file-keys">Config File Keys<a class="headerlink" href="#config-file-keys" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Function</th>
-<th>Role</th>
+<th>Key</th>
+<th>Required</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong><code>run_bh_batch</code></strong></td>
-<td>One FITS file → fits → <code>&lt;out_dir&gt;/&lt;shot_id&gt;/</code>.</td>
+<td><code>folder</code></td>
+<td>One of these</td>
+<td>Directory containing <code>.fits</code> files</td>
 </tr>
 <tr>
-<td><strong><code>run_folder_batch</code></strong></td>
-<td>Every <code>.fits</code> in a folder; skips shots whose <code>summary.csv</code> already exists (resume).</td>
+<td><code>fits_file</code> / <code>fits</code></td>
+<td>One of these</td>
+<td>Path to a single FITS file</td>
+</tr>
+<tr>
+<td><code>cw</code></td>
+<td>Yes</td>
+<td>Center wavelength (nm) for calibration</td>
+</tr>
+<tr>
+<td><code>scale</code></td>
+<td>Yes</td>
+<td>Pixel-to-nm scale factor</td>
+</tr>
+<tr>
+<td><code>out_dir</code></td>
+<td>No</td>
+<td>Output directory (default: <code>results</code>)</td>
+</tr>
+<tr>
+<td><code>time_range</code></td>
+<td>No</td>
+<td><code>[start, stop]</code> seconds for frame time axis</td>
+</tr>
+<tr>
+<td><code>dark_frame</code></td>
+<td>No</td>
+<td>Frame index to subtract as dark reference</td>
+</tr>
+<tr>
+<td><code>background_frames</code></td>
+<td>No</td>
+<td>Pre-plasma frames: noise estimate for signal detection <strong>and</strong> per-channel mean subtracted in the fitting preprocessor (default: <code>[0,1,2,3]</code>)</td>
+</tr>
+<tr>
+<td><code>band</code></td>
+<td>No</td>
+<td>Wavelength range <code>[lo, hi]</code> nm for signal detection (default: <code>[433.0, 433.4]</code>)</td>
+</tr>
+<tr>
+<td><code>threshold_sigma</code></td>
+<td>No</td>
+<td>Detection threshold in sigma units (default: <code>5.0</code>)</td>
+</tr>
+<tr>
+<td><code>frames</code></td>
+<td>No</td>
+<td>Explicit frame indices (skip auto-detection)</td>
+</tr>
+<tr>
+<td><code>channels</code></td>
+<td>No</td>
+<td>Explicit channel indices (skip auto-detection)</td>
+</tr>
+<tr>
+<td><code>bounds</code></td>
+<td>No</td>
+<td>Fit parameter bounds (<code>{lower: [...], upper: [...]}</code>)</td>
+</tr>
+<tr>
+<td><code>bh_fit_range</code></td>
+<td>No</td>
+<td>BH fit wavelength window [nm] (crop before fitting); default matches <code>BH_FIT_WAVELENGTH_RANGE_NM</code> in preprocessing</td>
+</tr>
+<tr>
+<td><code>bh_scale_range</code></td>
+<td>No</td>
+<td>Sub-window [nm] used only for normalization scale; default matches <code>BH_SCALE_WAVELENGTH_RANGE_NM</code></td>
+</tr>
+<tr>
+<td><code>w_inst_default</code></td>
+<td>No</td>
+<td>Initial guess and fixed value when <code>fix_w_inst: true</code> (instrumental FWHM, nm)</td>
+</tr>
+<tr>
+<td><code>w_inst_bounds</code></td>
+<td>No</td>
+<td><code>[lo, hi]</code> for <code>w_inst</code> (nm), <code>0 &lt;= lo &lt; hi</code></td>
+</tr>
+<tr>
+<td><code>fix_w_inst</code></td>
+<td>No</td>
+<td>When <code>true</code>, hold <code>w_inst</code> at <code>w_inst_default</code></td>
+</tr>
+<tr>
+<td><code>dx_tol_nm</code></td>
+<td>No</td>
+<td>Half-width of allowed <code>dx</code> (nm); default fitter value if omitted</td>
+</tr>
+<tr>
+<td><code>base_bound</code></td>
+<td>No</td>
+<td>Half-width of tight <code>base</code> bound when <code>base_tight</code> applies</td>
+</tr>
+<tr>
+<td><code>fitter_kwargs</code></td>
+<td>No</td>
+<td>Extra args for <code>BHFitter</code> (<code>nm_window</code>, <code>weight</code>, <code>warm_start</code>)</td>
 </tr>
 </tbody>
 </table>
-<p>Shared options include <code>cw</code>, <code>scale</code>, <code>dark_frame</code>, <code>time_range</code>, <code>background_frames</code>, <strong><code>bh_fit_range</code></strong>, <strong><code>bh_scale_range</code></strong>, <strong><code>w_inst_default</code></strong>, <strong><code>w_inst_bounds</code></strong>, <strong><code>fix_w_inst</code></strong>, <strong><code>dx_tol_nm</code></strong>, <strong><code>base_bound</code></strong>, <code>frames</code>, <code>channels</code>, automatic detection (<code>band</code>, <code>threshold_sigma</code>), <code>bounds</code>, <code>fitter_kwargs</code>, <code>out_dir</code>, <strong><code>run_fit_limit</code></strong>, <code>save_frames</code>.</p>
-<h2 id="preprocessing-for-fitting-authoritative">Preprocessing for fitting (authoritative)<a class="headerlink" href="#preprocessing-for-fitting-authoritative" title="Permanent link">&para;</a></h2>
-<p><code>run_bh_batch</code> attaches a <strong><code>preprocess</code></strong> callable to <code>BHFitter</code> built by <code>make_bh_fit_preprocessor</code>. Under the hood this is <code>prepare_bh_fit_arrays</code>:</p>
-<ul>
-<li>subtract the <strong>mean</strong> of <code>background_frames</code> for the same channel from the raw cube row;</li>
-<li>crop to <strong><code>bh_fit_range</code></strong>;</li>
-<li>compute a <strong>positive</strong> normalization scale from <strong><code>bh_scale_range</code></strong> only (default: max of positive samples);</li>
-<li>divide; <strong>negatives are not clipped</strong> and there is no per-row <code>y - y.min()</code> shift.</li>
-</ul>
-<p>Rationale: <a href="../preprocessing_bh_fits/">Preprocessing for BH batch fits</a>.</p>
-<h2 id="loader-vs-fitter-prepare_vis_for_bh_batch">Loader vs fitter: <code>prepare_vis_for_bh_batch</code><a class="headerlink" href="#loader-vs-fitter-prepare_vis_for_bh_batch" title="Permanent link">&para;</a></h2>
-<p><code>prepare_vis_for_bh_batch</code> loads the cube, applies <code>cw</code>, <code>scale</code>, optional dark subtraction, sets the time axis, and sets <strong><code>set_baseline_zero(False)</code></strong> so <code>vis.spectrum</code> stays comparable to the raw cube row in inspection notebooks. <strong>Fitting</strong> does not use <code>spectrum</code> directly; it uses the preprocessor on <code>vis.cube</code> as described above.</p>
-<h2 id="pipeline-steps-single-shot">Pipeline steps (single shot)<a class="headerlink" href="#pipeline-steps-single-shot" title="Permanent link">&para;</a></h2>
-<ol>
-<li><strong>Load</strong> — <code>prepare_vis_for_bh_batch</code> (or equivalent steps inline in <code>run_bh_batch</code>).</li>
-<li><strong>Background sanity</strong> — <code>check_background_flat(vis, background_frames)</code>.</li>
-<li><strong>Frame/channel selection</strong> — explicit lists or <code>scan_signal_frames</code> (band image vs background noise).</li>
-<li><strong>Fitter</strong> — <code>BHFitter(..., preprocess=make_bh_fit_preprocessor(...), base_tight=True, nm_window=bh_fit_range, ...)</code> plus optional <code>bounds</code> / constraint kwargs; see <a href="../fitter_constraints/">Fitter constraints</a>.</li>
-<li><strong>Fit loop</strong> — <code>_batch_with_progress</code> (optional <code>run_fit_limit</code>).</li>
-<li><strong>Save</strong> — <code>summary.csv</code>, <code>curves.pkl</code>, <code>grid.pdf</code> / <code>grid.png</code> via <code>save_batch_fit_grid</code>, optional <code>frames/f{frame:02d}_ch{channel:02d}.png</code>.</li>
-</ol>
-<p>Grid PDFs use <strong>display</strong> normalization for layout; the fitted curves in <code>curves.pkl</code> follow the preprocessing pipeline above.</p>
-<h2 id="wavelength-shift-dx">Wavelength shift <code>dx</code><a class="headerlink" href="#wavelength-shift-dx" title="Permanent link">&para;</a></h2>
-<p>Parameter <code>dx</code> (nm) absorbs small CW / dispersion mismatches. Default half-width is <code>DEFAULT_DX_TOL_NM</code> (0.3 nm). Override with <strong><code>dx_tol_nm</code></strong> in Python/YAML or the <code>bounds</code> block. If the lower bound for <code>dx</code> is accidentally nonnegative, the fit can lock to one side and compress the spectrum—check bounds first.</p>
-<h2 id="output-layout-out_dirshot_id">Output layout (<code>&lt;out_dir&gt;/&lt;shot_id&gt;/</code>)<a class="headerlink" href="#output-layout-out_dirshot_id" title="Permanent link">&para;</a></h2>
+<h2 id="output-layout">Output Layout<a class="headerlink" href="#output-layout" title="Permanent link">&para;</a></h2>
+<p>For each shot (FITS file stem), outputs appear under <code>out_dir/&lt;shot_id&gt;/</code>:</p>
 <table>
 <thead>
 <tr>
-<th>Path</th>
+<th>File</th>
 <th>Content</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>summary.csv</code></td>
-<td>One row per fit: frame, channel, parameters, errors, <code>chi2_red</code>, <code>R2</code>, <code>npts</code>.</td>
+<td>Fit results: frame, channel, parameters, errors, chi2_red, R2, npts</td>
 </tr>
 <tr>
 <td><code>curves.pkl</code></td>
-<td><code>{(frame, channel): (x, y, yfit)}</code> from the <strong>fit</strong> preprocessing.</td>
+<td>Pickle of <code>{(frame, channel): (x, y, yfit)}</code> for further analysis</td>
 </tr>
 <tr>
-<td><code>grid.pdf</code> / <code>grid.png</code></td>
-<td>Normalized grid for quick review.</td>
+<td><code>grid.pdf</code></td>
+<td>Multi-page PDF with normalized spectra grid (frames × channels)</td>
 </tr>
 <tr>
-<td><code>frames/*.png</code></td>
-<td>Per-fit overlays when <code>save_frames=True</code>.</td>
+<td><code>frames/f&lt;NN&gt;_ch&lt;NN&gt;.png</code></td>
+<td>Per-fit plots (only if <code>save_frames: true</code>)</td>
 </tr>
 </tbody>
 </table>
-<h2 id="cli-secondary-workflow">CLI (secondary workflow)<a class="headerlink" href="#cli-secondary-workflow" title="Permanent link">&para;</a></h2>
-<p><code>bh batch --config ...</code> mirrors these kwargs from YAML. See <a href="../cli_commands/#batch-fitting-bh-batch">Command Line</a>. Prefer validating once in <a href="../workflow_batch_notebooks/">workflow notebooks</a> before long headless runs.</p>
-<h2 id="internal-helpers">Internal helpers<a class="headerlink" href="#internal-helpers" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Helper</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong><code>_batch_with_progress</code></strong></td>
-<td><code>(frame, channel)</code> iteration, tqdm, DataFrame + curves dict.</td>
-</tr>
-<tr>
-<td><strong><code>scan_signal_frames</code></strong> / <strong><code>check_background_flat</code></strong></td>
-<td>Selection and background checks (<code>signal_scan</code>).</td>
-</tr>
-</tbody>
-</table>
-<h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<h2 id="resume-behavior">Resume Behavior<a class="headerlink" href="#resume-behavior" title="Permanent link">&para;</a></h2>
+<p>When running <code>run_folder_batch</code> (i.e., config has <code>folder</code>), shots are skipped if <code>summary.csv</code> already exists in their output directory. To reprocess a shot, delete its output folder first.</p>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../api/preprocessing/">workflows.preprocessing API</a></li>
-<li><a href="../api/fit/">fit.py API</a></li>
+<li><strong>No frames/channels detected</strong>: Check that <code>background_frames</code> truly contain no signal, and that <code>band</code> covers the BH emission peak. Lower <code>threshold_sigma</code> if signal is weak.</li>
+<li><strong>Empty summary.csv</strong>: Signal detection found no qualifying frames/channels. Verify data quality and calibration.</li>
+<li><strong>Background check warning</strong>: If you see "background frames may contain signal", your <code>background_frames</code> indices may overlap with plasma discharge times.</li>
 </ul>
 
 

@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../preprocessing_bh_fits/">
+        <link rel="prev" href="../batch_fit/">
       
       
-        <link rel="next" href="../fitter_constraints/">
+        <link rel="next" href="../api/physics/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>Pipeline & outputs - BH Molecule</title>
+        <title>Fitter constraints - BH Molecule</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#batch-fitting-pipeline" class="md-skip">
+        <a href="#fitter-constraints-w_inst-dx-base" class="md-skip">
           Skip to content
         </a>
       
@@ -111,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Pipeline & outputs
+              Fitter constraints
             
           </span>
         </div>
@@ -615,6 +615,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../batch_fit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline & outputs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -634,7 +662,7 @@
   <span class="md-ellipsis">
     
   
-    Pipeline & outputs
+    Fitter constraints
   
 
     
@@ -652,7 +680,7 @@
   <span class="md-ellipsis">
     
   
-    Pipeline & outputs
+    Fitter constraints
   
 
     
@@ -678,10 +706,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#why-constraints-matter-in-practice" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Why constraints matter in practice
       
     </span>
   </a>
@@ -689,10 +717,38 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#entry-points" class="md-nav__link">
+  <a href="#api-summary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Entry points
+        API summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="API summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defaults-are-preserved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Defaults are preserved
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#batch-workflow-python-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch workflow (Python API)
       
     </span>
   </a>
@@ -700,10 +756,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#preprocessing-for-fitting-authoritative" class="md-nav__link">
+  <a href="#yaml-schema-bh-batch" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Preprocessing for fitting (authoritative)
+        YAML schema (bh batch)
       
     </span>
   </a>
@@ -711,10 +767,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#loader-vs-fitter-prepare_vis_for_bh_batch" class="md-nav__link">
+  <a href="#reporting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Loader vs fitter: prepare_vis_for_bh_batch
+        Reporting
       
     </span>
   </a>
@@ -722,54 +778,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pipeline-steps-single-shot" class="md-nav__link">
+  <a href="#recommended-calibration-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pipeline steps (single shot)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#wavelength-shift-dx" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Wavelength shift dx
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#output-layout-out_dirshot_id" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output layout (&lt;out_dir&gt;/&lt;shot_id&gt;/)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cli-secondary-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CLI (secondary workflow)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#internal-helpers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Internal helpers
+        Recommended calibration workflow
       
     </span>
   </a>
@@ -787,38 +799,21 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#implementation-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation notes
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../fitter_constraints/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Fitter constraints
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1590,10 +1585,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#why-constraints-matter-in-practice" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Why constraints matter in practice
       
     </span>
   </a>
@@ -1601,10 +1596,38 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#entry-points" class="md-nav__link">
+  <a href="#api-summary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Entry points
+        API summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="API summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defaults-are-preserved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Defaults are preserved
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#batch-workflow-python-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch workflow (Python API)
       
     </span>
   </a>
@@ -1612,10 +1635,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#preprocessing-for-fitting-authoritative" class="md-nav__link">
+  <a href="#yaml-schema-bh-batch" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Preprocessing for fitting (authoritative)
+        YAML schema (bh batch)
       
     </span>
   </a>
@@ -1623,10 +1646,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#loader-vs-fitter-prepare_vis_for_bh_batch" class="md-nav__link">
+  <a href="#reporting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Loader vs fitter: prepare_vis_for_bh_batch
+        Reporting
       
     </span>
   </a>
@@ -1634,54 +1657,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pipeline-steps-single-shot" class="md-nav__link">
+  <a href="#recommended-calibration-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pipeline steps (single shot)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#wavelength-shift-dx" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Wavelength shift dx
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#output-layout-out_dirshot_id" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output layout (&lt;out_dir&gt;/&lt;shot_id&gt;/)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cli-secondary-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CLI (secondary workflow)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#internal-helpers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Internal helpers
+        Recommended calibration workflow
       
     </span>
   </a>
@@ -1693,6 +1672,17 @@
     <span class="md-ellipsis">
       
         See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation notes
       
     </span>
   </a>
@@ -1719,108 +1709,164 @@
   
 
 
-<h1 id="batch-fitting-pipeline">Batch fitting pipeline<a class="headerlink" href="#batch-fitting-pipeline" title="Permanent link">&para;</a></h1>
-<p>Code: <code>bh_molecule.workflows.batch_fit</code>. Entry points:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bh_molecule</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_bh_batch</span><span class="p">,</span> <span class="n">run_folder_batch</span>
+<h1 id="fitter-constraints-w_inst-dx-base">Fitter constraints (<code>w_inst</code>, <code>dx</code>, <code>base</code>)<a class="headerlink" href="#fitter-constraints-w_inst-dx-base" title="Permanent link">&para;</a></h1>
+<p><code>BHFitter</code> exposes a small set of <strong>high-level, reviewable</strong> controls for the instrumental width <code>w_inst</code>, the wavelength shift <code>dx</code>, and the additive baseline <code>base</code>. They propagate through <code>run_bh_batch</code> / <code>run_folder_batch</code> and through YAML for <code>bh batch</code>.</p>
+<p>In day-to-day work these choices are usually made <strong>after</strong> inspecting preprocessing (<a href="../preprocessing_bh_fits/">Preprocessing for BH batch fits</a>) and <strong>after</strong> a loose calibration pass in <a href="https://github.com/queezz/bh-molecule/blob/main/examples/14_w_inst_calibration.ipynb"><code>examples/14_w_inst_calibration.ipynb</code></a>; see <a href="../workflow_batch_notebooks/">Batch fitting workflow (notebooks)</a>.</p>
+<h2 id="why-constraints-matter-in-practice">Why constraints matter in practice<a class="headerlink" href="#why-constraints-matter-in-practice" title="Permanent link">&para;</a></h2>
+<p><strong>Parameter degeneracy.</strong> BH band shape is sensitive to <code>T_rot</code>, amplitude (<code>C</code> / line strengths), <code>w_inst</code>, <code>dx</code>, and <code>base</code>. With wide bounds, the optimiser can trade a slightly wrong <code>w_inst</code> for a compensating <code>T_rot</code> or baseline while keeping <span class="arithmatex">\(\chi^2\)</span> acceptable—especially when noise is high or the BH window includes blended structure.</p>
+<p><strong><code>w_inst</code> in particular.</strong> Instrumental FWHM is often nearly constant for a given spectrometer state, while the fitter treats it as a free line-broadening dial. Leaving it <strong>too free</strong> invites the optimiser to absorb model–data mismatch into width instead of wavelength shift or temperature. That is not a moral failure of the fitter; it is a reason to <strong>narrow or fix</strong> <code>w_inst</code> once you have evidence from data.</p>
+<p><strong>Tighten vs fix.</strong> Use <strong>tight bounds</strong> when you expect small shot-to-shot drift (focus, etendue) but want to stay near a calibrated interval. Use <strong><code>fix_w_inst=True</code></strong> (with <code>w_inst_default</code> set to your adopted value) when the instrument width is stable and you want the optimiser to spend its degrees of freedom elsewhere. Both are legitimate; the choice should come from <strong>histograms and residuals</strong>, not from defaults alone.</p>
+<p><strong>Explicit and reviewable.</strong> Production runs should carry <strong><code>w_inst_default</code></strong>, <strong><code>w_inst_bounds</code></strong>, <strong><code>fix_w_inst</code></strong>, <strong><code>dx_tol_nm</code></strong>, <strong><code>base_bound</code></strong> (and the BH windows) in the notebook cell, YAML, or script—so a colleague can reproduce the physics without reverse-engineering the run.</p>
+<p><strong>No automatic bounds.</strong> The library intentionally avoids auto-setting per-spectrum limits from local noise or heuristics. Automated bounds are hard to audit in a paper trail and easy to mistake for “the software figured it out.” The workflow is: <strong>you</strong> choose bounds after looking at data; the code enforces what you wrote.</p>
+<h2 id="api-summary">API summary<a class="headerlink" href="#api-summary" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="n">BHFitter</span><span class="p">(</span>
+    <span class="n">vis</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">,</span>
+    <span class="o">...</span><span class="p">,</span>
+    <span class="n">w_inst_default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>    <span class="c1"># float | None  -- initial guess (and fixed value when fix_w_inst=True)</span>
+    <span class="n">w_inst_bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>     <span class="c1"># (lo, hi) | None  -- 0 &lt;= lo &lt; hi</span>
+    <span class="n">fix_w_inst</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>       <span class="c1"># bool  -- hold w_inst at w_inst_default via parameter elimination</span>
+    <span class="n">dx_tol_nm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>         <span class="c1"># float | None  -- overrides bounds[dx] = +/- dx_tol_nm</span>
+    <span class="n">base_bound</span><span class="o">=</span><span class="n">DEFAULT_BASE_TIGHT_NM</span><span class="p">,</span>
+    <span class="n">base_tight</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>       <span class="c1"># apply base_bound when True</span>
+    <span class="n">preprocess</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>        <span class="c1"># see workflows/preprocessing.make_bh_fit_preprocessor</span>
+<span class="p">)</span>
 </code></pre></div>
-<p>For <strong>how this is used in practice</strong> (notebook order, constraint calibration), start with <a href="../workflow_batch_notebooks/">Batch fitting workflow (notebooks)</a>.</p>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Run BH A–X fits over many <code>(frame, channel)</code> pairs from a VIS-1.33 m FITS cube: wavelength calibration, optional signal-based selection, fitting with shared preprocessing, then CSV / curves / grid artifacts under each shot directory.</p>
-<h2 id="entry-points">Entry points<a class="headerlink" href="#entry-points" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Function</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong><code>run_bh_batch</code></strong></td>
-<td>One FITS file → fits → <code>&lt;out_dir&gt;/&lt;shot_id&gt;/</code>.</td>
-</tr>
-<tr>
-<td><strong><code>run_folder_batch</code></strong></td>
-<td>Every <code>.fits</code> in a folder; skips shots whose <code>summary.csv</code> already exists (resume).</td>
-</tr>
-</tbody>
-</table>
-<p>Shared options include <code>cw</code>, <code>scale</code>, <code>dark_frame</code>, <code>time_range</code>, <code>background_frames</code>, <strong><code>bh_fit_range</code></strong>, <strong><code>bh_scale_range</code></strong>, <strong><code>w_inst_default</code></strong>, <strong><code>w_inst_bounds</code></strong>, <strong><code>fix_w_inst</code></strong>, <strong><code>dx_tol_nm</code></strong>, <strong><code>base_bound</code></strong>, <code>frames</code>, <code>channels</code>, automatic detection (<code>band</code>, <code>threshold_sigma</code>), <code>bounds</code>, <code>fitter_kwargs</code>, <code>out_dir</code>, <strong><code>run_fit_limit</code></strong>, <code>save_frames</code>.</p>
-<h2 id="preprocessing-for-fitting-authoritative">Preprocessing for fitting (authoritative)<a class="headerlink" href="#preprocessing-for-fitting-authoritative" title="Permanent link">&para;</a></h2>
-<p><code>run_bh_batch</code> attaches a <strong><code>preprocess</code></strong> callable to <code>BHFitter</code> built by <code>make_bh_fit_preprocessor</code>. Under the hood this is <code>prepare_bh_fit_arrays</code>:</p>
-<ul>
-<li>subtract the <strong>mean</strong> of <code>background_frames</code> for the same channel from the raw cube row;</li>
-<li>crop to <strong><code>bh_fit_range</code></strong>;</li>
-<li>compute a <strong>positive</strong> normalization scale from <strong><code>bh_scale_range</code></strong> only (default: max of positive samples);</li>
-<li>divide; <strong>negatives are not clipped</strong> and there is no per-row <code>y - y.min()</code> shift.</li>
-</ul>
-<p>Rationale: <a href="../preprocessing_bh_fits/">Preprocessing for BH batch fits</a>.</p>
-<h2 id="loader-vs-fitter-prepare_vis_for_bh_batch">Loader vs fitter: <code>prepare_vis_for_bh_batch</code><a class="headerlink" href="#loader-vs-fitter-prepare_vis_for_bh_batch" title="Permanent link">&para;</a></h2>
-<p><code>prepare_vis_for_bh_batch</code> loads the cube, applies <code>cw</code>, <code>scale</code>, optional dark subtraction, sets the time axis, and sets <strong><code>set_baseline_zero(False)</code></strong> so <code>vis.spectrum</code> stays comparable to the raw cube row in inspection notebooks. <strong>Fitting</strong> does not use <code>spectrum</code> directly; it uses the preprocessor on <code>vis.cube</code> as described above.</p>
-<h2 id="pipeline-steps-single-shot">Pipeline steps (single shot)<a class="headerlink" href="#pipeline-steps-single-shot" title="Permanent link">&para;</a></h2>
+<p>The 6 free-parameter parameter-elimination path is used internally when
+<code>fix_w_inst=True</code>; the returned <code>params</code>, <code>errors</code>, <code>cov</code>, and the batch
+CSV columns keep the full 7-parameter shape, with <code>w_inst_err == 0</code> and
+the corresponding covariance row/column zeroed.</p>
+<p><code>BHFitter.describe_constraints()</code> returns a JSON-serializable dict that
+is printed in the per-shot batch header (see "Reporting" below).</p>
+<h3 id="defaults-are-preserved">Defaults are preserved<a class="headerlink" href="#defaults-are-preserved" title="Permanent link">&para;</a></h3>
+<p>Every new constructor kwarg defaults to <code>None</code> / <code>False</code> and preserves
+the previous behaviour exactly. Calling code that does not pass them
+sees the same <code>p0</code> and <code>bounds</code> as before this change.</p>
+<h2 id="batch-workflow-python-api">Batch workflow (Python API)<a class="headerlink" href="#batch-workflow-python-api" title="Permanent link">&para;</a></h2>
+<p><code>run_bh_batch</code> (and <code>run_folder_batch</code>) accept the same five kwargs and
+forward them into <code>BHFitter</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bh_molecule</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_folder_batch</span>
+
+<span class="n">run_folder_batch</span><span class="p">(</span>
+    <span class="n">DATA_DIR</span><span class="p">,</span>
+    <span class="n">frames</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">channels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">shots</span><span class="o">=</span><span class="p">[</span><span class="mi">193788</span><span class="p">,</span> <span class="mi">193789</span><span class="p">,</span> <span class="mi">193790</span><span class="p">],</span>
+    <span class="n">cw</span><span class="o">=</span><span class="mf">431.91</span><span class="p">,</span>
+    <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">background_frames</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="n">bh_fit_range</span><span class="o">=</span><span class="p">(</span><span class="mf">433.05</span><span class="p">,</span> <span class="mf">433.90</span><span class="p">),</span>
+    <span class="n">bh_scale_range</span><span class="o">=</span><span class="p">(</span><span class="mf">433.08</span><span class="p">,</span> <span class="mf">433.30</span><span class="p">),</span>
+    <span class="n">w_inst_default</span><span class="o">=</span><span class="mf">0.022</span><span class="p">,</span>
+    <span class="n">w_inst_bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.020</span><span class="p">,</span> <span class="mf">0.024</span><span class="p">),</span>
+    <span class="n">fix_w_inst</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">dx_tol_nm</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+    <span class="n">base_bound</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span>
+    <span class="n">out_dir</span><span class="o">=</span><span class="s2">&quot;bh_batch_results&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<p><code>None</code> for any constraint means "use the fitter default; do not forward
+the kwarg" -- this keeps the existing API call sites unchanged.</p>
+<h2 id="yaml-schema-bh-batch">YAML schema (<code>bh batch</code>)<a class="headerlink" href="#yaml-schema-bh-batch" title="Permanent link">&para;</a></h2>
+<p>The same keys are accepted in the YAML config consumed by <code>bh batch
+--config &lt;file&gt;</code> (reproducible / headless runs):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># explicit, reproducible fitter constraints</span>
+<span class="nt">w_inst_default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.022</span>
+<span class="nt">w_inst_bounds</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0.020</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.024</span><span class="p p-Indicator">]</span>
+<span class="nt">fix_w_inst</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="nt">dx_tol_nm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.3</span>
+<span class="nt">base_bound</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.03</span>
+</code></pre></div>
+<p>See <code>examples/fit_batch_example.yaml</code> and
+<code>examples/fit_batch_small_example.yaml</code> for full templates.</p>
+<h2 id="reporting">Reporting<a class="headerlink" href="#reporting" title="Permanent link">&para;</a></h2>
+<p><code>run_bh_batch</code> emits a per-shot header that includes the active
+constraints (via <code>tqdm.write</code>, so it composes with progress bars):</p>
+<div class="highlight"><pre><span></span><code>Processing shot 193788: .../193788.fits
+Output: bh_batch_results/193788
+background_frames: (0, 1, 2, 3)
+save_frames: False
+BH fit window: [433.05, 433.9] nm
+BH scale window: [433.08, 433.3] nm
+Using frames [...]
+Using channels [...]
+Fitter constraints: w_inst_default=0.0220 nm, w_inst_bounds=[0.0200, 0.0240] nm,
+  fix_w_inst=False, dx_tol_nm=0.3000, base_bound=0.0300, base_tight=True
+</code></pre></div>
+<p>So a run is reproducible from its log alone: feed the printed values
+back into the YAML / Python API and you get an identical batch.</p>
+<h2 id="recommended-calibration-workflow">Recommended calibration workflow<a class="headerlink" href="#recommended-calibration-workflow" title="Permanent link">&para;</a></h2>
+<p>The calibration workflow is <strong>manual</strong>. The helper notebook
+<a href="https://github.com/queezz/bh-molecule/blob/main/examples/14_w_inst_calibration.ipynb"><code>examples/14_w_inst_calibration.ipynb</code></a> is a small, inspectable scaffold;
+it does not auto-pick bounds. API: <a href="../api/workflows_calibration/">workflows.calibration</a>.</p>
 <ol>
-<li><strong>Load</strong> — <code>prepare_vis_for_bh_batch</code> (or equivalent steps inline in <code>run_bh_batch</code>).</li>
-<li><strong>Background sanity</strong> — <code>check_background_flat(vis, background_frames)</code>.</li>
-<li><strong>Frame/channel selection</strong> — explicit lists or <code>scan_signal_frames</code> (band image vs background noise).</li>
-<li><strong>Fitter</strong> — <code>BHFitter(..., preprocess=make_bh_fit_preprocessor(...), base_tight=True, nm_window=bh_fit_range, ...)</code> plus optional <code>bounds</code> / constraint kwargs; see <a href="../fitter_constraints/">Fitter constraints</a>.</li>
-<li><strong>Fit loop</strong> — <code>_batch_with_progress</code> (optional <code>run_fit_limit</code>).</li>
-<li><strong>Save</strong> — <code>summary.csv</code>, <code>curves.pkl</code>, <code>grid.pdf</code> / <code>grid.png</code> via <code>save_batch_fit_grid</code>, optional <code>frames/f{frame:02d}_ch{channel:02d}.png</code>.</li>
+<li>Select a few representative shots (<code>SHOTS</code>) and an explicit, small
+   set of <code>FRAMES</code> / <code>CHANNELS</code>.</li>
+<li>Run <code>run_folder_batch</code> (or <code>run_bh_batch</code>) with <strong>loose</strong> bounds:</li>
 </ol>
-<p>Grid PDFs use <strong>display</strong> normalization for layout; the fitted curves in <code>curves.pkl</code> follow the preprocessing pipeline above.</p>
-<h2 id="wavelength-shift-dx">Wavelength shift <code>dx</code><a class="headerlink" href="#wavelength-shift-dx" title="Permanent link">&para;</a></h2>
-<p>Parameter <code>dx</code> (nm) absorbs small CW / dispersion mismatches. Default half-width is <code>DEFAULT_DX_TOL_NM</code> (0.3 nm). Override with <strong><code>dx_tol_nm</code></strong> in Python/YAML or the <code>bounds</code> block. If the lower bound for <code>dx</code> is accidentally nonnegative, the fit can lock to one side and compress the spectrum—check bounds first.</p>
-<h2 id="output-layout-out_dirshot_id">Output layout (<code>&lt;out_dir&gt;/&lt;shot_id&gt;/</code>)<a class="headerlink" href="#output-layout-out_dirshot_id" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Path</th>
-<th>Content</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>summary.csv</code></td>
-<td>One row per fit: frame, channel, parameters, errors, <code>chi2_red</code>, <code>R2</code>, <code>npts</code>.</td>
-</tr>
-<tr>
-<td><code>curves.pkl</code></td>
-<td><code>{(frame, channel): (x, y, yfit)}</code> from the <strong>fit</strong> preprocessing.</td>
-</tr>
-<tr>
-<td><code>grid.pdf</code> / <code>grid.png</code></td>
-<td>Normalized grid for quick review.</td>
-</tr>
-<tr>
-<td><code>frames/*.png</code></td>
-<td>Per-fit overlays when <code>save_frames=True</code>.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="cli-secondary-workflow">CLI (secondary workflow)<a class="headerlink" href="#cli-secondary-workflow" title="Permanent link">&para;</a></h2>
-<p><code>bh batch --config ...</code> mirrors these kwargs from YAML. See <a href="../cli_commands/#batch-fitting-bh-batch">Command Line</a>. Prefer validating once in <a href="../workflow_batch_notebooks/">workflow notebooks</a> before long headless runs.</p>
-<h2 id="internal-helpers">Internal helpers<a class="headerlink" href="#internal-helpers" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Helper</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong><code>_batch_with_progress</code></strong></td>
-<td><code>(frame, channel)</code> iteration, tqdm, DataFrame + curves dict.</td>
-</tr>
-<tr>
-<td><strong><code>scan_signal_frames</code></strong> / <strong><code>check_background_flat</code></strong></td>
-<td>Selection and background checks (<code>signal_scan</code>).</td>
-</tr>
-</tbody>
-</table>
+<p><div class="highlight"><pre><span></span><code><span class="n">w_inst_bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">)</span>   <span class="c1"># generous; see where the optimizer lands</span>
+<span class="n">fix_w_inst</span><span class="o">=</span><span class="kc">False</span>
+</code></pre></div>
+3. Concatenate the per-shot summary tables, then use:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bh_molecule.workflows.calibration</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">summarize_fit_distribution</span><span class="p">,</span>
+    <span class="n">plot_fit_distributions</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">summary</span> <span class="o">=</span> <span class="n">summarize_fit_distribution</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;w_inst&quot;</span><span class="p">,</span> <span class="s2">&quot;dx&quot;</span><span class="p">,</span> <span class="s2">&quot;base&quot;</span><span class="p">),</span> <span class="n">r2_min</span><span class="o">=</span><span class="mf">0.5</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>The returned table reports <code>n</code>, <code>median</code>, <code>mad</code>, <code>p05/p16/p50/p84/p95</code>,
+   <code>min</code>, <code>max</code> per parameter (filtered by <code>R2 &gt;= r2_min</code> when the column
+   is present).</p>
+<ol>
+<li>Overlay candidate bounds on histograms:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plot_fit_distributions</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">,</span>
+    <span class="n">params</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;w_inst&quot;</span><span class="p">,</span> <span class="s2">&quot;dx&quot;</span><span class="p">,</span> <span class="s2">&quot;base&quot;</span><span class="p">),</span>
+    <span class="n">suggested_bounds</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;w_inst&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.020</span><span class="p">,</span> <span class="mf">0.024</span><span class="p">),</span>
+        <span class="s2">&quot;dx&quot;</span><span class="p">:</span>     <span class="p">(</span><span class="o">-</span><span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">),</span>
+        <span class="s2">&quot;base&quot;</span><span class="p">:</span>   <span class="p">(</span><span class="o">-</span><span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">),</span>
+    <span class="p">},</span>
+    <span class="n">r2_min</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<ol>
+<li><strong>Inspect</strong> the histograms. If <code>w_inst</code> is tight around a single
+   value with small MAD across shots/frames/channels, consider either:</li>
+</ol>
+<ul>
+<li>tight bounds (<code>w_inst_bounds = (lo, hi)</code>), or</li>
+<li>a fixed value (<code>fix_w_inst=True</code>, <code>w_inst_default=median</code>).</li>
+</ul>
+<ol>
+<li>Commit the chosen values to the notebook cell (e.g. <code>W_INST_DEFAULT</code>, <code>W_INST_BOUNDS</code> in <a href="https://github.com/queezz/bh-molecule/blob/main/examples/12_batch_batch.ipynb"><code>examples/12_batch_batch.ipynb</code></a>) or to YAML for <code>bh batch</code>. <strong>Do not</strong>
+   add code that picks them automatically -- the goal is explicit,
+   inspectable, reviewable production constraints.</li>
+</ol>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../api/preprocessing/">workflows.preprocessing API</a></li>
-<li><a href="../api/fit/">fit.py API</a></li>
+<li><a href="../preprocessing_bh_fits/">Preprocessing for BH batch fits</a></li>
+<li><a href="../batch_fit/">Batch fitting pipeline</a></li>
+</ul>
+<h2 id="implementation-notes">Implementation notes<a class="headerlink" href="#implementation-notes" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Fixed <code>w_inst</code> is implemented via <em>parameter elimination</em>: <code>curve_fit</code>
+  receives a six-parameter model where <code>w_inst</code> is captured by closure.
+  After the fit, the fixed value is re-inserted at index 3 of <code>params</code>
+  and <code>errors[3] = 0.0</code>; the covariance row/column at index 3 are zero.
+  This keeps the batch CSV schema and the formatted summary table
+  unchanged.</li>
+<li><code>w_inst_bounds</code>, <code>dx_tol_nm</code>, and <code>base_bound</code> overwrite the relevant
+  slots of <code>self.bounds</code> directly. <code>p0</code> is moved inside the new window
+  if it fell outside.</li>
+<li>Invalid bounds raise <code>ValueError</code> at fitter construction time, never
+  silently.</li>
+<li>The new keys are forwarded by <code>bh_molecule.cli.main_bh</code> only when
+  present in the YAML; absent keys leave the fitter defaults untouched.</li>
 </ul>
 
 

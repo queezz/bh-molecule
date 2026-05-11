@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../preprocessing_bh_fits/">
+        <link rel="prev" href="../workflow_batch_notebooks/">
       
       
-        <link rel="next" href="../fitter_constraints/">
+        <link rel="next" href="../batch_fit/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>Pipeline & outputs - BH Molecule</title>
+        <title>Preprocessing - BH Molecule</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#batch-fitting-pipeline" class="md-skip">
+        <a href="#preprocessing-for-bh-batch-fits" class="md-skip">
           Skip to content
         </a>
       
@@ -111,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Pipeline & outputs
+              Preprocessing
             
           </span>
         </div>
@@ -587,34 +587,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../preprocessing_bh_fits/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Preprocessing
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -634,7 +606,7 @@
   <span class="md-ellipsis">
     
   
-    Pipeline & outputs
+    Preprocessing
   
 
     
@@ -652,7 +624,7 @@
   <span class="md-ellipsis">
     
   
-    Pipeline & outputs
+    Preprocessing
   
 
     
@@ -678,10 +650,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#pipeline-summary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Pipeline (summary)
       
     </span>
   </a>
@@ -689,10 +661,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#entry-points" class="md-nav__link">
+  <a href="#why-full-spectrum-normalization-is-dangerous" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Entry points
+        Why full-spectrum normalization is dangerous
       
     </span>
   </a>
@@ -700,10 +672,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#preprocessing-for-fitting-authoritative" class="md-nav__link">
+  <a href="#why-background-subtraction-matters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Preprocessing for fitting (authoritative)
+        Why background subtraction matters
       
     </span>
   </a>
@@ -711,10 +683,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#loader-vs-fitter-prepare_vis_for_bh_batch" class="md-nav__link">
+  <a href="#why-negative-values-are-preserved" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Loader vs fitter: prepare_vis_for_bh_batch
+        Why negative values are preserved
       
     </span>
   </a>
@@ -722,10 +694,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pipeline-steps-single-shot" class="md-nav__link">
+  <a href="#preprocessing-vs-display-normalization" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pipeline steps (single shot)
+        Preprocessing vs display normalization
       
     </span>
   </a>
@@ -733,43 +705,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#wavelength-shift-dx" class="md-nav__link">
+  <a href="#practical-recommendations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Wavelength shift dx
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#output-layout-out_dirshot_id" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output layout (&lt;out_dir&gt;/&lt;shot_id&gt;/)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cli-secondary-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CLI (secondary workflow)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#internal-helpers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Internal helpers
+        Practical recommendations
       
     </span>
   </a>
@@ -791,6 +730,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../batch_fit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline & outputs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1590,10 +1557,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#pipeline-summary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Pipeline (summary)
       
     </span>
   </a>
@@ -1601,10 +1568,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#entry-points" class="md-nav__link">
+  <a href="#why-full-spectrum-normalization-is-dangerous" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Entry points
+        Why full-spectrum normalization is dangerous
       
     </span>
   </a>
@@ -1612,10 +1579,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#preprocessing-for-fitting-authoritative" class="md-nav__link">
+  <a href="#why-background-subtraction-matters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Preprocessing for fitting (authoritative)
+        Why background subtraction matters
       
     </span>
   </a>
@@ -1623,10 +1590,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#loader-vs-fitter-prepare_vis_for_bh_batch" class="md-nav__link">
+  <a href="#why-negative-values-are-preserved" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Loader vs fitter: prepare_vis_for_bh_batch
+        Why negative values are preserved
       
     </span>
   </a>
@@ -1634,10 +1601,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pipeline-steps-single-shot" class="md-nav__link">
+  <a href="#preprocessing-vs-display-normalization" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pipeline steps (single shot)
+        Preprocessing vs display normalization
       
     </span>
   </a>
@@ -1645,43 +1612,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#wavelength-shift-dx" class="md-nav__link">
+  <a href="#practical-recommendations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Wavelength shift dx
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#output-layout-out_dirshot_id" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output layout (&lt;out_dir&gt;/&lt;shot_id&gt;/)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cli-secondary-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CLI (secondary workflow)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#internal-helpers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Internal helpers
+        Practical recommendations
       
     </span>
   </a>
@@ -1719,108 +1653,39 @@
   
 
 
-<h1 id="batch-fitting-pipeline">Batch fitting pipeline<a class="headerlink" href="#batch-fitting-pipeline" title="Permanent link">&para;</a></h1>
-<p>Code: <code>bh_molecule.workflows.batch_fit</code>. Entry points:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bh_molecule</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_bh_batch</span><span class="p">,</span> <span class="n">run_folder_batch</span>
-</code></pre></div>
-<p>For <strong>how this is used in practice</strong> (notebook order, constraint calibration), start with <a href="../workflow_batch_notebooks/">Batch fitting workflow (notebooks)</a>.</p>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Run BH A–X fits over many <code>(frame, channel)</code> pairs from a VIS-1.33 m FITS cube: wavelength calibration, optional signal-based selection, fitting with shared preprocessing, then CSV / curves / grid artifacts under each shot directory.</p>
-<h2 id="entry-points">Entry points<a class="headerlink" href="#entry-points" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Function</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong><code>run_bh_batch</code></strong></td>
-<td>One FITS file → fits → <code>&lt;out_dir&gt;/&lt;shot_id&gt;/</code>.</td>
-</tr>
-<tr>
-<td><strong><code>run_folder_batch</code></strong></td>
-<td>Every <code>.fits</code> in a folder; skips shots whose <code>summary.csv</code> already exists (resume).</td>
-</tr>
-</tbody>
-</table>
-<p>Shared options include <code>cw</code>, <code>scale</code>, <code>dark_frame</code>, <code>time_range</code>, <code>background_frames</code>, <strong><code>bh_fit_range</code></strong>, <strong><code>bh_scale_range</code></strong>, <strong><code>w_inst_default</code></strong>, <strong><code>w_inst_bounds</code></strong>, <strong><code>fix_w_inst</code></strong>, <strong><code>dx_tol_nm</code></strong>, <strong><code>base_bound</code></strong>, <code>frames</code>, <code>channels</code>, automatic detection (<code>band</code>, <code>threshold_sigma</code>), <code>bounds</code>, <code>fitter_kwargs</code>, <code>out_dir</code>, <strong><code>run_fit_limit</code></strong>, <code>save_frames</code>.</p>
-<h2 id="preprocessing-for-fitting-authoritative">Preprocessing for fitting (authoritative)<a class="headerlink" href="#preprocessing-for-fitting-authoritative" title="Permanent link">&para;</a></h2>
-<p><code>run_bh_batch</code> attaches a <strong><code>preprocess</code></strong> callable to <code>BHFitter</code> built by <code>make_bh_fit_preprocessor</code>. Under the hood this is <code>prepare_bh_fit_arrays</code>:</p>
-<ul>
-<li>subtract the <strong>mean</strong> of <code>background_frames</code> for the same channel from the raw cube row;</li>
-<li>crop to <strong><code>bh_fit_range</code></strong>;</li>
-<li>compute a <strong>positive</strong> normalization scale from <strong><code>bh_scale_range</code></strong> only (default: max of positive samples);</li>
-<li>divide; <strong>negatives are not clipped</strong> and there is no per-row <code>y - y.min()</code> shift.</li>
-</ul>
-<p>Rationale: <a href="../preprocessing_bh_fits/">Preprocessing for BH batch fits</a>.</p>
-<h2 id="loader-vs-fitter-prepare_vis_for_bh_batch">Loader vs fitter: <code>prepare_vis_for_bh_batch</code><a class="headerlink" href="#loader-vs-fitter-prepare_vis_for_bh_batch" title="Permanent link">&para;</a></h2>
-<p><code>prepare_vis_for_bh_batch</code> loads the cube, applies <code>cw</code>, <code>scale</code>, optional dark subtraction, sets the time axis, and sets <strong><code>set_baseline_zero(False)</code></strong> so <code>vis.spectrum</code> stays comparable to the raw cube row in inspection notebooks. <strong>Fitting</strong> does not use <code>spectrum</code> directly; it uses the preprocessor on <code>vis.cube</code> as described above.</p>
-<h2 id="pipeline-steps-single-shot">Pipeline steps (single shot)<a class="headerlink" href="#pipeline-steps-single-shot" title="Permanent link">&para;</a></h2>
+<h1 id="preprocessing-for-bh-batch-fits">Preprocessing for BH batch fits<a class="headerlink" href="#preprocessing-for-bh-batch-fits" title="Permanent link">&para;</a></h1>
+<p>The arrays passed to <code>BHFitter</code> in the batch workflow are <strong>not</strong> raw <code>Vis133M.spectrum</code> rows. They are built by <code>prepare_bh_fit_arrays</code> (wrapped for the fitter via <code>make_bh_fit_preprocessor</code> in <code>run_bh_batch</code>). The same path is used in <a href="https://github.com/queezz/bh-molecule/blob/main/examples/13_single_spectrum_batch_debug.ipynb"><code>examples/13_single_spectrum_batch_debug.ipynb</code></a>.</p>
+<p>This page is about <strong>scientific provenance</strong>: what the code does and why, not implementation trivia.</p>
+<h2 id="pipeline-summary">Pipeline (summary)<a class="headerlink" href="#pipeline-summary" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>Load</strong> — <code>prepare_vis_for_bh_batch</code> (or equivalent steps inline in <code>run_bh_batch</code>).</li>
-<li><strong>Background sanity</strong> — <code>check_background_flat(vis, background_frames)</code>.</li>
-<li><strong>Frame/channel selection</strong> — explicit lists or <code>scan_signal_frames</code> (band image vs background noise).</li>
-<li><strong>Fitter</strong> — <code>BHFitter(..., preprocess=make_bh_fit_preprocessor(...), base_tight=True, nm_window=bh_fit_range, ...)</code> plus optional <code>bounds</code> / constraint kwargs; see <a href="../fitter_constraints/">Fitter constraints</a>.</li>
-<li><strong>Fit loop</strong> — <code>_batch_with_progress</code> (optional <code>run_fit_limit</code>).</li>
-<li><strong>Save</strong> — <code>summary.csv</code>, <code>curves.pkl</code>, <code>grid.pdf</code> / <code>grid.png</code> via <code>save_batch_fit_grid</code>, optional <code>frames/f{frame:02d}_ch{channel:02d}.png</code>.</li>
+<li>Take the raw cube row <code>vis.cube[frame, channel]</code> (no per-row minimum subtraction).</li>
+<li>Subtract the mean over <code>background_frames</code> for that channel (if configured).</li>
+<li>Crop wavelengths to <strong><code>bh_fit_range</code></strong> (fit window).</li>
+<li>Compute a <strong>positive</strong> scale from intensities <strong>only inside <code>bh_scale_range</code></strong> (default: max of positive samples; optional <code>p99</code>).</li>
+<li>Divide the cropped spectrum by that scale. <strong>Negative values remain negative</strong> after division.</li>
 </ol>
-<p>Grid PDFs use <strong>display</strong> normalization for layout; the fitted curves in <code>curves.pkl</code> follow the preprocessing pipeline above.</p>
-<h2 id="wavelength-shift-dx">Wavelength shift <code>dx</code><a class="headerlink" href="#wavelength-shift-dx" title="Permanent link">&para;</a></h2>
-<p>Parameter <code>dx</code> (nm) absorbs small CW / dispersion mismatches. Default half-width is <code>DEFAULT_DX_TOL_NM</code> (0.3 nm). Override with <strong><code>dx_tol_nm</code></strong> in Python/YAML or the <code>bounds</code> block. If the lower bound for <code>dx</code> is accidentally nonnegative, the fit can lock to one side and compress the spectrum—check bounds first.</p>
-<h2 id="output-layout-out_dirshot_id">Output layout (<code>&lt;out_dir&gt;/&lt;shot_id&gt;/</code>)<a class="headerlink" href="#output-layout-out_dirshot_id" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Path</th>
-<th>Content</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>summary.csv</code></td>
-<td>One row per fit: frame, channel, parameters, errors, <code>chi2_red</code>, <code>R2</code>, <code>npts</code>.</td>
-</tr>
-<tr>
-<td><code>curves.pkl</code></td>
-<td><code>{(frame, channel): (x, y, yfit)}</code> from the <strong>fit</strong> preprocessing.</td>
-</tr>
-<tr>
-<td><code>grid.pdf</code> / <code>grid.png</code></td>
-<td>Normalized grid for quick review.</td>
-</tr>
-<tr>
-<td><code>frames/*.png</code></td>
-<td>Per-fit overlays when <code>save_frames=True</code>.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="cli-secondary-workflow">CLI (secondary workflow)<a class="headerlink" href="#cli-secondary-workflow" title="Permanent link">&para;</a></h2>
-<p><code>bh batch --config ...</code> mirrors these kwargs from YAML. See <a href="../cli_commands/#batch-fitting-bh-batch">Command Line</a>. Prefer validating once in <a href="../workflow_batch_notebooks/">workflow notebooks</a> before long headless runs.</p>
-<h2 id="internal-helpers">Internal helpers<a class="headerlink" href="#internal-helpers" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Helper</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong><code>_batch_with_progress</code></strong></td>
-<td><code>(frame, channel)</code> iteration, tqdm, DataFrame + curves dict.</td>
-</tr>
-<tr>
-<td><strong><code>scan_signal_frames</code></strong> / <strong><code>check_background_flat</code></strong></td>
-<td>Selection and background checks (<code>signal_scan</code>).</td>
-</tr>
-</tbody>
-</table>
+<p>API reference: <a href="../api/preprocessing/">preprocessing module</a>.</p>
+<h2 id="why-full-spectrum-normalization-is-dangerous">Why full-spectrum normalization is dangerous<a class="headerlink" href="#why-full-spectrum-normalization-is-dangerous" title="Permanent link">&para;</a></h2>
+<p>If the normalization divisor is taken over the <strong>entire</strong> cropped fit window, any bright feature in that window—H-γ, scattered light, a neighbor line—can set the scale. The BH band then sits at an arbitrary fraction of “1”, and the fitter couples amplitude (<code>C</code>), baseline (<code>base</code>), and broadening (<code>w_inst</code>) in misleading ways. The symptom is often a fit that looks tolerable on paper while misrepresenting temperature or instrument width.</p>
+<p>Restricting the scale to <strong><code>bh_scale_range</code></strong>, a sub-window placed on the BH bandhead / main structure, keeps the divisor tied to <strong>BH-dominated</strong> pixels.</p>
+<h2 id="why-background-subtraction-matters">Why background subtraction matters<a class="headerlink" href="#why-background-subtraction-matters" title="Permanent link">&para;</a></h2>
+<p><code>background_frames</code> should be pre-plasma (or otherwise signal-free) slices. Averaging them per channel estimates structured bias (stray light, detector offset patterns) that a single additive <code>base</code> parameter cannot fully mimic across the band. Subtracting that mean <strong>before</strong> cropping and scaling stabilizes the BH peak amplitude relative to the local continuum.</p>
+<p>Background frames are still used for the <strong>flatness check</strong> and optional <strong>signal detection</strong>; for fitting, the same indices feed the subtraction above.</p>
+<h2 id="why-negative-values-are-preserved">Why negative values are preserved<a class="headerlink" href="#why-negative-values-are-preserved" title="Permanent link">&para;</a></h2>
+<p>Forcing <span class="arithmatex">\(y \leftarrow y - \min(y)\)</span> (or clipping at zero) erases information about subtraction noise and baseline curvature. The model is fit to the <strong>real</strong> processed counts (scaled), including small negative excursions after background removal. The fitter’s <code>base</code> remains interpretable as a small residual offset <strong>around</strong> a spectrum whose BH peak was normalized near unity by the BH-local scale—not around a nonnegative envelope.</p>
+<h2 id="preprocessing-vs-display-normalization">Preprocessing vs display normalization<a class="headerlink" href="#preprocessing-vs-display-normalization" title="Permanent link">&para;</a></h2>
+<p>Multi-frame grid plots (<code>normalize_curves_for_grid</code>, PDF/PNG summaries) may rescale curves for <strong>layout</strong> (e.g. comparable peak heights on a page). That is <strong>only</strong> for visualization. The fit always uses <code>prepare_bh_fit_arrays</code>. When debugging, compare the debug notebook’s fit arrays to batch outputs, not to grid-plot scaling.</p>
+<h2 id="practical-recommendations">Practical recommendations<a class="headerlink" href="#practical-recommendations" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Choose <code>bh_scale_range</code> so it avoids strong non-BH lines when possible; keep it wide enough to sample the BH peak robustly.</li>
+<li>Widen <code>bh_fit_range</code> if the model must see wing structure for <span class="arithmatex">\(T_\mathrm{rot}\)</span>, but keep the <strong>scale</strong> window on the BH-dominated region.</li>
+<li>If step 4 fails (“no positive values in scale window”), the window or background is wrong for that spectrum—fix the physics before expanding bounds.</li>
+</ul>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../api/preprocessing/">workflows.preprocessing API</a></li>
-<li><a href="../api/fit/">fit.py API</a></li>
+<li><a href="../workflow_batch_notebooks/">Batch fitting workflow (notebooks)</a></li>
+<li><a href="../batch_fit/">Batch fitting pipeline</a></li>
+<li><a href="../fitter_constraints/">Fitter constraints</a> — constraints are chosen <strong>after</strong> preprocessing is trusted.</li>
 </ul>
 
 
