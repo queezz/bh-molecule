@@ -13,6 +13,49 @@ from matplotlib.backends.backend_pdf import PdfPages
 import numpy as np
 
 
+def normalize_curves_for_grid(
+    y: np.ndarray,
+    yfit: np.ndarray | None,
+) -> tuple[np.ndarray, np.ndarray | None]:
+    """Linearly rescale data and fit to [0, 1] using **data** ``y`` min/max only.
+
+    The fit curve is drawn in the same normalized vertical system as the data
+    (both use ``vmin``, ``vmax`` from ``y``).  This avoids the misleading case
+    where joint min/max over ``y`` and ``yfit`` squashes a low-amplitude (but
+    shape-correct) fit against the bottom of the panel when the optimizer
+    returns a much smaller absolute scale than the data.
+
+    Parameters
+    ----------
+    y : ndarray
+        Observed spectrum in the fit window.
+    yfit : ndarray or None
+        Model spectrum on the same grid.
+
+    Returns
+    -------
+    y_n, yfit_n
+        Normalized arrays; ``y_n`` spans [0, 1] when ``y`` is non-constant.
+    """
+    y = np.asarray(y, dtype=float)
+    vmin = float(np.min(y))
+    vmax = float(np.max(y))
+    if vmax <= vmin:
+        y_n = np.zeros_like(y)
+        yfit_n = (
+            np.zeros_like(y, dtype=float)
+            if yfit is not None
+            else None
+        )
+        return y_n, yfit_n
+    y_n = (y - vmin) / (vmax - vmin)
+    if yfit is None:
+        return y_n, None
+    yfit = np.asarray(yfit, dtype=float)
+    yfit_n = (yfit - vmin) / (vmax - vmin)
+    return y_n, yfit_n
+
+
 def save_batch_fit_grid(
     curves: dict[tuple[int, int], tuple[np.ndarray, np.ndarray, np.ndarray]],
     frames: list[int],
@@ -25,7 +68,8 @@ def save_batch_fit_grid(
     """Plot normalized spectra in a (frames × channels) grid and save as multi-page PDF.
 
     - Rows correspond to frames, columns to channels (grouped into pages).
-    - Each spectrum is normalized to [0, 1] for visualization.
+    - Each panel rescales **data** to [0, 1]; the fit uses the same linear map
+      (:func:`normalize_curves_for_grid`) so overlay shape matches the fit window.
     - Data: markers only (no line), optionally rasterized in PDF. Fit: smooth line (vector).
     - Axes are simplified for compact overview.
 
@@ -78,23 +122,11 @@ def save_batch_fit_grid(
                     x, y, yfit = curves[key]
                     x = np.asarray(x, dtype=float)
                     y = np.asarray(y, dtype=float)
-                    yfit = np.asarray(yfit, dtype=float) if yfit is not None else None
+                    yfit = (
+                        np.asarray(yfit, dtype=float) if yfit is not None else None
+                    )
 
-                    # Normalize to [0, 1]
-                    vals: list[np.ndarray] = [y]
-                    if yfit is not None:
-                        vals.append(yfit)
-                    all_vals = np.concatenate(vals)
-                    vmin = float(np.min(all_vals)) if all_vals.size else 0.0
-                    vmax = float(np.max(all_vals)) if all_vals.size else 1.0
-                    if vmax > vmin:
-                        y_n = (y - vmin) / (vmax - vmin)
-                        yfit_n = (
-                            (yfit - vmin) / (vmax - vmin) if yfit is not None else None
-                        )
-                    else:
-                        y_n = np.zeros_like(y)
-                        yfit_n = np.zeros_like(y) if yfit is not None else None
+                    y_n, yfit_n = normalize_curves_for_grid(y, yfit)
 
                     # Data: markers only (rasterized in PDF). Fit: smooth line (vector).
                     ax.plot(
@@ -144,4 +176,4 @@ def save_batch_fit_grid(
             plt.close(fig)
 
 
-__all__ = ["save_batch_fit_grid"]
+__all__ = ["save_batch_fit_grid", "normalize_curves_for_grid"]

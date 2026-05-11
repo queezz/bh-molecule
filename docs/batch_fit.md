@@ -42,6 +42,8 @@ Inside `run_bh_batch` the flow is:
 3. **Baseline** — `vis.set_baseline_zero(True)` and set time axis from `time_range`.
 4. **Background check** — `check_background_flat(vis, background_frames)` to warn if background frames look non-flat.
 5. **Frame/channel selection** — If `frames` or `channels` are `None`, `scan_signal_frames(vis, band=..., threshold_sigma=...)` returns lists of frames and channels with signal above threshold; otherwise the provided lists are used.
+
+**Important:** `background_frames` is **only** used in steps 4–5 (flat check and band-image noise for detection). It is **not** subtracted from individual spectra. Fitting uses `Vis133M.spectrum` after `set_baseline_zero(True)`, i.e. each row has its **minimum across wavelength** subtracted (plus optional `dark_frame` cube subtraction earlier). For a full walk-through of single vs batch preprocessing, see `examples/13_single_spectrum_batch_debug.ipynb`. The helper `prepare_vis_for_bh_batch` in `workflows.batch_fit` matches the batch loader exactly.
 6. **Fit loop** — `_batch_with_progress(fitr, frames_list, channels_list, run_fit_limit=run_fit_limit)` builds (frame, channel) pairs (optionally truncated to the first N), runs `fitr.fit(f, ch)` for each, and aggregates rows and curves.
 7. **Save** — Write `summary.csv`, `curves.pkl`, grid PDF via `save_batch_fit_grid`, and (when `save_frames=True`, the default) per-fit PNGs in `frames/` named via `frame_plot_filename(frame, channel)` (e.g. `f06_ch28.png`).
 

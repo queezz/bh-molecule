@@ -15,6 +15,57 @@ from bh_molecule.plotting.batch_fit_plots import save_batch_fit_grid
 from .signal_scan import check_background_flat, scan_signal_frames
 
 
+def prepare_vis_for_bh_batch(
+    fits_file: str | Path,
+    *,
+    cw: float,
+    scale: float,
+    dark_frame: int | None = None,
+    time_range: tuple[float, float] = (0.0, 10.0),
+) -> Vis133M:
+    """Load and calibrate VIS data exactly as :func:`run_bh_batch` does before fitting.
+
+    Steps: ``Vis133M.from_files`` → :meth:`~bh_molecule.instruments.vis133m.Vis133M.apply_cw`
+    → :meth:`~bh_molecule.instruments.vis133m.Vis133M.set_scale` → optional
+    ``dark_frame`` subtraction from the cube →
+    :meth:`~bh_molecule.instruments.vis133m.Vis133M.set_baseline_zero` (``True``) →
+    :meth:`~bh_molecule.instruments.vis133m.Vis133M.set_time_linspace`.
+
+    Notes
+    -----
+    Frame and channel indices are **0-based** everywhere (FITS time slice 0 is
+    the first frame).
+
+    The ``background_frames`` argument to :func:`run_bh_batch` is **not** used
+    here. Those indices only feed :func:`~bh_molecule.workflows.signal_scan.check_background_flat`
+    and :func:`~bh_molecule.workflows.signal_scan.scan_signal_frames` (noise level
+    for thresholding in the band image). They are **not** subtracted from
+    per-channel spectra; the only default spectral preprocessing is
+    *per-row minimum subtraction* when baseline-zero mode is on (see
+    :meth:`~bh_molecule.instruments.vis133m.Vis133M.spectrum`).
+    """
+    fits_path = Path(fits_file)
+    if not fits_path.is_file():
+        raise FileNotFoundError(f"FITS file not found: {fits_path}")
+
+    vis = Vis133M.from_files(str(fits_path), scale=scale)
+    vis.apply_cw(cw_nm=float(cw))
+    vis.set_scale(float(scale))
+
+    if dark_frame is not None:
+        f_idx = int(dark_frame)
+        F, C, P = vis.cube.shape
+        if not (0 <= f_idx < F):
+            raise IndexError(f"dark_frame {f_idx} out of range for F={F}")
+        dark_img = vis.cube[f_idx]
+        vis.cube = vis.cube - dark_img[None, :, :]
+
+    vis.set_baseline_zero(True)
+    t_start, t_stop = map(float, time_range)
+    vis.set_time_linspace(t_start, t_stop)
+    return vis
+
+
 def _normalize_indices(values: Iterable[int] | int) -> list[int]:
     """Return a list of indices given an int or iterable of ints."""
     if isinstance(values, int):
@@ -169,31 +220,19 @@ def run_bh_batch(
     curves_path = shot_dir / "curves.pkl"
     grid_pdf_path = shot_dir / "grid.pdf"
 
-    # Load VIS data
-    vis = Vis133M.from_files(str(fits_path), scale=scale)
+    bg_tuple = tuple(_normalize_indices(background_frames))
+    print(
+        f"[{shot_id}] background_frames={bg_tuple} "
+        "(flat-check + signal detection; not subtracted from spectra)"
+    )
 
-    # Apply CW calibration (regenerate wavelength axis)
-    vis.apply_cw(cw_nm=float(cw))
-
-    # Ensure scale matches the requested value
-    vis.set_scale(float(scale))
-
-    # Optional dark subtraction: interpret dark_frame as a frame index whose
-    # image is subtracted from all frames.
-    if dark_frame is not None:
-        f_idx = int(dark_frame)
-        F, C, P = vis.cube.shape
-        if not (0 <= f_idx < F):
-            raise IndexError(f"dark_frame {f_idx} out of range for F={F}")
-        dark_img = vis.cube[f_idx]  # (C, P)
-        vis.cube = vis.cube - dark_img[None, :, :]
-
-    # Apply baseline_zero=True
-    vis.set_baseline_zero(True)
-
-    # Set time axis from time_range over the number of frames
-    t_start, t_stop = map(float, time_range)
-    vis.set_time_linspace(t_start, t_stop)
+    vis = prepare_vis_for_bh_batch(
+        fits_path,
+        cw=cw,
+        scale=scale,
+        dark_frame=dark_frame,
+        time_range=time_range,
+    )
 
     # Step 1: background validation on the requested background frames
     check_background_flat(vis, background_frames)
@@ -365,5 +404,10 @@ def run_folder_batch(
     return results
 
 
-__all__ = ["run_bh_batch", "run_folder_batch", "frame_plot_filename"]
+__all__ = [
+    "run_bh_batch",
+    "run_folder_batch",
+    "frame_plot_filename",
+    "prepare_vis_for_bh_batch",
+]
 
