@@ -1,13 +1,20 @@
 # Fitter constraints (`w_inst`, `dx`, `base`)
 
-This page describes the **explicit, reproducible** production constraints
-that `BHFitter` accepts and how they propagate through the batch
-workflow (`run_bh_batch` / `run_folder_batch`) and the YAML / CLI entry
-point.
+`BHFitter` exposes a small set of **high-level, reviewable** controls for the instrumental width `w_inst`, the wavelength shift `dx`, and the additive baseline `base`. They propagate through `run_bh_batch` / `run_folder_batch` and through YAML for `bh batch`.
 
-The design goal is to **not** introduce per-spectrum auto-bounding,
-adaptive constraints, or hidden heuristics: every constraint below is a
-deliberate, inspectable choice set up-front for a whole experiment.
+In day-to-day work these choices are usually made **after** inspecting preprocessing ([Preprocessing for BH batch fits](preprocessing_bh_fits.md)) and **after** a loose calibration pass in [`examples/14_w_inst_calibration.ipynb`](https://github.com/queezz/bh-molecule/blob/main/examples/14_w_inst_calibration.ipynb); see [Batch fitting workflow (notebooks)](workflow_batch_notebooks.md).
+
+## Why constraints matter in practice
+
+**Parameter degeneracy.** BH band shape is sensitive to `T_rot`, amplitude (`C` / line strengths), `w_inst`, `dx`, and `base`. With wide bounds, the optimiser can trade a slightly wrong `w_inst` for a compensating `T_rot` or baseline while keeping $\chi^2$ acceptable—especially when noise is high or the BH window includes blended structure.
+
+**`w_inst` in particular.** Instrumental FWHM is often nearly constant for a given spectrometer state, while the fitter treats it as a free line-broadening dial. Leaving it **too free** invites the optimiser to absorb model–data mismatch into width instead of wavelength shift or temperature. That is not a moral failure of the fitter; it is a reason to **narrow or fix** `w_inst` once you have evidence from data.
+
+**Tighten vs fix.** Use **tight bounds** when you expect small shot-to-shot drift (focus, etendue) but want to stay near a calibrated interval. Use **`fix_w_inst=True`** (with `w_inst_default` set to your adopted value) when the instrument width is stable and you want the optimiser to spend its degrees of freedom elsewhere. Both are legitimate; the choice should come from **histograms and residuals**, not from defaults alone.
+
+**Explicit and reviewable.** Production runs should carry **`w_inst_default`**, **`w_inst_bounds`**, **`fix_w_inst`**, **`dx_tol_nm`**, **`base_bound`** (and the BH windows) in the notebook cell, YAML, or script—so a colleague can reproduce the physics without reverse-engineering the run.
+
+**No automatic bounds.** The library intentionally avoids auto-setting per-spectrum limits from local noise or heuristics. Automated bounds are hard to audit in a paper trail and easy to mistake for “the software figured it out.” The workflow is: **you** choose bounds after looking at data; the code enforces what you wrote.
 
 ## API summary
 
@@ -40,7 +47,7 @@ Every new constructor kwarg defaults to `None` / `False` and preserves
 the previous behaviour exactly. Calling code that does not pass them
 sees the same `p0` and `bounds` as before this change.
 
-## Batch workflow plumbing
+## Batch workflow (Python API)
 
 `run_bh_batch` (and `run_folder_batch`) accept the same five kwargs and
 forward them into `BHFitter`:
@@ -70,10 +77,10 @@ run_folder_batch(
 `None` for any constraint means "use the fitter default; do not forward
 the kwarg" -- this keeps the existing API call sites unchanged.
 
-## YAML schema
+## YAML schema (`bh batch`)
 
 The same keys are accepted in the YAML config consumed by `bh batch
---config <file>`:
+--config <file>` (reproducible / headless runs):
 
 ```yaml
 # explicit, reproducible fitter constraints
@@ -111,8 +118,8 @@ back into the YAML / Python API and you get an identical batch.
 ## Recommended calibration workflow
 
 The calibration workflow is **manual**. The helper notebook
-`examples/14_w_inst_calibration.ipynb` is a small, inspectable scaffold;
-it does not auto-pick bounds.
+[`examples/14_w_inst_calibration.ipynb`](https://github.com/queezz/bh-molecule/blob/main/examples/14_w_inst_calibration.ipynb) is a small, inspectable scaffold;
+it does not auto-pick bounds. API: [workflows.calibration](api/workflows_calibration.md).
 
 1. Select a few representative shots (`SHOTS`) and an explicit, small
    set of `FRAMES` / `CHANNELS`.
@@ -160,9 +167,14 @@ it does not auto-pick bounds.
    - tight bounds (`w_inst_bounds = (lo, hi)`), or
    - a fixed value (`fix_w_inst=True`, `w_inst_default=median`).
 
-6. Commit the chosen values to the YAML / notebook config. **Do not**
+6. Commit the chosen values to the notebook cell (e.g. `W_INST_DEFAULT`, `W_INST_BOUNDS` in [`examples/12_batch_batch.ipynb`](https://github.com/queezz/bh-molecule/blob/main/examples/12_batch_batch.ipynb)) or to YAML for `bh batch`. **Do not**
    add code that picks them automatically -- the goal is explicit,
    inspectable, reviewable production constraints.
+
+## See also
+
+- [Preprocessing for BH batch fits](preprocessing_bh_fits.md)
+- [Batch fitting pipeline](batch_fit.md)
 
 ## Implementation notes
 

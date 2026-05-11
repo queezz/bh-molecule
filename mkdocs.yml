@@ -80,13 +80,18 @@ nav:
   - Home: index.md
   - Physics: phys.md
   - Instruments: instruments.md
-  - Batch fit: batch_fit.md
-  - Fitter constraints: fitter_constraints.md
+  - BH batch workflow:
+      - Overview (notebooks): workflow_batch_notebooks.md
+      - Preprocessing: preprocessing_bh_fits.md
+      - Pipeline & outputs: batch_fit.md
+      - Fitter constraints: fitter_constraints.md
   - API:
       - physics.py: api/physics.md
       - constants.py: api/constants.md
       - fit.py: api/fit.md
-      - calibration.py: api/calibration.md
+      - preprocessing (batch): api/preprocessing.md
+      - calibration (wavelength): api/calibration.md
+      - fit-distribution helpers: api/workflows_calibration.md
       - dataio.py: api/dataio.md
       - Vis133M: api/vis133m.md
       - wavecal.py: api/wavecal.md
@@ -96,8 +101,9 @@ nav:
       - Quickstart: examples/02_quickstart.ipynb
       - Load spectral data: examples/03_load_spectral_data.ipynb
       - BH fit example: examples/04_bh_fit.ipynb
-  - Command Line: cli_commands.md
-  - Operator Guide: operator_guide.md
+  - Automation:
+      - Command Line: cli_commands.md
+      - Operator Guide: operator_guide.md
   - Setup Guide:
       - Dev Install: dev-install-guide.md
       - Venv & Sync: venv-outside-synced-folders.md

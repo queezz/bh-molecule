@@ -1,111 +1,77 @@
-# BH Batch Fitting Workflow
+# Batch fitting pipeline
 
-This page gives a brief overview of the batch fitting code: where it lives, what it does, and how the pieces fit together.
-
-## Location
-
-- **Batch workflow:** `bh_molecule.workflows.batch_fit`
-- **Signal detection:** `bh_molecule.workflows.signal_scan`
-
-The package exposes the main entry points at top level:
+Code: `bh_molecule.workflows.batch_fit`. Entry points:
 
 ```python
 from bh_molecule import run_bh_batch, run_folder_batch
 ```
 
+For **how this is used in practice** (notebook order, constraint calibration), start with [Batch fitting workflow (notebooks)](workflow_batch_notebooks.md).
+
 ## Purpose
 
-The workflow runs BH A–X band fits over many **(frame, channel)** pairs from a VIS-1.33 m FITS cube. It:
+Run BH A–X fits over many `(frame, channel)` pairs from a VIS-1.33 m FITS cube: wavelength calibration, optional signal-based selection, fitting with shared preprocessing, then CSV / curves / grid artifacts under each shot directory.
 
-1. Loads the cube and applies wavelength calibration (CW, scale, optional dark).
-2. Decides which frames and channels to fit (either from your input or via automatic signal detection).
-3. Fits the BH model for each selected (frame, channel), collects parameters and fit curves.
-4. Writes results (CSV, pickle, grid plots, per-fit figures) under a shot output directory.
-
-So you get a table of fit parameters per (frame, channel) plus diagnostic plots, without scripting the loop yourself.
-
-## Main entry points
+## Entry points
 
 | Function | Role |
 |----------|------|
-| **`run_bh_batch`** | Single FITS file: load, calibrate, select frames/channels, run fits, save under `out_dir/<shot_id>/`. |
-| **`run_folder_batch`** | Multiple FITS: for each `.fits` in a folder, call `run_bh_batch`; skip shots that already have `summary.csv` (resume). |
+| **`run_bh_batch`** | One FITS file → fits → `<out_dir>/<shot_id>/`. |
+| **`run_folder_batch`** | Every `.fits` in a folder; skips shots whose `summary.csv` already exists (resume). |
 
-Both accept explicit `frames` and `channels` (or `None` for auto selection), plus options such as `cw`, `scale`, `dark_frame`, `time_range`, `band`, `threshold_sigma`, `bounds`, `out_dir`, and **`run_fit_limit`** (run only the first N fits for testing).
+Shared options include `cw`, `scale`, `dark_frame`, `time_range`, `background_frames`, **`bh_fit_range`**, **`bh_scale_range`**, **`w_inst_default`**, **`w_inst_bounds`**, **`fix_w_inst`**, **`dx_tol_nm`**, **`base_bound`**, `frames`, `channels`, automatic detection (`band`, `threshold_sigma`), `bounds`, `fitter_kwargs`, `out_dir`, **`run_fit_limit`**, `save_frames`.
+
+## Preprocessing for fitting (authoritative)
+
+`run_bh_batch` attaches a **`preprocess`** callable to `BHFitter` built by `make_bh_fit_preprocessor`. Under the hood this is `prepare_bh_fit_arrays`:
+
+- subtract the **mean** of `background_frames` for the same channel from the raw cube row;
+- crop to **`bh_fit_range`**;
+- compute a **positive** normalization scale from **`bh_scale_range`** only (default: max of positive samples);
+- divide; **negatives are not clipped** and there is no per-row `y - y.min()` shift.
+
+Rationale: [Preprocessing for BH batch fits](preprocessing_bh_fits.md).
+
+## Loader vs fitter: `prepare_vis_for_bh_batch`
+
+`prepare_vis_for_bh_batch` loads the cube, applies `cw`, `scale`, optional dark subtraction, sets the time axis, and sets **`set_baseline_zero(False)`** so `vis.spectrum` stays comparable to the raw cube row in inspection notebooks. **Fitting** does not use `spectrum` directly; it uses the preprocessor on `vis.cube` as described above.
 
 ## Pipeline steps (single shot)
 
-Inside `run_bh_batch` the flow is:
+1. **Load** — `prepare_vis_for_bh_batch` (or equivalent steps inline in `run_bh_batch`).
+2. **Background sanity** — `check_background_flat(vis, background_frames)`.
+3. **Frame/channel selection** — explicit lists or `scan_signal_frames` (band image vs background noise).
+4. **Fitter** — `BHFitter(..., preprocess=make_bh_fit_preprocessor(...), base_tight=True, nm_window=bh_fit_range, ...)` plus optional `bounds` / constraint kwargs; see [Fitter constraints](fitter_constraints.md).
+5. **Fit loop** — `_batch_with_progress` (optional `run_fit_limit`).
+6. **Save** — `summary.csv`, `curves.pkl`, `grid.pdf` / `grid.png` via `save_batch_fit_grid`, optional `frames/f{frame:02d}_ch{channel:02d}.png`.
 
-1. **Load** — `Vis133M.from_files(fits_path, scale=scale)` and apply CW via `vis.apply_cw(cw_nm)`.
-2. **Optional dark** — If `dark_frame` is set, subtract that frame from the cube.
-3. **Baseline** — `vis.set_baseline_zero(True)` and set time axis from `time_range`.
-4. **Background check** — `check_background_flat(vis, background_frames)` to warn if background frames look non-flat.
-5. **Frame/channel selection** — If `frames` or `channels` are `None`, `scan_signal_frames(vis, band=..., threshold_sigma=...)` returns lists of frames and channels with signal above threshold; otherwise the provided lists are used.
+Grid PDFs use **display** normalization for layout; the fitted curves in `curves.pkl` follow the preprocessing pipeline above.
 
-**Important:** `background_frames` is **only** used in steps 4–5 (flat check and band-image noise for detection). It is **not** subtracted from individual spectra. Fitting uses `Vis133M.spectrum` after `set_baseline_zero(True)`, i.e. each row has its **minimum across wavelength** subtracted (plus optional `dark_frame` cube subtraction earlier). For a full walk-through of single vs batch preprocessing, see `examples/13_single_spectrum_batch_debug.ipynb`. The helper `prepare_vis_for_bh_batch` in `workflows.batch_fit` matches the batch loader exactly.
-6. **Fit loop** — `_batch_with_progress(fitr, frames_list, channels_list, run_fit_limit=run_fit_limit)` builds (frame, channel) pairs (optionally truncated to the first N), runs `fitr.fit(f, ch)` for each, and aggregates rows and curves.
-7. **Save** — Write `summary.csv`, `curves.pkl`, grid PDF via `save_batch_fit_grid`, and (when `save_frames=True`, the default) per-fit PNGs in `frames/` named via `frame_plot_filename(frame, channel)` (e.g. `f06_ch28.png`).
+## Wavelength shift `dx`
 
-Selection logic is unchanged when `run_fit_limit` is set; only the number of fits executed is capped so you can test the pipeline quickly.
+Parameter `dx` (nm) absorbs small CW / dispersion mismatches. Default half-width is `DEFAULT_DX_TOL_NM` (0.3 nm). Override with **`dx_tol_nm`** in Python/YAML or the `bounds` block. If the lower bound for `dx` is accidentally nonnegative, the fit can lock to one side and compress the spectrum—check bounds first.
 
-### Wavelength-shift tolerance
+## Output layout (`<out_dir>/<shot_id>/`)
 
-The fit parameter `dx` (in nm) absorbs small mismatches between the data wavelength axis (set by `cw`) and the model. Defaults live in `bh_molecule.fit.DEFAULT_DX_TOL_NM` (currently **0.3 nm**) and the fitter is initialised with symmetric bounds `[-DEFAULT_DX_TOL_NM, +DEFAULT_DX_TOL_NM]` so the fit can shift the model in either direction. Override via the YAML config's `bounds:` block when an experiment needs a different tolerance:
+| Path | Content |
+|------|---------|
+| `summary.csv` | One row per fit: frame, channel, parameters, errors, `chi2_red`, `R2`, `npts`. |
+| `curves.pkl` | `{(frame, channel): (x, y, yfit)}` from the **fit** preprocessing. |
+| `grid.pdf` / `grid.png` | Normalized grid for quick review. |
+| `frames/*.png` | Per-fit overlays when `save_frames=True`. |
 
-```yaml
-bounds:
-  lower: [0, 0, -0.5, 0, -10, 0, 0]
-  upper: [10, 10000,  0.5, 0.1, 10, 1, 1]
-```
+## CLI (secondary workflow)
 
-A previous regression set the lower `dx` bound to `0`, which silently locked the fit to one side of the model; symptoms were "compressed" fits with all amplitude pushed onto narrow lines. If you see that pattern, check the `dx` bounds first.
-
-### Per-fit PNGs
-
-`save_frames=True` (default) writes `<out>/<shot>/frames/f{frame:02d}_ch{channel:02d}.png`. Set `save_frames: false` in the YAML config (or the Python kwarg) to skip per-fit plots and keep only the summary CSV / grid PDF. The directory is created automatically; failed plots are skipped without aborting the batch.
+`bh batch --config ...` mirrors these kwargs from YAML. See [Command Line](cli_commands.md#batch-fitting-bh-batch). Prefer validating once in [workflow notebooks](workflow_batch_notebooks.md) before long headless runs.
 
 ## Internal helpers
 
 | Helper | Role |
 |--------|------|
-| **`_batch_with_progress`** | Iterates over (frame, channel) pairs (optionally limited by `run_fit_limit`), calls `BHFitter.fit`, builds a DataFrame of parameters and a dict of `(frame, channel) -> (x, y, yfit)`. Uses tqdm for a progress bar. |
-| **`_plot_normalized_grid_pages`** | Takes the curves dict and frame/channel lists; produces a multi-page PDF and a PNG of normalized spectra in a frames×channels grid. |
+| **`_batch_with_progress`** | `(frame, channel)` iteration, tqdm, DataFrame + curves dict. |
+| **`scan_signal_frames`** / **`check_background_flat`** | Selection and background checks (`signal_scan`). |
 
-Signal selection lives in **`signal_scan`**:
+## See also
 
-- **`scan_signal_frames`** — Builds a band image over the wavelength `band`, compares to background frames, returns frame and channel indices above `threshold_sigma`.
-- **`check_background_flat`** — Quick check that background frames look noise-like (peak/baseline ratio).
-
-## Dependencies
-
-- **Vis133M** — Load FITS, apply CW/scale/dark, expose `spectrum(frame, channel)` and band image.
-- **BHModel** — BH A–X spectrum model.
-- **BHFitter** — Wraps the model and Vis133M data; `fit(frame, channel)` returns parameters, errors, and fit curve.
-
-## Output layout
-
-For a single shot, output is under `out_dir/<shot_id>/`:
-
-| Path | Content |
-|------|---------|
-| `summary.csv` | One row per (frame, channel): frame, channel, fit parameters, errors, chi2_red, R2, npts. |
-| `curves.pkl` | Pickle of `{(frame, channel): (x, y, yfit)}` for plotting. |
-| `grid.pdf` / `grid.png` | Normalized spectra in a frames×channels grid (PDF multi-page by channel groups). |
-| `frames/f<frame>_ch<channel>.png` | Single-spectrum fit plot per (frame, channel). |
-
-The same structure is used for limited runs (`run_fit_limit`); only the number of rows and curves is smaller.
-
-## CLI
-
-The **`bh batch`** command runs this workflow from a YAML config: see [Command Line](cli_commands.md#batch-fitting-bh-batch). The config supplies `fits_file` or `folder`, plus `cw`, `scale`, and other options; **`--run-fit-limit N`** is passed through as `run_fit_limit` for quick tests.
-
-### Quick subset run
-
-For developer/manual testing, point at a single FITS and limit the fits:
-
-```bash
-bh batch --config examples/fit_batch_small_example.yaml --run-fit-limit 6
-```
-
-The example config (`examples/fit_batch_small_example.yaml`) targets shot `193788` from the LHD BH dataset and uses an explicit `frames`/`channels` selection so the full run completes in seconds. To exercise shots `193788`, `193789`, and `193790`, copy the file three times (one per `fits_file`) or place those three FITS files in a folder and use the `folder:` key — `run_folder_batch` skips shots whose `summary.csv` already exists, so the three runs can chain via the same `out_dir`.
+- [workflows.preprocessing API](api/preprocessing.md)
+- [fit.py API](api/fit.md)

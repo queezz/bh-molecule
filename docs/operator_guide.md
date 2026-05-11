@@ -1,6 +1,8 @@
 # BH Batch Fitting: Operator Quick-Start Guide
 
-This guide explains how to run BH rotational-temperature fitting on VIS-1.33 m FITS data using the `bh batch` CLI command.
+For development and analysis, the usual path is the repository notebooks ([overview](workflow_batch_notebooks.md)): single-spectrum debug, folder batch, then `w_inst` calibration before freezing settings.
+
+This page documents **`bh batch`** for **reproducible** runs from a YAML file—after you have already validated preprocessing and fitter constraints interactively.
 
 ## Setup
 
@@ -69,12 +71,19 @@ If no signal is detected (empty frame/channel lists), the workflow continues wit
 | `out_dir` | No | Output directory (default: `results`) |
 | `time_range` | No | `[start, stop]` seconds for frame time axis |
 | `dark_frame` | No | Frame index to subtract as dark reference |
-| `background_frames` | No | Frame indices for noise estimation (default: `[0,1,2,3]`) |
+| `background_frames` | No | Pre-plasma frames: noise estimate for signal detection **and** per-channel mean subtracted in the fitting preprocessor (default: `[0,1,2,3]`) |
 | `band` | No | Wavelength range `[lo, hi]` nm for signal detection (default: `[433.0, 433.4]`) |
 | `threshold_sigma` | No | Detection threshold in sigma units (default: `5.0`) |
 | `frames` | No | Explicit frame indices (skip auto-detection) |
 | `channels` | No | Explicit channel indices (skip auto-detection) |
 | `bounds` | No | Fit parameter bounds (`{lower: [...], upper: [...]}`) |
+| `bh_fit_range` | No | BH fit wavelength window [nm] (crop before fitting); default matches `BH_FIT_WAVELENGTH_RANGE_NM` in preprocessing |
+| `bh_scale_range` | No | Sub-window [nm] used only for normalization scale; default matches `BH_SCALE_WAVELENGTH_RANGE_NM` |
+| `w_inst_default` | No | Initial guess and fixed value when `fix_w_inst: true` (instrumental FWHM, nm) |
+| `w_inst_bounds` | No | `[lo, hi]` for `w_inst` (nm), `0 <= lo < hi` |
+| `fix_w_inst` | No | When `true`, hold `w_inst` at `w_inst_default` |
+| `dx_tol_nm` | No | Half-width of allowed `dx` (nm); default fitter value if omitted |
+| `base_bound` | No | Half-width of tight `base` bound when `base_tight` applies |
 | `fitter_kwargs` | No | Extra args for `BHFitter` (`nm_window`, `weight`, `warm_start`) |
 
 ## Output Layout

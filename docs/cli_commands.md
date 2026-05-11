@@ -22,6 +22,8 @@ To use the commands, you need to install the package. See the [Installation](ind
 
 Run BH batch fitting on VIS-1.33 m FITS data using a YAML config. Supports a single FITS file or a folder of `.fits` files. Frame and channel selection can be automatic (signal detection) or specified in the config.
 
+Typical practice is to settle **`bh_fit_range`**, **`bh_scale_range`**, **`background_frames`**, **`w_inst_default`**, **`w_inst_bounds`**, **`fix_w_inst`**, **`dx_tol_nm`**, and **`base_bound`** in the [notebook workflow](workflow_batch_notebooks.md) first; use this command when those values are ready for a logged, repeatable run.
+
 ```bash
 bh batch --config fit_v3.yaml
 ```
@@ -41,7 +43,7 @@ bh batch --config fit_v3.yaml --run-fit-limit 5
 
 With `--run-fit-limit 5`, the pipeline runs the same steps (selection, fitting, saving CSV, curves, grid plots, per-fit figures) but only for the first 5 (frame, channel) pairs. Output structure and filenames are unchanged; only fewer fits are executed.
 
-**Config file (YAML):** Must contain either `folder` (path to directory of `.fits` files) or `fits_file` / `fits` (path to a single FITS). Paths may use `~` for the user home. Other keys are passed as batch options, e.g. `cw`, `scale`, `out_dir`, `dark_frame`, `time_range`, `background_frames`, `band`, `threshold_sigma`, `bounds`, `fitter_kwargs`, `frames`, `channels`, `save_frames`. See [Instruments and calibration](instruments.md) and [Batch fitting](batch_fit.md) for details.
+**Config file (YAML):** Must contain either `folder` (path to directory of `.fits` files) or `fits_file` / `fits` (path to a single FITS). Paths may use `~` for the user home. Other keys mirror `run_bh_batch`: `cw`, `scale`, `out_dir`, `dark_frame`, `time_range`, `background_frames`, `bh_fit_range`, `bh_scale_range`, `w_inst_default`, `w_inst_bounds`, `fix_w_inst`, `dx_tol_nm`, `base_bound`, `band`, `threshold_sigma`, `bounds`, `fitter_kwargs`, `frames`, `channels`, `save_frames`. See [Preprocessing](preprocessing_bh_fits.md), [Batch fitting pipeline](batch_fit.md), and [Fitter constraints](fitter_constraints.md).
 
 **Common toggles:**
 
@@ -151,4 +153,4 @@ bh-spectra-plot --C 4.0 --T_rot 3200 --save plot.png --dpi 200
 
 * The BH-Spectra CLI tools (`bh-spectra`, `bh-spectra-csv`, `bh-spectra-plot`) are based on the **BHModel** class and use molecular constants loaded via `load_v00_wavelengths()`.
 * Adjusting `C`, `T_rot`, and `w_inst` has the most visible effect on spectrum shape.
-* The **bh batch** command uses `run_bh_batch` / `run_folder_batch` from the package; `--run-fit-limit` limits the number of fits per run for workflow testing without changing output structure or filenames.
+* The **bh batch** command uses `run_bh_batch` / `run_folder_batch` from the package; `--run-fit-limit` limits the number of fits per run for workflow testing without changing output structure or filenames. For the recommended notebook-first calibration path, see [Batch fitting workflow (notebooks)](workflow_batch_notebooks.md).

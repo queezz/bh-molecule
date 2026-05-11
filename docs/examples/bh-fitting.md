@@ -59,6 +59,6 @@ fitter.plot_single(res)
 fitter.plot_overlay(curves, frame=10)
 ```
 
-For full technical documentation see:
+For full technical documentation see **API → [fit](../api/fit.md)**.
 
-**API → [fit](../api/fit.md)**
+For end-to-end VIS batch fitting (preprocessing, constraints, notebook order), see [Batch fitting workflow (notebooks)](../workflow_batch_notebooks.md) and [Preprocessing for BH batch fits](../preprocessing_bh_fits.md).

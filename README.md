@@ -60,10 +60,17 @@ x = np.linspace(432.8, 434.2, 4000)
 y = model.full_fit_model(x, C=1.0, T_rot=2000, dx=0.0, w_inst=0.02)
 ```
 
-## Batch fitting
+## Batch fitting (VIS-1.33 m)
 
-Run the BH fitter over a single FITS file or a folder of `.fits` files via the
-`bh batch` CLI:
+The usual workflow is **notebook-driven**: validate preprocessing and fitter constraints interactively, then scale up.
+
+1. **Debug / one spectrum** — [`examples/13_single_spectrum_batch_debug.ipynb`](examples/13_single_spectrum_batch_debug.ipynb)
+2. **Many shots** — [`examples/12_batch_batch.ipynb`](examples/12_batch_batch.ipynb)
+3. **Calibrate `w_inst` (and related bounds)** — [`examples/14_w_inst_calibration.ipynb`](examples/14_w_inst_calibration.ipynb)
+
+See the [online docs — BH batch workflow](https://queezz.github.io/bh-molecule/workflow_batch_notebooks/) for terminology (`bh_fit_range` ↔ notebook `BH_FIT_WAVELENGTH_RANGE_NM`, etc.) and preprocessing rationale.
+
+**Automation / reproducible runs:** after those choices are frozen, mirror them in YAML and call the CLI:
 
 ```bash
 bh batch --config examples/fit_batch_example.yaml
@@ -75,15 +82,11 @@ Outputs land under `<out_dir>/<shot_id>/`:
 | File | Content |
 |------|---------|
 | `summary.csv` | one row per `(frame, channel)` with fit parameters and errors |
-| `curves.pkl` | raw `(x, y, yfit)` triples for replotting |
-| `grid.pdf` | normalized BH-band grid plot, one page per channel group |
+| `curves.pkl` | `(x, y, yfit)` triples from the **fitting** preprocessing path |
+| `grid.pdf` | BH-band grid (display normalization for layout) |
 | `frames/f{frame:02d}_ch{channel:02d}.png` | per-fit data + fit overlay (set `save_frames: false` to skip) |
 
-The fitter parameter `dx` (wavelength shift, nm) is bounded symmetrically by
-`bh_molecule.fit.DEFAULT_DX_TOL_NM` (default ±0.3 nm) so the fit can absorb
-small CW / dispersion mismatches in either direction. See
-[`docs/batch_fit.md`](docs/batch_fit.md) for details on the batch workflow,
-including the YAML schema and how to override bounds.
+Details: [`docs/batch_fit.md`](docs/batch_fit.md), [`docs/fitter_constraints.md`](docs/fitter_constraints.md), [`docs/preprocessing_bh_fits.md`](docs/preprocessing_bh_fits.md).
 
 ## Fits Viewer
 
