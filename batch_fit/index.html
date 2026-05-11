@@ -12,7 +12,7 @@
         <link rel="prev" href="../preprocessing_bh_fits/">
       
       
-        <link rel="next" href="../fitter_constraints/">
+        <link rel="next" href="../batch_fit_memory/">
       
       
         
@@ -766,6 +766,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#memory-behavior-on-long-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory behavior on long runs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#internal-helpers" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -791,6 +802,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../batch_fit_memory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory behavior (long runs)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1678,6 +1717,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#memory-behavior-on-long-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory behavior on long runs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#internal-helpers" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1798,6 +1848,9 @@
 </table>
 <h2 id="cli-secondary-workflow">CLI (secondary workflow)<a class="headerlink" href="#cli-secondary-workflow" title="Permanent link">&para;</a></h2>
 <p><code>bh batch --config ...</code> mirrors these kwargs from YAML. See <a href="../cli_commands/#batch-fitting-bh-batch">Command Line</a>. Prefer validating once in <a href="../workflow_batch_notebooks/">workflow notebooks</a> before long headless runs.</p>
+<h2 id="memory-behavior-on-long-runs">Memory behavior on long runs<a class="headerlink" href="#memory-behavior-on-long-runs" title="Permanent link">&para;</a></h2>
+<p>Long folder runs are now memory-safe by construction: <code>save_batch_fit_grid</code> uses a fixed <code>subplots_adjust</code> layout plus a plain <code>pdf.savefig(fig)</code> (no <code>bbox_inches="tight"</code>, no explicit <code>dpi</code>), and <code>run_folder_batch</code> drops the per-shot <code>curves</code> dict + <code>plt.close("all")</code> + <code>gc.collect()</code> between shots. Optional <code>psutil</code>-based RSS diagnostics print one line at each shot / page boundary; set <code>BH_BATCH_MEM_LOG=0</code> to silence them.</p>
+<p>Full story (symptom, root cause, A/B numbers, opt-out, recommendations): <a href="../batch_fit_memory/">Batch fit memory behavior (long runs)</a>.</p>
 <h2 id="internal-helpers">Internal helpers<a class="headerlink" href="#internal-helpers" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1819,6 +1872,7 @@
 </table>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
+<li><a href="../batch_fit_memory/">Batch fit memory behavior (long runs)</a></li>
 <li><a href="../api/preprocessing/">workflows.preprocessing API</a></li>
 <li><a href="../api/fit/">fit.py API</a></li>
 </ul>

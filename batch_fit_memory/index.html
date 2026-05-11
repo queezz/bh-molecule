@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../instruments/">
+        <link rel="prev" href="../batch_fit/">
       
       
-        <link rel="next" href="../preprocessing_bh_fits/">
+        <link rel="next" href="../fitter_constraints/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>Overview (notebooks & CLI) - BH Molecule</title>
+        <title>Memory behavior (long runs) - BH Molecule</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#batch-fitting-workflow" class="md-skip">
+        <a href="#batch-fit-memory-behavior-long-runs" class="md-skip">
           Skip to content
         </a>
       
@@ -111,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Overview (notebooks & CLI)
+              Memory behavior (long runs)
             
           </span>
         </div>
@@ -283,7 +283,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+        <a href="../workflow_batch_notebooks/" class="md-tabs__link">
           
   
   
@@ -559,37 +559,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview (notebooks & CLI)
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../workflow_batch_notebooks/" class="md-nav__link">
         
   
   
@@ -605,59 +578,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#why-this-order" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why this order
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#terminology-notebooks-vs-api-yaml" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Terminology: notebooks vs API / YAML
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#see-also" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        See also
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -723,10 +643,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../batch_fit_memory/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory behavior (long runs)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -742,6 +689,159 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#symptom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Symptom
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#root-cause" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root cause
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fix-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Fix summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plotting-bh_moleculeplottingbatch_fit_plotspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plotting (bh_molecule/plotting/batch_fit_plots.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-bh_moleculeworkflowsbatch_fitpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow (bh_molecule/workflows/batch_fit.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-observations-ab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory observations (A/B)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory diagnostics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Memory diagnostics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#opt-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opt-out
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reading-the-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading the output
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1541,10 +1641,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#why-this-order" class="md-nav__link">
+  <a href="#symptom" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why this order
+        Symptom
       
     </span>
   </a>
@@ -1552,10 +1652,110 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#terminology-notebooks-vs-api-yaml" class="md-nav__link">
+  <a href="#root-cause" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Terminology: notebooks vs API / YAML
+        Root cause
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fix-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Fix summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plotting-bh_moleculeplottingbatch_fit_plotspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plotting (bh_molecule/plotting/batch_fit_plots.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-bh_moleculeworkflowsbatch_fitpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow (bh_molecule/workflows/batch_fit.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-observations-ab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory observations (A/B)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory diagnostics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Memory diagnostics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#opt-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opt-out
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reading-the-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading the output
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendations
       
     </span>
   </a>
@@ -1593,114 +1793,183 @@
   
 
 
-<h1 id="batch-fitting-workflow">Batch fitting workflow<a class="headerlink" href="#batch-fitting-workflow" title="Permanent link">&para;</a></h1>
-<p>For VIS-1.33 m BH A–X work there are two supported entry points:</p>
-<ul>
-<li><strong>Notebooks 12–14</strong> — exploratory debugging, visual validation, and constraint calibration before trusting large batches.</li>
-<li><strong><code>bh batch</code> + YAML</strong> — the same <code>run_bh_batch</code> / <code>run_folder_batch</code> pipeline with a checked-in config; best once preprocessing windows and fitter constraints are settled, or when you want unattended / reproducible reruns.</li>
-</ul>
-<p>The sections below emphasize the <strong>notebook path</strong> because that is where preprocessing and <code>w_inst</code> choices are usually vetted; the <a href="../operator_guide/">Operator Guide</a> and <a href="../cli_commands/">Command Line</a> document the CLI path end-to-end.</p>
-<p>Canonical notebooks in the repository (open from a clone of <a href="https://github.com/queezz/bh-molecule">queezz/bh-molecule</a>):</p>
-<table>
-<thead>
-<tr>
-<th>Step</th>
-<th>Notebook</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1 — Explore</td>
-<td><a href="https://github.com/queezz/bh-molecule/blob/main/examples/13_single_spectrum_batch_debug.ipynb"><code>examples/13_single_spectrum_batch_debug.ipynb</code></a></td>
-<td>One <code>(frame, channel)</code>; same preprocessing as batch; plots for sanity checks.</td>
-</tr>
-<tr>
-<td>2 — Batch</td>
-<td><a href="https://github.com/queezz/bh-molecule/blob/main/examples/12_batch_batch.ipynb"><code>examples/12_batch_batch.ipynb</code></a></td>
-<td><code>run_folder_batch</code> over a shot list; production constraints from step 3.</td>
-</tr>
-<tr>
-<td>3 — Calibrate constraints</td>
-<td><a href="https://github.com/queezz/bh-molecule/blob/main/examples/14_w_inst_calibration.ipynb"><code>examples/14_w_inst_calibration.ipynb</code></a></td>
-<td>Loose fits on a small grid; histograms for <code>w_inst</code>, <code>dx</code>, <code>base</code>; you choose bounds or <code>fix_w_inst</code>.</td>
-</tr>
-<tr>
-<td>4 — Optional</td>
-<td><a href="https://github.com/queezz/bh-molecule/blob/main/examples/fit_batch_example.yaml"><code>examples/fit_batch_example.yaml</code></a> + <code>bh batch</code></td>
-<td>Same parameters as the notebooks, checked into version control.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="why-this-order">Why this order<a class="headerlink" href="#why-this-order" title="Permanent link">&para;</a></h2>
+<h1 id="batch-fit-memory-behavior-long-runs">Batch fit memory behavior (long runs)<a class="headerlink" href="#batch-fit-memory-behavior-long-runs" title="Permanent link">&para;</a></h1>
+<p>This page documents the memory-safety work in
+<code>bh_molecule.workflows.batch_fit</code> and <code>bh_molecule.plotting.batch_fit_plots</code>.
+It explains the failure mode that long folder runs of
+<a href="../batch_fit/"><code>run_folder_batch</code></a> used to hit, the exact fixes applied, and
+how to use the built-in process-memory diagnostics on your own campaigns.</p>
+<p>The user-facing API is unchanged: notebooks, the CLI, output filenames,
+<code>summary.csv</code>, <code>curves.pkl</code>, <code>grid.pdf</code>, and <code>frames/*.png</code> all behave
+exactly as before. Only the memory profile of long runs changed.</p>
+<h2 id="symptom">Symptom<a class="headerlink" href="#symptom" title="Permanent link">&para;</a></h2>
+<p>On long batch runs (<code>run_folder_batch</code> over many <code>.fits</code> shots) the process
+used to crash inside Agg PDF rendering with:</p>
+<div class="highlight"><pre><span></span><code>MemoryError: bad allocation
+  ...
+  fig.tight_layout(rect=[0, 0, 1, 0.97])
+  pdf.savefig(fig, bbox_inches=&quot;tight&quot;, dpi=200)
+  ...
+  RendererAgg(int(width), int(height), dpi)
+</code></pre></div>
+<p>Single shots, and even small batches, completed fine. The crash only
+appeared deep into a campaign-scale run — strongly suggesting cumulative
+memory pressure / fragmentation, not one impossible figure.</p>
+<h2 id="root-cause">Root cause<a class="headerlink" href="#root-cause" title="Permanent link">&para;</a></h2>
+<p>Three things in <code>save_batch_fit_grid()</code> compounded inside the per-shot
+folder loop:</p>
 <ol>
-<li>
-<p><strong>Debug before scale</strong> — Batch output is only trustworthy if the per-spectrum pipeline (background, crop, BH-local normalization) matches what you think you are fitting. The debug notebook makes that comparison explicit; see <a href="../preprocessing_bh_fits/">Preprocessing for BH batch fits</a>.</p>
-</li>
-<li>
-<p><strong>Constraints before production batch</strong> — Unconstrained or overly wide <code>w_inst</code> trades off against temperature, amplitude, and baseline in ways that can look acceptable in <span class="arithmatex">\(\chi^2\)</span> while being physically wrong. The calibration notebook forces a <strong>reviewable</strong> decision (tight bounds vs fixed <code>w_inst</code>) before you commit CPU time; see <a href="../fitter_constraints/">Fitter constraints</a>.</p>
-</li>
-<li>
-<p><strong>Visual inspection</strong> — Per-fit PNGs and <code>summary.csv</code> are not a substitute for looking at a few raw rows: H-γ outside the BH scale window, bad background frames, or wavelength quirks show up immediately in single-spectrum plots.</p>
-</li>
-<li>
-<p><strong>YAML / CLI when stable</strong> — The same knobs (<code>bh_fit_range</code>, <code>bh_scale_range</code>, <code>w_inst_*</code>, …) appear in <code>examples/fit_batch_example.yaml</code>. Use <code>bh batch --config ...</code> for reproducible full-folder runs, automation, or sharing configs with collaborators—after steps 1–3 have justified those values.</p>
-</li>
+<li><strong><code>fig.tight_layout(rect=...)</code></strong> on a large
+    <code>(frames × channels_per_page)</code> grid runs an internal full-figure
+    rasterization pass just to measure ink bounds.</li>
+<li><strong><code>pdf.savefig(fig, bbox_inches="tight", dpi=200)</code></strong> runs <em>another</em>
+    full-figure Agg rasterization at 200 dpi only to compute the "tight"
+    crop — even though the PDF backend is vector and never uses that
+    raster for the output.</li>
+<li><strong>No incremental cleanup between shots</strong> — <code>run_folder_batch</code> kept the
+    previous shot's heavy <code>curves</code> dict (numpy <code>(x, y, yfit)</code> arrays for
+    every <code>(frame, channel)</code> pair) alive in the loop's local variable
+    until the next iteration reassigned it, and never collected.</li>
 </ol>
-<h2 id="terminology-notebooks-vs-api-yaml">Terminology: notebooks vs API / YAML<a class="headerlink" href="#terminology-notebooks-vs-api-yaml" title="Permanent link">&para;</a></h2>
-<p>The notebooks keep configuration in ALL_CAPS Python variables. They map to batch / fitter arguments as follows:</p>
+<p>Each per-page <code>RendererAgg(width, height, 200)</code> allocates a contiguous
+RGBA byte buffer of roughly <code>width * height * 4</code> bytes. After enough
+shots, the Windows allocator can no longer find a contiguous block of
+that size and the call fails with <code>bad allocation</code> exactly where the
+traceback pointed.</p>
+<h2 id="fix-summary">Fix summary<a class="headerlink" href="#fix-summary" title="Permanent link">&para;</a></h2>
+<h3 id="plotting-bh_moleculeplottingbatch_fit_plotspy">Plotting (<code>bh_molecule/plotting/batch_fit_plots.py</code>)<a class="headerlink" href="#plotting-bh_moleculeplottingbatch_fit_plotspy" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Replaced <code>fig.tight_layout(rect=[0, 0, 1, 0.97])</code> with a fixed
+    <code>fig.subplots_adjust(...)</code> layout. The page proportions are preserved
+    and there is no extra "measurement" rasterization pass.</li>
+<li>Replaced <code>pdf.savefig(fig, bbox_inches="tight", dpi=200)</code> with a plain
+    <code>pdf.savefig(fig)</code>. PDFs are vector; an explicit DPI just inflates
+    the Agg buffer used by <code>bbox_inches="tight"</code> and never reaches the
+    file. Data points are still rasterized (<code>rasterized=True</code>) for
+    reasonable PDF size, but at the figure's default DPI.</li>
+<li>Added <code>gc.collect()</code> after <code>plt.close(fig)</code> so the per-page figure,
+    its Agg renderer, and any temporary numpy buffers are released
+    before the next page begins.</li>
+</ul>
+<h3 id="workflow-bh_moleculeworkflowsbatch_fitpy">Workflow (<code>bh_molecule/workflows/batch_fit.py</code>)<a class="headerlink" href="#workflow-bh_moleculeworkflowsbatch_fitpy" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>In <code>run_folder_batch</code>, after each shot:</p>
+<div class="highlight"><pre><span></span><code><span class="n">results</span><span class="p">[</span><span class="n">shot_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">resb</span>
+<span class="k">del</span> <span class="n">resb</span><span class="p">,</span> <span class="n">curves</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+<span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+</code></pre></div>
+<p><code>curves</code> is by far the heaviest per-shot object. Dropping it
+eagerly, closing any leftover figures, and forcing a collection
+cycle gives the next shot a clean baseline.</p>
+</li>
+</ul>
+<ul>
+<li>Lightweight process-memory diagnostics (see below) wrap the
+    <code>save_batch_fit_grid</code> call and the per-shot boundary, so any future
+    regression is visible from the first run instead of only at crash
+    time.</li>
+</ul>
+<p>The grid PDF is visually equivalent to the old output — only the
+backend path changed.</p>
+<h2 id="memory-observations-ab">Memory observations (A/B)<a class="headerlink" href="#memory-observations-ab" title="Permanent link">&para;</a></h2>
+<p>Synthetic stress test (25 sequential grid-PDF saves; 28 channels × 6
+frames, 6 channels per page, ~5 pages each, no fitting):</p>
 <table>
 <thead>
 <tr>
-<th>Notebook variable</th>
-<th><code>run_bh_batch</code> / <code>run_folder_batch</code></th>
-<th>YAML (when applicable)</th>
+<th>Variant</th>
+<th>Per-iter wall time</th>
+<th>RSS plateau (above baseline)</th>
+<th>Total</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>BH_FIT_WAVELENGTH_RANGE_NM</code></td>
-<td><code>bh_fit_range</code></td>
-<td><code>bh_fit_range</code></td>
+<td><strong>OLD</strong> (<code>tight_layout</code> + <code>bbox_inches="tight"</code> + <code>dpi=200</code>)</td>
+<td>~10.6 s</td>
+<td>~+32 MB</td>
+<td>~266 s</td>
 </tr>
 <tr>
-<td><code>BH_SCALE_WAVELENGTH_RANGE_NM</code></td>
-<td><code>bh_scale_range</code></td>
-<td><code>bh_scale_range</code></td>
-</tr>
-<tr>
-<td><code>W_INST_DEFAULT</code></td>
-<td><code>w_inst_default</code></td>
-<td><code>w_inst_default</code></td>
-</tr>
-<tr>
-<td><code>W_INST_BOUNDS</code></td>
-<td><code>w_inst_bounds</code></td>
-<td><code>w_inst_bounds</code></td>
-</tr>
-<tr>
-<td><code>FIX_W_INST</code></td>
-<td><code>fix_w_inst</code></td>
-<td><code>fix_w_inst</code></td>
-</tr>
-<tr>
-<td><code>DX_TOL_NM</code></td>
-<td><code>dx_tol_nm</code></td>
-<td><code>dx_tol_nm</code></td>
-</tr>
-<tr>
-<td><code>BASE_BOUND</code></td>
-<td><code>base_bound</code></td>
-<td><code>base_bound</code></td>
+<td><strong>NEW</strong> (<code>subplots_adjust</code> + plain <code>pdf.savefig</code>)</td>
+<td>~3.2 s</td>
+<td>~+29 MB</td>
+<td>~80 s</td>
 </tr>
 </tbody>
 </table>
-<p>See also <a href="../batch_fit/">Batch fitting pipeline</a> and <a href="../cli_commands/#batch-fitting-bh-batch">Command Line</a>.</p>
+<p>Both <em>plateau</em> in RSS on this small synthetic load (modern allocators
+are good), but the old path does <strong>~3.3× more work per page</strong> — and
+that's exactly what fragments memory at real campaign scale, where each
+shot has hundreds of <code>(frame, channel)</code> panels spread over a multi-page
+PDF, repeated across dozens of shots.</p>
+<h2 id="memory-diagnostics">Memory diagnostics<a class="headerlink" href="#memory-diagnostics" title="Permanent link">&para;</a></h2>
+<p>When <code>psutil</code> is importable, the batch code prints a single
+<code>[MEM] &lt;label&gt;: RSS = X.XX GB</code> line at the points that matter:</p>
+<ul>
+<li>before / after <code>save_batch_fit_grid(...)</code> inside each shot,</li>
+<li>after <code>pdf.savefig</code> and after <code>plt.close(fig) + gc.collect()</code> for
+    each grid page,</li>
+<li>before <code>run_bh_batch</code> and at the end of each shot in
+    <code>run_folder_batch</code> (after the cleanup step above).</li>
+</ul>
+<p>If <code>psutil</code> is missing, the helper is a silent no-op — no extra
+dependency is required.</p>
+<h3 id="opt-out">Opt-out<a class="headerlink" href="#opt-out" title="Permanent link">&para;</a></h3>
+<p>Diagnostics are on by default. Silence them via an environment variable
+before launching the notebook / CLI:</p>
+<p>=== "PowerShell (Windows)"</p>
+<div class="highlight"><pre><span></span><code>```powershell
+$env:BH_BATCH_MEM_LOG = &quot;0&quot;
+```
+</code></pre></div>
+<p>=== "bash / zsh (Linux / macOS)"</p>
+<div class="highlight"><pre><span></span><code>```bash
+export BH_BATCH_MEM_LOG=0
+```
+</code></pre></div>
+<p>Recognized "off" values: <code>0</code>, <code>false</code>, <code>no</code>, <code>off</code>, and the empty
+string. Any other value (or the variable being unset) keeps the prints
+enabled.</p>
+<h3 id="reading-the-output">Reading the output<a class="headerlink" href="#reading-the-output" title="Permanent link">&para;</a></h3>
+<p>A healthy long run shows:</p>
+<ul>
+<li>RSS climbing during the first one or two shots as matplotlib caches
+    populate, then <strong>plateauing</strong>;</li>
+<li>approximately the same RSS at each <code>end of shot (after cleanup)</code> line;</li>
+<li>no large jumps that survive the per-shot <code>del curves + gc.collect()</code>
+    boundary.</li>
+</ul>
+<p>If RSS grows monotonically across many shot boundaries, suspect:</p>
+<ul>
+<li>a downstream caller holding <code>curves</code> (the lightweight <code>summary.csv</code>
+    is the canonical persistent artifact — <code>curves</code> is intentionally
+    dropped after the grid PDF and the <code>.pkl</code> are written);</li>
+<li>a custom <code>fitter_kwargs["preprocess"]</code> retaining per-shot arrays;</li>
+<li>third-party libraries hooked into matplotlib (custom backends,
+    interactive widgets) leaking figures.</li>
+</ul>
+<h2 id="recommendations">Recommendations<a class="headerlink" href="#recommendations" title="Permanent link">&para;</a></h2>
+<ul>
+<li>For very large campaigns where the in-memory <code>results</code> dict from
+    <code>run_folder_batch</code> is not needed, discard the return value
+    (<code>_ = run_folder_batch(...)</code>). The on-disk <code>summary.csv</code> files
+    remain the canonical record.</li>
+<li>Keep <code>save_frames=False</code> in long headless runs unless the per-fit
+    PNG overlays are needed for inspection. Each PNG goes through Agg
+    once and is fast, but it adds up at full-campaign scale.</li>
+<li>If you need to regenerate just <code>grid.pdf</code> for shots that already
+    have <code>summary.csv</code> + <code>curves.pkl</code>, delete the affected shot
+    folder(s) and rerun — the resume logic (skip if <code>summary.csv</code>
+    exists) will skip everything else and the new memory-safe code
+    path will redo only the missing shots.</li>
+</ul>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../preprocessing_bh_fits/">Preprocessing for BH batch fits</a> — why BH-local normalization and background subtraction matter.</li>
-<li><a href="../fitter_constraints/">Fitter constraints</a> — <code>w_inst</code>, <code>dx</code>, <code>base</code>, and the calibration helper API.</li>
-<li><a href="../operator_guide/">Operator Guide</a> — CLI-oriented quick start when you already trust the pipeline.</li>
+<li><a href="../batch_fit/">Batch fitting pipeline</a></li>
+<li><a href="../workflow_batch_notebooks/">Batch fitting workflow (notebooks)</a></li>
 </ul>
 
 
