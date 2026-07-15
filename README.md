@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/1037072056.svg)](https://doi.org/10.5281/zenodo.21371933)
 
 This project provides tools to model and fit the **A–X band spectra** of boron hydride (BH).
 The A–X band arises from electronic transitions between the A ¹Π excited state and the X ¹Σ⁺ ground state, producing a distinct band system near 432–434 nm. These spectra are widely used for determining rotational temperature and species concentration in plasmas, as well as for laboratory and astrophysical molecular spectroscopy.
