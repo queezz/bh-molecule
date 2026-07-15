@@ -5,7 +5,7 @@ description = "BH (boron hydride) A–X band spectrum model and fitting tools"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{ name = "Arseniy Kuzmin" }]
-license = { text = "MIT" }
+license = { file = "LICENSE" }
 dependencies = [
   "numpy>=1.26",
   "pandas>=2.0",
