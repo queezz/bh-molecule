@@ -32,6 +32,14 @@ H2_NUISANCE_LINES_NM: dict[str, float] = {
     "I_H2_R2": 433.5522,
 }
 
+# Intensity ratio I(R0/R1) / I(R2) of the two H2 Y 1 -> 2B 0 lines used when
+# their amplitudes are tied (``h2_r01_ratio``): Dieke's photoelectric
+# intensities I4 = 1.29 (4332.619 A, R0 with R1) and 1.20 (4335.522 A, R2),
+# Crosswhite (1972) Table T, pp. T104-T105, taken as a linear ratio. The eye
+# estimates of the same table give 0.9/0.8 (77 K discharge) and 1.0/1.0
+# (microwave discharge).
+DIEKE_H2_R01_OVER_R2: float = 1.29 / 1.20
+
 # Start values and bounds of the optional extra fit parameters, appended in
 # this order after (C, T_rot, dx, w_inst, base, I_R7, I_R8). base_slope is in
 # normalised intensity per nm (+-1 /nm is +-0.85 across the 0.85 nm window);
@@ -80,6 +88,13 @@ class BHModel:
         as free-amplitude Gaussians with the BH line width, on the same
         shifted grid ``x + dx`` as the BH lines; adds the fit parameters
         ``I_H2_R01`` and ``I_H2_R2``.
+    h2_r01_ratio : float or None, default None
+        Only with ``h2_lines=True``. ``None`` (default): the two H2 amplitudes
+        are free. A positive value ties them: the R0/R1 line (433.2619 nm)
+        gets ``h2_r01_ratio * I_H2_R2``, so only ``I_H2_R2`` is fitted. R0/R1
+        sits on BH Q(17) and the low-N Q lines and cannot be separated from
+        them by the fit; the tie takes its amplitude from the resolved R2
+        line. ``DIEKE_H2_R01_OVER_R2`` (1.29/1.20) is Dieke's ratio.
 
     Extra fit parameters are appended to the production signature of
     :meth:`full_fit_model` in the order of :attr:`extra_param_names`.
@@ -96,6 +111,7 @@ class BHModel:
         T_vib: float | None = None,
         baseline: str = "constant",
         h2_lines: bool = False,
+        h2_r01_ratio: float | None = None,
     ):
         # DataFrame with columns P,Q,R (wavelengths in nm). If not provided,
         # load the default v00 table from package resources.
@@ -116,6 +132,13 @@ class BHModel:
             raise ValueError(f"baseline must be one of {BASELINES}")
         if not isinstance(h2_lines, bool):
             raise ValueError("h2_lines must be True or False")
+        if h2_r01_ratio is not None:
+            if not h2_lines:
+                raise ValueError("h2_r01_ratio needs h2_lines=True")
+            if isinstance(h2_r01_ratio, bool) or not (
+                np.isfinite(float(h2_r01_ratio)) and float(h2_r01_ratio) > 0
+            ):
+                raise ValueError("h2_r01_ratio must be None or a positive number")
 
         self.v00_wl = v00_wl_df
         self.upper_energies = upper_energies
@@ -124,6 +147,7 @@ class BHModel:
         self.T_vib = None if T_vib is None else float(T_vib)
         self.baseline = baseline
         self.h2_lines = h2_lines
+        self.h2_r01_ratio = None if h2_r01_ratio is None else float(h2_r01_ratio)
 
         # Per-band line tables for band_positions="own" (v=0 is v00_wl).
         self._band_wl = {0: v00_wl_df}
@@ -202,7 +226,10 @@ class BHModel:
         if self.baseline == "linear":
             names.append("base_slope")
         if self.h2_lines:
-            names.extend(H2_NUISANCE_LINES_NM)
+            if self.h2_r01_ratio is None:
+                names.extend(H2_NUISANCE_LINES_NM)
+            else:
+                names.append("I_H2_R2")  # R0/R1 follows as h2_r01_ratio * I_H2_R2
         return tuple(names)
 
     @property
@@ -432,7 +459,8 @@ class BHModel:
         *extra : float
             Values of :attr:`extra_param_names`, in that order (none for the
             default model): ``base_slope`` [1/nm] for ``baseline="linear"``,
-            then ``I_H2_R01`` and ``I_H2_R2`` for ``h2_lines=True``.
+            then ``I_H2_R01`` and ``I_H2_R2`` for ``h2_lines=True`` (only
+            ``I_H2_R2`` when ``h2_r01_ratio`` ties the two).
 
         Returns
         -------
@@ -463,6 +491,9 @@ class BHModel:
         if self.baseline == "linear":
             y = y + values["base_slope"] * (np.asarray(x, dtype=float) - BASELINE_REF_NM)
         if self.h2_lines:
+            amps = dict(values)
+            if self.h2_r01_ratio is not None:
+                amps["I_H2_R01"] = self.h2_r01_ratio * values["I_H2_R2"]
             for name, wl in H2_NUISANCE_LINES_NM.items():
-                y = y + values[name] * self.line_profile(xs, wl, w_inst, T_tra)
+                y = y + amps[name] * self.line_profile(xs, wl, w_inst, T_tra)
         return y

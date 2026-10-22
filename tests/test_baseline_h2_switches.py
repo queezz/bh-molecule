@@ -16,6 +16,7 @@ import bh_molecule.workflows.batch_fit as batch_fit_mod
 from bh_molecule.fit import BHFitter
 from bh_molecule.physics import (
     BASELINE_REF_NM,
+    DIEKE_H2_R01_OVER_R2,
     EXTRA_PARAM_SPECS,
     H2_NUISANCE_LINES_NM,
     BHModel,
@@ -302,3 +303,87 @@ def test_run_bh_batch_default_model_is_production(monkeypatch, tmp_path):
     cols = pd.read_csv(shot_dir / "summary.csv").columns
     assert "base_slope" not in cols and "I_H2_R01" not in cols
     assert (shot_dir / "grid.pdf").exists() is False  # save_grid=False in _run
+
+
+# --- tied H2 amplitudes (session S5c, the C-prime systematic) --------------------------
+
+
+def test_dieke_ratio_is_the_photoelectric_intensity_ratio():
+    assert DIEKE_H2_R01_OVER_R2 == pytest.approx(1.29 / 1.20)
+    assert BHModel(h2_lines=True).h2_r01_ratio is None
+
+
+def test_tied_h2_lines_have_one_amplitude_equal_to_free_lines_at_the_ratio():
+    r = DIEKE_H2_R01_OVER_R2
+    free = BHModel(v_max=0, baseline="linear", h2_lines=True)
+    tied = BHModel(v_max=0, baseline="linear", h2_lines=True, h2_r01_ratio=r)
+    assert tied.extra_param_names == ("base_slope", "I_H2_R2")
+    lo, hi = tied.extra_bounds
+    assert tied.extra_p0 == (0.0, 1e-3)
+    assert (lo[1], hi[1]) == EXTRA_PARAM_SPECS["I_H2_R2"][1:]
+    slope, a2 = 0.15, 3e-3
+    assert np.allclose(
+        tied.full_fit_model(X_WIN, *_args(P7), slope, a2),
+        free.full_fit_model(X_WIN, *_args(P7), slope, r * a2, a2),
+        rtol=1e-13,
+        atol=1e-13,
+    )
+    with pytest.raises(TypeError):  # the free R0/R1 slot is gone
+        tied.full_fit_model(X_WIN, *_args(P7), slope, r * a2, a2)
+    # Without a baseline slope the single H2 amplitude is the only extra.
+    only = BHModel(v_max=0, h2_lines=True, h2_r01_ratio=2.0)
+    assert only.extra_param_names == ("I_H2_R2",)
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        dict(h2_r01_ratio=1.0),  # needs h2_lines=True
+        dict(h2_lines=True, h2_r01_ratio=0.0),
+        dict(h2_lines=True, h2_r01_ratio=-1.0),
+        dict(h2_lines=True, h2_r01_ratio=float("nan")),
+        dict(h2_lines=True, h2_r01_ratio=True),
+    ],
+)
+def test_invalid_h2_ratio_raises(kwargs):
+    with pytest.raises(ValueError):
+        BHModel(**kwargs)
+
+
+def test_fit_with_tied_h2_lines_recovers_temperature_and_the_shared_amplitude():
+    r = DIEKE_H2_R01_OVER_R2
+    tied = BHModel(v_max=0, baseline="linear", h2_lines=True, h2_r01_ratio=r)
+    y, scale = _synthetic(tied, extra=(0.2, 3e-3))
+    fitr = BHFitter(
+        vis=_DummyVis(X_WIN, y),
+        model=tied,
+        base_tight=True,
+        w_inst_default=W_FIX,
+        fix_w_inst=True,
+    )
+    fitr.set_bounds(lower={"base": -0.05}, upper={"base": 0.5})
+    assert fitr.param_names[7:] == ["base_slope", "I_H2_R2"]
+    res = fitr.fit(0, 0)
+    p = dict(zip(fitr.param_names, res["params"]))
+    assert res["params"].size == 9
+    assert p["T_rot"] == pytest.approx(P7["T_rot"], rel=0.05)
+    assert p["I_H2_R2"] == pytest.approx(3e-3 / scale, rel=0.15)
+
+
+def test_run_bh_batch_writes_one_h2_column_when_tied(monkeypatch, tmp_path):
+    _, _, shot_dir = _run(
+        monkeypatch,
+        tmp_path,
+        "100005",
+        model_options=dict(
+            upper_energies="fernando_bernath",
+            v_max=0,
+            baseline="linear",
+            h2_lines=True,
+            h2_r01_ratio=DIEKE_H2_R01_OVER_R2,
+        ),
+        bounds={"lower": {"base": -0.05}, "upper": {"base": 0.5}},
+    )
+    cols = pd.read_csv(shot_dir / "summary.csv").columns
+    assert "I_H2_R2" in cols and "I_H2_R2_err" in cols
+    assert "I_H2_R01" not in cols

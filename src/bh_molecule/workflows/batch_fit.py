@@ -240,7 +240,7 @@ def run_bh_batch(
     model_options : mapping or None
         Keyword arguments for :class:`~bh_molecule.physics.BHModel`
         (``upper_energies``, ``v_max``, ``band_positions``, ``T_vib``,
-        ``baseline``, ``h2_lines``).  ``None`` builds ``BHModel()``, the
+        ``baseline``, ``h2_lines``, ``h2_r01_ratio``).  ``None`` builds ``BHModel()``, the
         production model.  Extra fit parameters of the model (e.g.
         ``base_slope``) become extra columns of ``summary.csv``.
     run_fit_limit : int or None
