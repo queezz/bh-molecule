@@ -57,7 +57,7 @@ def test_defaults_add_no_parameters_and_fitter_keeps_seven():
     )
 
 
-@pytest.mark.parametrize("kwargs", [dict(baseline="quadratic"), dict(h2_lines="yes")])
+@pytest.mark.parametrize("kwargs", [dict(baseline="cubic"), dict(h2_lines="yes")])
 def test_invalid_switch_values_raise(kwargs):
     with pytest.raises(ValueError):
         BHModel(**kwargs)

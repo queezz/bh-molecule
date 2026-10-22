@@ -1,8 +1,15 @@
-from dataclasses import dataclass
 import enum
 import numpy as np
 import scipy.constants as spc
-from .constants import MolecularConstants, BH_X, BH_A, BH_A_FB91
+from .constants import MolecularConstants, BH_A, BH_A_FB91
+from .isotopes import (
+    BH10_OVER_BH11,
+    BH10_POSITIONS,
+    bh10_q_wavenumbers,
+    bh10_r11_wavenumbers,
+    bh10_upper_f_energy,
+    wavenumber_to_air_nm,
+)
 
 
 class Branch(enum.Enum):
@@ -14,7 +21,20 @@ class Branch(enum.Enum):
 # Sensitivity switches of `BHModel`; the first entry is the production default.
 UPPER_ENERGIES = ("huber_herzberg", "fernando_bernath")
 BAND_POSITIONS = ("v00", "own")
-BASELINES = ("constant", "linear")
+BASELINES = ("constant", "linear", "quadratic")
+ISOTOPOLOGUES = ("11BH", "natural")
+H2_LINE_SETS = (False, True, "R2")
+ROT_COMPONENTS = (1, 2)
+
+# Unidentified features in the fit window used as optional free nuisance
+# lines (``extra_lines``), rest-frame air wavelengths [nm]: F1 on the blue
+# foot of the Q head and F3 next to Q(22), found in the mean residuals of the
+# production and set C fits (paper repo S1, S5b, S7b, S5d: F1 433.09-433.12,
+# F3 433.745-433.755 nm in the rest frame).
+EXTRA_LINES_NM: dict[str, float] = {
+    "F1": 433.100,
+    "F3": 433.750,
+}
 
 # Reference wavelength of the linear baseline [nm]: the centre of the
 # production fit window 433.05-433.90 nm. Fixed (not the centre of whatever
@@ -47,8 +67,17 @@ DIEKE_H2_R01_OVER_R2: float = 1.29 / 1.20
 EXTRA_PARAM_SPECS: dict[str, tuple[float, float, float]] = {
     # name: (p0, lower, upper)
     "base_slope": (0.0, -1.0, 1.0),
+    # base_curv [1/nm^2] of baseline="quadratic": +-5 is +-0.9 at 433.05 nm
+    # and +-0.5 at 433.80 nm, far above the 0.2-0.4 the data take.
+    "base_curv": (0.0, -5.0, 5.0),
     "I_H2_R01": (1e-3, 0.0, 1.0),
     "I_H2_R2": (1e-3, 0.0, 1.0),
+    "I_F1": (1e-3, 0.0, 1.0),
+    "I_F3": (1e-3, 0.0, 1.0),
+    # second rotational component of rot_components=2 [K] and its population
+    # fraction; the first component is the production T_rot.
+    "T_rot2": (6000.0, 200.0, 30000.0),
+    "frac2": (0.1, 0.0, 1.0),
 }
 
 
@@ -78,16 +107,21 @@ class BHModel:
         ``None`` (default): every band is normalised at its own N = 1 level,
         with no vibrational population factor. A value in K weights band v by
         ``exp(-(T_v - T_0) / (k T_vib))`` with the F&B band origins T_v.
-    baseline : {"constant", "linear"}
+    baseline : {"constant", "linear", "quadratic"}
         ``"constant"`` (default): the baseline is the constant ``base``.
         ``"linear"``: ``base + base_slope * (x - BASELINE_REF_NM)`` on the
         measured (unshifted) wavelength grid; adds the fit parameter
         ``base_slope`` [1/nm].
-    h2_lines : bool, default False
+        ``"quadratic"``: the linear form plus
+        ``base_curv * (x - BASELINE_REF_NM)**2``; adds ``base_slope`` and
+        ``base_curv`` [1/nm^2], the curvature bounded to +-5 /nm^2.
+    h2_lines : {False, True, "R2"}, default False
         ``True`` adds the two H2 Y 1 -> 2B 0 lines of ``H2_NUISANCE_LINES_NM``
         as free-amplitude Gaussians with the BH line width, on the same
         shifted grid ``x + dx`` as the BH lines; adds the fit parameters
-        ``I_H2_R01`` and ``I_H2_R2``.
+        ``I_H2_R01`` and ``I_H2_R2``. ``"R2"`` adds the resolved R2 line
+        only (``I_H2_R2``), for fits that exclude the R0/R1 region from the
+        data instead (``BHFitter(exclude_nm=...)``).
     h2_r01_ratio : float or None, default None
         Only with ``h2_lines=True``. ``None`` (default): the two H2 amplitudes
         are free. A positive value ties them: the R0/R1 line (433.2619 nm)
@@ -95,6 +129,29 @@ class BHModel:
         sits on BH Q(17) and the low-N Q lines and cannot be separated from
         them by the fit; the tie takes its amplitude from the resolved R2
         line. ``DIEKE_H2_R01_OVER_R2`` (1.29/1.20) is Dieke's ratio.
+    isotopologue : {"11BH", "natural"}, default "11BH"
+        ``"natural"`` adds 10BH at its natural share (``BH10_FRACTION`` =
+        0.199 of BH, i.e. 0.248 of 11BH), at the same T_rot: the 10BH (0-0)
+        Q lines with their own f-level energies, each isotopologue
+        normalised by its own rotational partition function, and the 10BH
+        (1-1) R(7)/R(8) lines at 0.248 times the free 11BH R(7)/R(8)
+        amplitudes (F&B Table V positions). No extra fit parameters. Needs
+        ``upper_energies="fernando_bernath"`` and ``v_max=0``.
+    bh10_positions : {"fb91", "mass_scaled"}, default "fb91"
+        10BH Q-line positions and energies with ``isotopologue="natural"``
+        (:mod:`bh_molecule.isotopes`): F&B Table V where measured and their
+        Table VII constants elsewhere, or the mass-scaled 11BH Dunham set.
+        They differ for Q(13) and above (see the module).
+    extra_lines : tuple of {"F1", "F3"}, default ()
+        Unidentified window features of ``EXTRA_LINES_NM`` added as
+        free-amplitude Gaussians with the BH line width on the shifted grid,
+        like the H2 lines; adds ``I_F1``, ``I_F3`` (bounds [0, 1]).
+    rot_components : {1, 2}, default 1
+        ``2`` makes the upper-state population a sum of two Boltzmann
+        distributions, ``(1 - frac2) n(T_rot) + frac2 n(T_rot2)``, each
+        normalised by its partition function, scaled so that ``frac2 = 0``
+        is the one-temperature model with the same ``C``. Adds ``T_rot2``
+        [K] and ``frac2``. Needs ``v_max=0``.
 
     Extra fit parameters are appended to the production signature of
     :meth:`full_fit_model` in the order of :attr:`extra_param_names`.
@@ -110,8 +167,12 @@ class BHModel:
         band_positions: str = "v00",
         T_vib: float | None = None,
         baseline: str = "constant",
-        h2_lines: bool = False,
+        h2_lines: bool | str = False,
         h2_r01_ratio: float | None = None,
+        isotopologue: str = "11BH",
+        bh10_positions: str = "fb91",
+        extra_lines: tuple[str, ...] = (),
+        rot_components: int = 1,
     ):
         # DataFrame with columns P,Q,R (wavelengths in nm). If not provided,
         # load the default v00 table from package resources.
@@ -130,15 +191,37 @@ class BHModel:
             raise ValueError("T_vib must be None or a positive temperature [K]")
         if baseline not in BASELINES:
             raise ValueError(f"baseline must be one of {BASELINES}")
-        if not isinstance(h2_lines, bool):
-            raise ValueError("h2_lines must be True or False")
+        if not (isinstance(h2_lines, bool) or h2_lines == "R2"):
+            raise ValueError("h2_lines must be True, False or 'R2'")
         if h2_r01_ratio is not None:
-            if not h2_lines:
+            if h2_lines is not True:
                 raise ValueError("h2_r01_ratio needs h2_lines=True")
             if isinstance(h2_r01_ratio, bool) or not (
                 np.isfinite(float(h2_r01_ratio)) and float(h2_r01_ratio) > 0
             ):
                 raise ValueError("h2_r01_ratio must be None or a positive number")
+        if isotopologue not in ISOTOPOLOGUES:
+            raise ValueError(f"isotopologue must be one of {ISOTOPOLOGUES}")
+        if bh10_positions not in BH10_POSITIONS:
+            raise ValueError(f"bh10_positions must be one of {BH10_POSITIONS}")
+        if isotopologue == "natural" and (
+            upper_energies != "fernando_bernath" or int(v_max) != 0
+        ):
+            raise ValueError(
+                "isotopologue='natural' needs upper_energies='fernando_bernath' and v_max=0"
+            )
+        if isinstance(extra_lines, str):
+            extra_lines = (extra_lines,)
+        extra_lines = tuple(extra_lines)
+        unknown = [n for n in extra_lines if n not in EXTRA_LINES_NM]
+        if unknown or len(set(extra_lines)) != len(extra_lines):
+            raise ValueError(
+                f"extra_lines must be distinct names from {tuple(EXTRA_LINES_NM)}"
+            )
+        if isinstance(rot_components, bool) or rot_components not in ROT_COMPONENTS:
+            raise ValueError(f"rot_components must be one of {ROT_COMPONENTS}")
+        if rot_components == 2 and int(v_max) != 0:
+            raise ValueError("rot_components=2 needs v_max=0")
 
         self.v00_wl = v00_wl_df
         self.upper_energies = upper_energies
@@ -148,6 +231,12 @@ class BHModel:
         self.baseline = baseline
         self.h2_lines = h2_lines
         self.h2_r01_ratio = None if h2_r01_ratio is None else float(h2_r01_ratio)
+        self.isotopologue = isotopologue
+        self.bh10_positions = bh10_positions
+        # keep the EXTRA_LINES_NM order whatever order was given
+        self.extra_lines = tuple(n for n in EXTRA_LINES_NM if n in extra_lines)
+        self.rot_components = int(rot_components)
+        self._bh10 = self._bh10_tables() if isotopologue == "natural" else None
 
         # Per-band line tables for band_positions="own" (v=0 is v00_wl).
         self._band_wl = {0: v00_wl_df}
@@ -223,13 +312,20 @@ class BHModel:
         """Fit parameters added by the switches, appended after
         ``(C, T_rot, dx, w_inst, base, I_R7, I_R8)``; empty for the defaults."""
         names: list[str] = []
-        if self.baseline == "linear":
+        if self.baseline in ("linear", "quadratic"):
             names.append("base_slope")
-        if self.h2_lines:
+        if self.baseline == "quadratic":
+            names.append("base_curv")
+        if self.h2_lines == "R2":
+            names.append("I_H2_R2")
+        elif self.h2_lines:
             if self.h2_r01_ratio is None:
                 names.extend(H2_NUISANCE_LINES_NM)
             else:
                 names.append("I_H2_R2")  # R0/R1 follows as h2_r01_ratio * I_H2_R2
+        names.extend(f"I_{n}" for n in self.extra_lines)
+        if self.rot_components == 2:
+            names.extend(("T_rot2", "frac2"))
         return tuple(names)
 
     @property
@@ -250,6 +346,69 @@ class BHModel:
         """Line centres [nm] indexed by table row J, under ``band_positions``."""
         table = self.v00_wl if self.band_positions == "v00" else self._band_wl[v]
         return table[branch.value].to_numpy()
+
+    # MARK: 10BH, partition, two-T
+    def _bh10_tables(self) -> dict:
+        """10BH Q-line positions [nm, air], f-level energies and R(7)/R(8) [nm]."""
+        wn, src = bh10_q_wavenumbers(N_max=30, scheme=self.bh10_positions)
+        N = np.arange(wn.size)
+        r11 = bh10_r11_wavenumbers(self.bh10_positions)
+        return {
+            "wl_Q": np.asarray(wavenumber_to_air_nm(wn), dtype=float),
+            "source_Q": src,
+            "E_f": np.asarray(bh10_upper_f_energy(N, 0, self.bh10_positions), dtype=float),
+            "wl_R7": float(wavenumber_to_air_nm(r11[7])),
+            "wl_R8": float(wavenumber_to_air_nm(r11[8])),
+        }
+
+    def _f_level_offsets(self, isotope: str = "11BH", N2_max: int = 22) -> np.ndarray:
+        """f-level energies above N = 1 [cm^-1] of the (v=0) Q-branch upper levels, N = 1..N2_max."""
+        cache = self.__dict__.setdefault("_f_offsets", {})
+        key = (isotope, int(N2_max))
+        if key not in cache:
+            N = np.arange(1, N2_max + 1)
+            if isotope == "10BH":
+                E = self._bh10["E_f"][N] - self._bh10["E_f"][1]
+            else:
+                E = np.array([self.upper_energy(0, int(n), Branch.Q) for n in N])
+                E = E - self.upper_energy(0, 1, Branch.Q)
+            cache[key] = E
+        return cache[key]
+
+    def rot_partition(self, T_rot: float, isotope: str = "11BH", N2_max: int = 22) -> float:
+        r"""Rotational partition sum of the Q-branch upper levels (v' = 0, f),
+        :math:`Z = \sum_{N=1}^{N_2^{max}} (2N+1)\,e^{-\Delta F_N / k T}`, with
+        :math:`\Delta F_N` above N = 1, as :meth:`spectrum` weights them."""
+        N = np.arange(1, N2_max + 1)
+        dF = self._f_level_offsets(isotope, N2_max)
+        return float(np.sum((2 * N + 1) * np.exp(-dF / (T_rot * self.K2wn))))
+
+    def bh10_spectrum(
+        self, x: np.ndarray, T_rot: float, w_inst: float, T_tra: float, N2_max: int = 22
+    ) -> np.ndarray:
+        """10BH (0-0) Q branch with C = 1, normalised like the 11BH :meth:`spectrum`
+        (each at its own N = 1); see :meth:`full_fit_model` for the abundance
+        and partition-function scaling."""
+        if self._bh10 is None:
+            raise ValueError("bh10_spectrum needs isotopologue='natural'")
+        y = np.zeros_like(x, dtype=float)
+        dF = self._f_level_offsets("10BH", N2_max)
+        for i, N2 in enumerate(range(1, N2_max + 1)):
+            wl = self._bh10["wl_Q"][N2]
+            pop = self.g_as * (2 * N2 + 1) * np.exp(-dF[i] / (T_rot * self.K2wn))
+            photon_E = spc.h * (spc.c / (wl * 1e-9)) / (4 * np.pi)
+            A_ul = self.A_coeff(0, N2, N2)
+            y += photon_E * pop * A_ul * self.line_profile(x, wl, w_inst, T_tra)
+        return y
+
+    def q_band(self, xs: np.ndarray, T_rot: float, w_inst: float, T_tra: float = 0.0) -> np.ndarray:
+        """Q-branch emission with C = 1 on the shifted grid ``xs``: 11BH, plus
+        10BH at ``BH10_OVER_BH11 * Z11 / Z10`` for ``isotopologue="natural"``."""
+        y = self.spectrum(xs, 1.0, T_rot, w_inst, T_tra, Branch.Q)
+        if self._bh10 is not None:
+            scale = BH10_OVER_BH11 * self.rot_partition(T_rot) / self.rot_partition(T_rot, "10BH")
+            y = y + scale * self.bh10_spectrum(xs, T_rot, w_inst, T_tra)
+        return y
 
     # MARK: line prof
     def line_profile(self, x, wl, w_inst, T):
@@ -458,9 +617,12 @@ class BHModel:
             Amplitude of auxiliary line at :math:`\lambda_{R8}`.
         *extra : float
             Values of :attr:`extra_param_names`, in that order (none for the
-            default model): ``base_slope`` [1/nm] for ``baseline="linear"``,
+            default model): ``base_slope`` [1/nm] for ``baseline="linear"``
+            (and ``base_curv`` [1/nm^2] after it for ``"quadratic"``),
             then ``I_H2_R01`` and ``I_H2_R2`` for ``h2_lines=True`` (only
-            ``I_H2_R2`` when ``h2_r01_ratio`` ties the two).
+            ``I_H2_R2`` when ``h2_r01_ratio`` ties the two, or for
+            ``h2_lines="R2"``), then ``I_F1``, ``I_F3`` of ``extra_lines``,
+            then ``T_rot2``, ``frac2`` for ``rot_components=2``.
 
         Returns
         -------
@@ -479,21 +641,48 @@ class BHModel:
         wl_R8 = 433.3350058444114  # 1-1, R8
         T_tra = 0.0
         xs = x + dx
+        values = dict(zip(names, extra))
+        if self._bh10 is None and self.rot_components == 1:
+            # production path, unchanged
+            band = 1e8 * self.spectrum(xs, C, T_rot, w_inst, T_tra, Branch.Q)
+        else:
+            band = self.q_band(xs, T_rot, w_inst, T_tra)
+            if self.rot_components == 2:
+                T2, f2 = values["T_rot2"], values["frac2"]
+                ratio = self.rot_partition(T_rot) / self.rot_partition(T2)
+                band = (1.0 - f2) * band + f2 * ratio * self.q_band(xs, T2, w_inst, T_tra)
+            band = 1e8 * C * band
         y = (
-            1e8 * self.spectrum(xs, C, T_rot, w_inst, T_tra, Branch.Q)
+            band
             + I_R7 * self.line_profile(xs, wl_R7, w_inst, T_tra)
             + I_R8 * self.line_profile(xs, wl_R8, w_inst, T_tra)
             + base
         )
+        if self._bh10 is not None:
+            # 10BH (1-1) R(7)/R(8) at the natural share of the free 11BH amplitudes
+            y = y + BH10_OVER_BH11 * (
+                I_R7 * self.line_profile(xs, self._bh10["wl_R7"], w_inst, T_tra)
+                + I_R8 * self.line_profile(xs, self._bh10["wl_R8"], w_inst, T_tra)
+            )
         if not names:
             return y
-        values = dict(zip(names, extra))
-        if self.baseline == "linear":
-            y = y + values["base_slope"] * (np.asarray(x, dtype=float) - BASELINE_REF_NM)
-        if self.h2_lines:
+        if self.baseline in ("linear", "quadratic"):
+            u = np.asarray(x, dtype=float) - BASELINE_REF_NM
+            y = y + values["base_slope"] * u
+            if self.baseline == "quadratic":
+                y = y + values["base_curv"] * u**2
+        if self.h2_lines == "R2":
+            y = y + values["I_H2_R2"] * self.line_profile(
+                xs, H2_NUISANCE_LINES_NM["I_H2_R2"], w_inst, T_tra
+            )
+        elif self.h2_lines:
             amps = dict(values)
             if self.h2_r01_ratio is not None:
                 amps["I_H2_R01"] = self.h2_r01_ratio * values["I_H2_R2"]
             for name, wl in H2_NUISANCE_LINES_NM.items():
                 y = y + amps[name] * self.line_profile(xs, wl, w_inst, T_tra)
+        for name in self.extra_lines:
+            y = y + values[f"I_{name}"] * self.line_profile(
+                xs, EXTRA_LINES_NM[name], w_inst, T_tra
+            )
         return y

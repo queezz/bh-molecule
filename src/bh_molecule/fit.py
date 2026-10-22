@@ -18,6 +18,9 @@ DEFAULT_DX_TOL_NM: float = 0.3
 # allowed to absorb the BH band by freely raising the baseline.
 DEFAULT_BASE_TIGHT_NM: float = 0.03
 
+# Units of the model's optional extra parameters (others are dimensionless).
+_EXTRA_UNITS: dict[str, str] = {"base_slope": "1/nm", "base_curv": "1/nm^2", "T_rot2": "K"}
+
 
 class BHFitter:
     """Blackbody-Hydrogen molecular spectrum fitter.
@@ -58,6 +61,15 @@ class BHFitter:
     warm_start : bool, optional
         If True reuse the last found parameters as initial guess for the
         next fit. Defaults to False.
+    exclude_nm : sequence of (lo, hi) or None, optional
+        Wavelength ranges [nm] given zero weight: their points are dropped
+        before the fit, and ``x``, ``y``, ``yfit`` (hence R2) cover the rest.
+        ``None`` (default) fits every point.
+    exclude_frame : {"rest", "measured"}, optional
+        Frame of ``exclude_nm``. ``"rest"`` (default): the model frame
+        ``x + dx``, where line positions are fixed; a first fit of all
+        points gives ``dx`` and starts the second. ``"measured"``: the data
+        grid.
 
     Attributes
     ----------
@@ -89,10 +101,19 @@ class BHFitter:
         w_inst_bounds=None,
         fix_w_inst=False,
         dx_tol_nm=None,
+        exclude_nm=None,
+        exclude_frame="rest",
     ):
         self.vis = vis
         self.model = model
         self.nm_window = tuple(map(float, nm_window))
+        # Wavelength ranges left out of the fit (zero weight). "rest": the
+        # ranges are in the model's rest frame x + dx, placed with dx from a
+        # first fit of all points; "measured": on the data grid as given.
+        self.exclude_nm = self._check_exclude(exclude_nm)
+        if exclude_frame not in ("rest", "measured"):
+            raise ValueError("exclude_frame must be 'rest' or 'measured'")
+        self.exclude_frame = exclude_frame
         self.maxfev = int(maxfev)
         self.weight = weight
         self.warm_start = bool(warm_start)
@@ -109,7 +130,7 @@ class BHFitter:
         if extra_names:
             self.param_names = self.param_names + list(extra_names)
             self.param_units = self.param_units + [
-                "1/nm" if n == "base_slope" else "" for n in extra_names
+                _EXTRA_UNITS.get(n, "") for n in extra_names
             ]
         self.p0 = self._extend_to_model(p0, getattr(model, "extra_p0", ()))
         extra_lo, extra_hi = getattr(model, "extra_bounds", ((), ()))
@@ -196,6 +217,26 @@ class BHFitter:
             self._w_inst_fixed_value = w_fixed
         else:
             self._w_inst_fixed_value = None
+
+    @staticmethod
+    def _check_exclude(exclude_nm) -> tuple[tuple[float, float], ...]:
+        if exclude_nm is None:
+            return ()
+        out = []
+        for rng in exclude_nm:
+            lo, hi = (float(rng[0]), float(rng[1]))
+            if not lo < hi:
+                raise ValueError(f"exclude_nm range {rng!r} must satisfy lo < hi")
+            out.append((lo, hi))
+        return tuple(out)
+
+    def _excluded(self, x) -> np.ndarray:
+        """Boolean mask of ``x`` inside any ``exclude_nm`` range."""
+        x = np.asarray(x, dtype=float)
+        m = np.zeros(x.shape, dtype=bool)
+        for lo, hi in self.exclude_nm:
+            m |= (x >= lo) & (x <= hi)
+        return m
 
     def _extend_to_model(self, values, extra_values) -> np.ndarray:
         """Return ``values`` as a float array of length ``len(param_names)``.
@@ -366,6 +407,8 @@ class BHFitter:
             "preprocess": (
                 "callable" if self._preprocess is not None else None
             ),
+            "exclude_nm": [list(r) for r in self.exclude_nm],
+            "exclude_frame": self.exclude_frame,
         }
 
     # MARK: Fit
@@ -410,6 +453,39 @@ class BHFitter:
             )
         else:
             p0 = self._extend_to_model(p0, getattr(self.model, "extra_p0", ()))
+
+        if self.exclude_nm:
+            # Zero weight inside the excluded ranges: the points are dropped.
+            # In the rest frame, a first fit of all points places them.
+            shift = 0.0
+            if self.exclude_frame == "rest":
+                first, _ = self._curve_fit(x, y, p0)
+                shift = float(first[self.param_names.index("dx")])
+                p0 = first
+            keep = ~self._excluded(x + shift)
+            x, y = x[keep], y[keep]
+
+        params, cov = self._curve_fit(x, y, p0)
+        self._last_params = params.copy()
+        res = {
+            "frame": frame,
+            "channel": channel,
+            "params": params,
+            "cov": cov,
+            "errors": np.sqrt(np.diag(cov)),
+            "summary": self._format_table(
+                params, cov, self.param_names, self.param_units
+            ),
+            "x": x,
+            "y": y,
+        }
+        if return_fit:
+            res["yfit"] = self._f(x, *params)
+        return res
+
+    def _curve_fit(self, x, y, p0):
+        """One bounded least-squares fit of ``x, y`` from ``p0``; returns
+        ``(params, cov)`` in the full parameter layout."""
         sigma = self._sigma(x, y)
 
         if self._fix_w_inst:
@@ -442,22 +518,7 @@ class BHFitter:
                 sigma=sigma,
                 absolute_sigma=bool(sigma is not None),
             )
-        self._last_params = params.copy()
-        res = {
-            "frame": frame,
-            "channel": channel,
-            "params": params,
-            "cov": cov,
-            "errors": np.sqrt(np.diag(cov)),
-            "summary": self._format_table(
-                params, cov, self.param_names, self.param_units
-            ),
-            "x": x,
-            "y": y,
-        }
-        if return_fit:
-            res["yfit"] = self._f(x, *params)
-        return res
+        return params, cov
 
     def set_bounds(self, lower=None, upper=None):
         """Update parameter bounds for the fitter.

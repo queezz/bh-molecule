@@ -2,6 +2,17 @@
 
 Dated record of shipped work, newest first; per-session detail in `log/`.
 
+## 2026-10-23
+
+- S5e refinement switches for the NME revision (Reviewer 1 critical read):
+  `BHModel(isotopologue="natural", bh10_positions="fb91"|"mass_scaled")` (10BH at
+  0.199 of BH, new `isotopes.py` with F&B Tables V, VII, VIII), `extra_lines=("F1",
+  "F3")` (free lines at 433.100/433.750 nm), `baseline="quadratic"`,
+  `h2_lines="R2"`, `rot_components=2` (two Boltzmann components), and
+  `BHFitter(exclude_nm=..., exclude_frame=...)`. Defaults and set C unchanged.
+  Found: F&B Table V's 10BH Q(18)-Q(20) disagree with mass scaling by 2.4-5.5
+  cm^-1. See `log/2026-10-23-s5e-refinement-switches.md`.
+
 ## 2026-10-22
 
 - S5c switch `BHModel(h2_r01_ratio=...)`: ties the H2 R0/R1 amplitude at 433.2619 nm
