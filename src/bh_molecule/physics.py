@@ -2,7 +2,7 @@ from dataclasses import dataclass
 import enum
 import numpy as np
 import scipy.constants as spc
-from .constants import MolecularConstants, BH_X, BH_A
+from .constants import MolecularConstants, BH_X, BH_A, BH_A_FB91
 
 
 class Branch(enum.Enum):
@@ -11,12 +11,50 @@ class Branch(enum.Enum):
     R = "R"
 
 
+# Sensitivity switches of `BHModel`; the first entry is the production default.
+UPPER_ENERGIES = ("huber_herzberg", "fernando_bernath")
+BAND_POSITIONS = ("v00", "own")
+
+
 class BHModel:
     """BH spectroscopy model.
     See Also [Physics explainer](../phys.md)
+
+    Parameters
+    ----------
+    v00_wl_df : DataFrame, optional
+        0-0 line positions (columns J, P, Q, R in nm); default from resources.
+    upper_energies : {"huber_herzberg", "fernando_bernath"}
+        Upper A-state term values used in the rotational population weights.
+        ``"huber_herzberg"`` (default) is :meth:`energy` with ``BH_A``.
+        ``"fernando_bernath"`` is Fernando & Bernath (1991) Eq. (1) with the
+        per-level Table III constants ``BH_A_FB91``, on the f level for Q lines
+        and the e level for P/R lines.
+    v_max : int, default 2
+        Highest upper vibrational level summed by :meth:`spectrum` (when its
+        own ``v_max`` is not given) and hence by :meth:`full_fit_model`.
+        ``v_max=0`` is the 0-0-only model.
+    band_positions : {"v00", "own"}
+        ``"v00"`` (default) puts the lines of every band at the 0-0 positions.
+        ``"own"`` uses each band's measured positions (F&B Table I, resources
+        ``11BH_v11.csv``, ``11BH_v22.csv``) and skips lines not observed there.
+    T_vib : float or None
+        ``None`` (default): every band is normalised at its own N = 1 level,
+        with no vibrational population factor. A value in K weights band v by
+        ``exp(-(T_v - T_0) / (k T_vib))`` with the F&B band origins T_v.
+
+    The defaults reproduce the production model exactly.
     """
 
-    def __init__(self, v00_wl_df=None):
+    def __init__(
+        self,
+        v00_wl_df=None,
+        *,
+        upper_energies: str = "huber_herzberg",
+        v_max: int = 2,
+        band_positions: str = "v00",
+        T_vib: float | None = None,
+    ):
         # DataFrame with columns P,Q,R (wavelengths in nm). If not provided,
         # load the default v00 table from package resources.
         if v00_wl_df is None:
@@ -24,7 +62,28 @@ class BHModel:
 
             v00_wl_df = load_v00_wavelengths()
 
+        if upper_energies not in UPPER_ENERGIES:
+            raise ValueError(f"upper_energies must be one of {UPPER_ENERGIES}")
+        if band_positions not in BAND_POSITIONS:
+            raise ValueError(f"band_positions must be one of {BAND_POSITIONS}")
+        if int(v_max) not in (0, 1, 2):
+            raise ValueError("v_max must be 0, 1, or 2")
+        if T_vib is not None and not float(T_vib) > 0:
+            raise ValueError("T_vib must be None or a positive temperature [K]")
+
         self.v00_wl = v00_wl_df
+        self.upper_energies = upper_energies
+        self.v_max = int(v_max)
+        self.band_positions = band_positions
+        self.T_vib = None if T_vib is None else float(T_vib)
+
+        # Per-band line tables for band_positions="own" (v=0 is v00_wl).
+        self._band_wl = {0: v00_wl_df}
+        if band_positions == "own":
+            from .dataio import load_band_wavelengths
+
+            for v in (1, 2):
+                self._band_wl[v] = load_band_wavelengths(v)
         # Conversion constants
         self.K2wn = spc.Boltzmann / (spc.h * spc.c * 100)  # cm⁻¹ per K
         self.K2eV = spc.Boltzmann / spc.eV  # eV K⁻¹
@@ -62,6 +121,35 @@ class BHModel:
         )
         F = B_v * N * (N + 1) - D_v * N**2 * (N + 1) ** 2
         return c.T_e + G + F
+
+    def upper_energy(self, v: int, N: int, branch: Branch = Branch.Q) -> float:
+        r"""Upper A-state term value [cm⁻¹] under the ``upper_energies`` switch.
+
+        ``"huber_herzberg"``: :meth:`energy` with ``BH_A``. ``"fernando_bernath"``:
+        F&B (1991) Eq. (1) with ``BH_A_FB91[v]``; the upper level of a Q line is
+        the f component, of a P or R line the e component.
+        """
+        if self.upper_energies == "huber_herzberg":
+            return self.energy(v, N, BH_A)
+        parity = "f" if branch is Branch.Q else "e"
+        return float(BH_A_FB91[v].term(N, parity))
+
+    def vib_weight(self, v: int) -> float:
+        r"""Vibrational population factor of band v relative to v = 0.
+
+        1 when ``T_vib`` is None (each band normalised at its own N = 1);
+        otherwise :math:`\exp[-(T_v - T_0)/(k_B T_{\rm vib})]` with the F&B
+        Table III band origins.
+        """
+        if self.T_vib is None:
+            return 1.0
+        G = BH_A_FB91[v].T_v - BH_A_FB91[0].T_v
+        return float(np.exp(-G / (self.T_vib * self.K2wn)))
+
+    def _line_positions(self, v: int, branch: Branch) -> np.ndarray:
+        """Line centres [nm] indexed by table row J, under ``band_positions``."""
+        table = self.v00_wl if self.band_positions == "v00" else self._band_wl[v]
+        return table[branch.value].to_numpy()
 
     # MARK: line prof
     def line_profile(self, x, wl, w_inst, T):
@@ -141,7 +229,7 @@ class BHModel:
         w_inst: float,
         T_tra: float,
         branch: Branch,
-        v_max: int = 2,
+        v_max: int | None = None,
         N2_max: int = 22,
     ) -> np.ndarray:
         r"""Branch spectrum on a wavelength grid; sums Gaussian lines over P/Q/R.
@@ -160,8 +248,9 @@ class BHModel:
             Translational temperature [K] for Doppler.
         branch : Branch
             Rotational branch to synthesize.
-        v_max : int, default 2
-            Highest upper vibrational level :math:`v'` (inclusive).
+        v_max : int, optional
+            Highest upper vibrational level :math:`v'` (inclusive); defaults to
+            the model's ``v_max`` (2 unless the model was built otherwise).
         N2_max : int, default 22
             Highest upper rotational level :math:`N_2` (inclusive).
 
@@ -172,12 +261,12 @@ class BHModel:
 
         See Also [Physics explainer — spectrum](../phys.md#spectrum)
         """
+        if v_max is None:
+            v_max = self.v_max
+
         # Map branch to ΔN = N2 - N1
         DELTA_N = {Branch.P: -1, Branch.Q: 0, Branch.R: +1}
         dN = DELTA_N[branch]
-
-        # Wavelengths (nm) for the chosen branch from the X-state table
-        wl_nm = self.v00_wl[branch.value].to_numpy()
 
         # Output spectrum
         y = np.zeros_like(x, dtype=float)
@@ -185,11 +274,16 @@ class BHModel:
         # Convenience aliases
         g_as = self.g_as  # electronic degeneracy factor
         K2wn = self.K2wn  # K -> cm^-1
-        Aconst = BH_A  # upper-state (A) constants
+        own_positions = self.band_positions == "own"
 
         for v in range(0, v_max + 1):
+            # Wavelengths (nm) for the chosen branch, rows indexed by table J
+            # (the lower-state J, so the N2 lookup below is exact for Q only)
+            wl_nm = self._line_positions(v, branch)
+
             # Reference energy for population normalization in this v'
-            E_ref = self.energy(v, 1, Aconst)
+            E_ref = self.upper_energy(v, 1, branch)
+            w_vib = self.vib_weight(v)
 
             for N2 in range(1, N2_max + 1):
                 N1 = N2 - dN  # since dN = N2 - N1
@@ -198,12 +292,17 @@ class BHModel:
                 if N1 < 0:
                     continue
 
+                # Own band positions: skip lines the band's table does not list
+                if own_positions and (N2 >= wl_nm.size or not np.isfinite(wl_nm[N2])):
+                    continue
+
                 # --- Upper-state A-term energies (parametric) ---
-                E_u = self.energy(v, N2, Aconst)  # cm^-1
+                E_u = self.upper_energy(v, N2, branch)  # cm^-1
                 ΔF = E_u - E_ref  # cm^-1
 
                 # Boltzmann-weighted A-state population (up to a scale C)
                 pop_rot = C * g_as * (2 * N2 + 1) * np.exp(-ΔF / (T_rot * K2wn))
+                pop_rot = pop_rot * w_vib
 
                 # --- Lower-state X-term only via tabulated line center (nm) ---
                 λ0 = wl_nm[N2]  # line position for this branch and N2

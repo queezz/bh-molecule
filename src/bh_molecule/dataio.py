@@ -25,22 +25,28 @@ def n_air(wl_nm: float | np.ndarray) -> float | np.ndarray:
 
 def load_v00_wavelengths() -> pd.DataFrame:
     """Load 11BH_v00.csv from package resources and convert to wavelengths (nm)."""
-    with (
-        resources.files("bh_molecule._resources")
-        .joinpath("11BH_v00.csv")
-        .open("rb") as f
-    ):
-        v00_wn = pd.read_csv(f, comment="#")
+    return load_band_wavelengths(0)
+
+
+def load_band_wavelengths(v: int) -> pd.DataFrame:
+    """Load the measured ``v-v`` band line list (11BH_v{v}{v}.csv) in air wavelengths (nm).
+
+    The tables are Fernando & Bernath (1991) Table I (11BH, printed p. 395),
+    rows indexed by the lower-state J; unobserved lines are NaN.
+    """
+    name = f"11BH_v{int(v)}{int(v)}.csv"
+    with resources.files("bh_molecule._resources").joinpath(name).open("rb") as f:
+        v_wn = pd.read_csv(f, comment="#")
 
     branch_cols = ["P", "Q", "R"]
-    missing = [c for c in branch_cols if c not in v00_wn.columns]
+    missing = [c for c in branch_cols if c not in v_wn.columns]
     if missing:
-        raise ValueError(f"Missing expected columns in 11BH_v00.csv: {missing}")
+        raise ValueError(f"Missing expected columns in {name}: {missing}")
 
-    wl_vac_nm = 1e7 / v00_wn[branch_cols]
+    wl_vac_nm = 1e7 / v_wn[branch_cols]
     wl_air_nm = wl_vac_nm / n_air(wl_vac_nm)
 
-    out = v00_wn[["J"]].copy()
+    out = v_wn[["J"]].copy()
     out[branch_cols] = wl_air_nm
     return out  # type: ignore[reportReturnType]
 

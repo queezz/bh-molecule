@@ -117,3 +117,26 @@ $$ \begin{aligned} y(x) ={}&
      {}+ I_{R8}\, g\!\left(x; \lambda_{R8}, w_{\mathrm{inst}}\right) + b. \end{aligned} $$
 
 **Notes.** The X-state affects only line centers (via tables). If Doppler broadening is also required for the auxiliary features, replace their $g$ with the full Doppler + instrument $\Delta\lambda$.
+
+---
+
+## Model switches (sensitivity studies)
+
+`BHModel(...)` takes four keyword switches. Their defaults are the production model above; any other value is a sensitivity variant, not a replacement.
+
+| Switch | Default | Alternative |
+|---|---|---|
+| `upper_energies` | `"huber_herzberg"`: `energy` with `BH_A` | `"fernando_bernath"`: Fernando & Bernath (1991) Eq. (1) with the per-level Table III constants `BH_A_FB91`; f level for Q lines, e level for P/R lines |
+| `v_max` | `2`: $v'=0,1,2$ co-added | `0`: the 0–0 band only (the R7/R8 features of `full_fit_model` stay) |
+| `band_positions` | `"v00"`: every band at the 0–0 line positions | `"own"`: each band at its measured positions (F&B Table I: `11BH_v11.csv`, `11BH_v22.csv`); lines not observed are skipped |
+| `T_vib` | `None`: each band normalised at its own $N=1$ | a temperature [K]: band $v$ weighted by $\exp[-(T_v-T_0)/k_B T_{\rm vib}]$ with the F&B band origins |
+
+The Fernando–Bernath term value is
+
+$$
+F_{e/f}(J) = T_v + B_v x - D_v x^2 + H_v x^3 + L_v x^4 \pm \tfrac12 x\,(q_v + q_{Dv}\,x), \qquad x = J(J+1),
+$$
+
+with "+" for e and "−" for f. A Q line ($\Delta J = 0$) joins an f level of A$\,^1\Pi$ to an e level of X$\,^1\Sigma^+$, so the Q-branch populations use $F_f$. With the f sign the tabulated constants reproduce every observed Q line of the 0–0, 1–1 and 2–2 bands to 0.03 cm⁻¹; the e sign misses by up to 17 cm⁻¹.
+
+With `band_positions="own"` the 1–1 and 2–2 Q branches lie at 436.7–439.9 nm and 443.4–446.8 nm (air), outside the 433.05–433.90 nm fit window, so in that window the mixture reduces to the 0–0 model whatever `T_vib` is.
