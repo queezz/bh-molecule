@@ -14,6 +14,34 @@ class Branch(enum.Enum):
 # Sensitivity switches of `BHModel`; the first entry is the production default.
 UPPER_ENERGIES = ("huber_herzberg", "fernando_bernath")
 BAND_POSITIONS = ("v00", "own")
+BASELINES = ("constant", "linear")
+
+# Reference wavelength of the linear baseline [nm]: the centre of the
+# production fit window 433.05-433.90 nm. Fixed (not the centre of whatever
+# window is fitted) so that the offset ``base`` keeps one meaning when the
+# window is trimmed.
+BASELINE_REF_NM: float = 433.475
+
+# H2 lines in the 433 nm window used as optional nuisance features
+# (``h2_lines=True``): Dieke's Y 1 -> 2B 0 R0/R1 (4332.619 A, on the BH
+# Q(1)-Q(3) lines) and R2 (4335.522 A); air wavelengths from H. M. Crosswhite
+# (ed.), The Hydrogen Molecule Wavelength Tables of G. H. Dieke (1972),
+# Table T, pp. T104-T105.
+H2_NUISANCE_LINES_NM: dict[str, float] = {
+    "I_H2_R01": 433.2619,
+    "I_H2_R2": 433.5522,
+}
+
+# Start values and bounds of the optional extra fit parameters, appended in
+# this order after (C, T_rot, dx, w_inst, base, I_R7, I_R8). base_slope is in
+# normalised intensity per nm (+-1 /nm is +-0.85 across the 0.85 nm window);
+# the H2 amplitudes are line areas in the units of I_R7 and I_R8.
+EXTRA_PARAM_SPECS: dict[str, tuple[float, float, float]] = {
+    # name: (p0, lower, upper)
+    "base_slope": (0.0, -1.0, 1.0),
+    "I_H2_R01": (1e-3, 0.0, 1.0),
+    "I_H2_R2": (1e-3, 0.0, 1.0),
+}
 
 
 class BHModel:
@@ -42,7 +70,19 @@ class BHModel:
         ``None`` (default): every band is normalised at its own N = 1 level,
         with no vibrational population factor. A value in K weights band v by
         ``exp(-(T_v - T_0) / (k T_vib))`` with the F&B band origins T_v.
+    baseline : {"constant", "linear"}
+        ``"constant"`` (default): the baseline is the constant ``base``.
+        ``"linear"``: ``base + base_slope * (x - BASELINE_REF_NM)`` on the
+        measured (unshifted) wavelength grid; adds the fit parameter
+        ``base_slope`` [1/nm].
+    h2_lines : bool, default False
+        ``True`` adds the two H2 Y 1 -> 2B 0 lines of ``H2_NUISANCE_LINES_NM``
+        as free-amplitude Gaussians with the BH line width, on the same
+        shifted grid ``x + dx`` as the BH lines; adds the fit parameters
+        ``I_H2_R01`` and ``I_H2_R2``.
 
+    Extra fit parameters are appended to the production signature of
+    :meth:`full_fit_model` in the order of :attr:`extra_param_names`.
     The defaults reproduce the production model exactly.
     """
 
@@ -54,6 +94,8 @@ class BHModel:
         v_max: int = 2,
         band_positions: str = "v00",
         T_vib: float | None = None,
+        baseline: str = "constant",
+        h2_lines: bool = False,
     ):
         # DataFrame with columns P,Q,R (wavelengths in nm). If not provided,
         # load the default v00 table from package resources.
@@ -70,12 +112,18 @@ class BHModel:
             raise ValueError("v_max must be 0, 1, or 2")
         if T_vib is not None and not float(T_vib) > 0:
             raise ValueError("T_vib must be None or a positive temperature [K]")
+        if baseline not in BASELINES:
+            raise ValueError(f"baseline must be one of {BASELINES}")
+        if not isinstance(h2_lines, bool):
+            raise ValueError("h2_lines must be True or False")
 
         self.v00_wl = v00_wl_df
         self.upper_energies = upper_energies
         self.v_max = int(v_max)
         self.band_positions = band_positions
         self.T_vib = None if T_vib is None else float(T_vib)
+        self.baseline = baseline
+        self.h2_lines = h2_lines
 
         # Per-band line tables for band_positions="own" (v=0 is v00_wl).
         self._band_wl = {0: v00_wl_df}
@@ -145,6 +193,31 @@ class BHModel:
             return 1.0
         G = BH_A_FB91[v].T_v - BH_A_FB91[0].T_v
         return float(np.exp(-G / (self.T_vib * self.K2wn)))
+
+    @property
+    def extra_param_names(self) -> tuple[str, ...]:
+        """Fit parameters added by the switches, appended after
+        ``(C, T_rot, dx, w_inst, base, I_R7, I_R8)``; empty for the defaults."""
+        names: list[str] = []
+        if self.baseline == "linear":
+            names.append("base_slope")
+        if self.h2_lines:
+            names.extend(H2_NUISANCE_LINES_NM)
+        return tuple(names)
+
+    @property
+    def extra_p0(self) -> tuple[float, ...]:
+        """Start values of :attr:`extra_param_names`."""
+        return tuple(EXTRA_PARAM_SPECS[n][0] for n in self.extra_param_names)
+
+    @property
+    def extra_bounds(self) -> tuple[tuple[float, ...], tuple[float, ...]]:
+        """``(lower, upper)`` bounds of :attr:`extra_param_names`."""
+        names = self.extra_param_names
+        return (
+            tuple(EXTRA_PARAM_SPECS[n][1] for n in names),
+            tuple(EXTRA_PARAM_SPECS[n][2] for n in names),
+        )
 
     def _line_positions(self, v: int, branch: Branch) -> np.ndarray:
         """Line centres [nm] indexed by table row J, under ``band_positions``."""
@@ -333,6 +406,7 @@ class BHModel:
         base: float,
         I_R7: float,
         I_R8: float,
+        *extra: float,
     ) -> np.ndarray:
         r"""Composite forward model near 433 nm: BH Q-branch + two fixed Gaussians + baseline.
 
@@ -349,11 +423,16 @@ class BHModel:
         w_inst : float
             Instrumental Gaussian FWHM [nm].
         base : float
-            Constant baseline.
+            Constant baseline; with ``baseline="linear"``, its value at
+            ``BASELINE_REF_NM``.
         I_R7 : float
             Amplitude of auxiliary line at :math:`\lambda_{R7}`.
         I_R8 : float
             Amplitude of auxiliary line at :math:`\lambda_{R8}`.
+        *extra : float
+            Values of :attr:`extra_param_names`, in that order (none for the
+            default model): ``base_slope`` [1/nm] for ``baseline="linear"``,
+            then ``I_H2_R01`` and ``I_H2_R2`` for ``h2_lines=True``.
 
         Returns
         -------
@@ -362,13 +441,28 @@ class BHModel:
 
         See Also [Physics explainer — full fit model](../phys.md#full-fit-model)
         """
+        names = self.extra_param_names
+        if len(extra) != len(names):
+            raise TypeError(
+                f"full_fit_model expects {len(names)} extra parameter(s) "
+                f"{names} for this model, got {len(extra)}"
+            )
         wl_R7 = 433.6477624402892  # 1-1, R7
         wl_R8 = 433.3350058444114  # 1-1, R8
         T_tra = 0.0
         xs = x + dx
-        return (
+        y = (
             1e8 * self.spectrum(xs, C, T_rot, w_inst, T_tra, Branch.Q)
             + I_R7 * self.line_profile(xs, wl_R7, w_inst, T_tra)
             + I_R8 * self.line_profile(xs, wl_R8, w_inst, T_tra)
             + base
         )
+        if not names:
+            return y
+        values = dict(zip(names, extra))
+        if self.baseline == "linear":
+            y = y + values["base_slope"] * (np.asarray(x, dtype=float) - BASELINE_REF_NM)
+        if self.h2_lines:
+            for name, wl in H2_NUISANCE_LINES_NM.items():
+                y = y + values[name] * self.line_profile(xs, wl, w_inst, T_tra)
+        return y

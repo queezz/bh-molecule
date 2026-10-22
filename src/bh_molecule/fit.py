@@ -33,6 +33,10 @@ class BHFitter:
         Data source exposing ``spectrum(frame, channel) -> (wl, spec)``.
     model : object
         Model providing ``full_fit_model(x, C, T_rot, dx, w_inst, base, I_R7, I_R8)``.
+        A model with ``extra_param_names`` (``BHModel`` built with
+        ``baseline="linear"`` or ``h2_lines=True``) takes those parameters
+        after the seven; the fitter appends them to ``param_names`` with the
+        model's ``extra_p0`` and ``extra_bounds``.
     nm_window : tuple, optional
         Wavelength window `(lo, hi)` in nanometers to select data for
         fitting. Default is ``(433.05, 433.90)``.
@@ -89,17 +93,30 @@ class BHFitter:
         self.vis = vis
         self.model = model
         self.nm_window = tuple(map(float, nm_window))
-        self.p0 = np.asarray(p0, float).copy()
-        self.bounds = (
-            np.asarray(bounds[0], float).copy(),
-            np.asarray(bounds[1], float).copy(),
-        )
         self.maxfev = int(maxfev)
         self.weight = weight
         self.warm_start = bool(warm_start)
         self._last_params = None
         self.param_names = ["C", "T_rot", "dx", "w_inst", "base", "I_R7", "I_R8"]
         self.param_units = ["", "K", "nm", "nm", "", "", ""]
+
+        # Models built with switches (e.g. ``BHModel(baseline="linear",
+        # h2_lines=True)``) append extra parameters after the production
+        # seven; ``p0``/``bounds`` given for the seven are extended with the
+        # model's own start values and bounds for them.
+        extra_names = tuple(getattr(model, "extra_param_names", ()))
+        self._n_base_params = len(self.param_names)
+        if extra_names:
+            self.param_names = self.param_names + list(extra_names)
+            self.param_units = self.param_units + [
+                "1/nm" if n == "base_slope" else "" for n in extra_names
+            ]
+        self.p0 = self._extend_to_model(p0, getattr(model, "extra_p0", ()))
+        extra_lo, extra_hi = getattr(model, "extra_bounds", ((), ()))
+        self.bounds = (
+            self._extend_to_model(bounds[0], extra_lo),
+            self._extend_to_model(bounds[1], extra_hi),
+        )
 
         # Optional shared preprocessing callable (see
         # `bh_molecule.workflows.preprocessing.make_bh_fit_preprocessor`).
@@ -180,6 +197,24 @@ class BHFitter:
         else:
             self._w_inst_fixed_value = None
 
+    def _extend_to_model(self, values, extra_values) -> np.ndarray:
+        """Return ``values`` as a float array of length ``len(param_names)``.
+
+        A sequence of the production length (7) is extended with
+        ``extra_values`` (the model's own entries for its extra parameters);
+        a sequence of the full length is used as given.
+        """
+        arr = np.asarray(values, float).copy()
+        n_full = len(self.param_names)
+        if arr.size == n_full:
+            return arr
+        if arr.size == self._n_base_params:
+            return np.concatenate([arr, np.asarray(extra_values, float)])
+        raise ValueError(
+            f"expected {self._n_base_params} or {n_full} values for "
+            f"{self.param_names}, got {arr.size}"
+        )
+
     def _sigma(self, x, y):
         """Compute per-point uncertainties (sigma) for weighting the fit.
 
@@ -251,38 +286,36 @@ class BHFitter:
             x, y = x[idx], y[idx]
         return x, y
 
-    def _f(self, x, C, T_rot, dx, w_inst, base, I_R7, I_R8):
+    def _f(self, x, *params):
         """Wrapper that calls the underlying model's full fit function.
 
         Parameters
         ----------
         x : array_like
             Independent variable (wavelength) at which to evaluate the model.
-        C, T_rot, dx, w_inst, base, I_R7, I_R8 : float
-            Model parameters forwarded to ``model.full_fit_model``.
+        *params : float
+            ``C, T_rot, dx, w_inst, base, I_R7, I_R8`` followed by the
+            model's extra parameters, forwarded to ``model.full_fit_model``.
 
         Returns
         -------
         y : ndarray
             Model-evaluated dependent variable at ``x``.
         """
-        return self.model.full_fit_model(x, C, T_rot, dx, w_inst, base, I_R7, I_R8)
+        return self.model.full_fit_model(x, *params)
 
-    def _f_w_fixed(self, x, C, T_rot, dx, base, I_R7, I_R8):
+    def _f_w_fixed(self, x, *params_reduced):
         """Reduced model used when ``fix_w_inst=True``.
 
         ``w_inst`` is held at ``self._w_inst_fixed_value``; ``curve_fit``
-        sees only six free parameters.
+        sees one parameter fewer (six for the production model).
         """
+        idx = self._w_inst_idx
         return self.model.full_fit_model(
             x,
-            C,
-            T_rot,
-            dx,
+            *params_reduced[:idx],
             self._w_inst_fixed_value,
-            base,
-            I_R7,
-            I_R8,
+            *params_reduced[idx:],
         )
 
     def _expand_fixed_w_inst(self, params_reduced, cov_reduced):
@@ -375,6 +408,8 @@ class BHFitter:
                 if (self.warm_start and self._last_params is not None)
                 else self.p0
             )
+        else:
+            p0 = self._extend_to_model(p0, getattr(self.model, "extra_p0", ()))
         sigma = self._sigma(x, y)
 
         if self._fix_w_inst:
@@ -468,7 +503,12 @@ class BHFitter:
                 raise ValueError("Upper bounds must match number of parameters")
             hi = upper
 
-        if np.any(lo >= hi):
+        # A fixed w_inst is stored as lo == hi (it is eliminated from the
+        # fit), so it is exempt from the strict-ordering check.
+        free = np.ones(lo.size, dtype=bool)
+        if self._fix_w_inst:
+            free[self._w_inst_idx] = False
+        if np.any(lo[free] >= hi[free]):
             raise ValueError(
                 "Each lower bound must be strictly smaller than upper bound"
             )

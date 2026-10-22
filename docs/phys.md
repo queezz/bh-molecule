@@ -122,7 +122,7 @@ $$ \begin{aligned} y(x) ={}&
 
 ## Model switches (sensitivity studies)
 
-`BHModel(...)` takes four keyword switches. Their defaults are the production model above; any other value is a sensitivity variant, not a replacement.
+`BHModel(...)` takes six keyword switches. Their defaults are the production model above; any other value is a sensitivity variant, not a replacement.
 
 | Switch | Default | Alternative |
 |---|---|---|
@@ -130,6 +130,8 @@ $$ \begin{aligned} y(x) ={}&
 | `v_max` | `2`: $v'=0,1,2$ co-added | `0`: the 0–0 band only (the R7/R8 features of `full_fit_model` stay) |
 | `band_positions` | `"v00"`: every band at the 0–0 line positions | `"own"`: each band at its measured positions (F&B Table I: `11BH_v11.csv`, `11BH_v22.csv`); lines not observed are skipped |
 | `T_vib` | `None`: each band normalised at its own $N=1$ | a temperature [K]: band $v$ weighted by $\exp[-(T_v-T_0)/k_B T_{\rm vib}]$ with the F&B band origins |
+| `baseline` | `"constant"`: the constant `base` | `"linear"`: `base + base_slope * (x - 433.475)` on the measured (unshifted) grid, so `base` is the value at the centre of the production window; adds the fit parameter `base_slope` [1/nm], start 0, bounds ±1 |
+| `h2_lines` | `False` | `True`: the H$_2$ lines Y 1 → 2B 0 R0/R1 (433.2619 nm) and R2 (433.5522 nm), Dieke's air wavelengths (Crosswhite 1972, Table T), as free-amplitude Gaussians with the BH line width on the shifted grid `x + dx`; adds `I_H2_R01`, `I_H2_R2`, start 1e-3, bounds [0, 1] like `I_R7`, `I_R8` |
 
 The Fernando–Bernath term value is
 
@@ -140,3 +142,5 @@ $$
 with "+" for e and "−" for f. A Q line ($\Delta J = 0$) joins an f level of A$\,^1\Pi$ to an e level of X$\,^1\Sigma^+$, so the Q-branch populations use $F_f$. With the f sign the tabulated constants reproduce every observed Q line of the 0–0, 1–1 and 2–2 bands to 0.03 cm⁻¹; the e sign misses by up to 17 cm⁻¹.
 
 With `band_positions="own"` the 1–1 and 2–2 Q branches lie at 436.7–439.9 nm and 443.4–446.8 nm (air), outside the 433.05–433.90 nm fit window, so in that window the mixture reduces to the 0–0 model whatever `T_vib` is.
+
+The extra fit parameters of `baseline="linear"` and `h2_lines=True` follow the seven of `full_fit_model` in the order `base_slope`, `I_H2_R01`, `I_H2_R2` (`BHModel.extra_param_names`). `BHFitter` appends them to `param_names` with the model's start values and bounds; `run_bh_batch(..., model_options={...})` builds the model with any of the six switches and writes the extra parameters as `summary.csv` columns. The fit-window upper limit is the upper edge of `run_bh_batch`'s `bh_fit_range` (e.g. `(433.05, 433.80)` leaves out the H$\gamma$ wing); the normalisation, taken inside `bh_scale_range`, does not depend on it. The offset `base` keeps the fitter's bound (`base_tight`, `base_bound`) unless `bounds` overrides it, e.g. `{"lower": {"base": -0.05}, "upper": {"base": 0.5}}`.

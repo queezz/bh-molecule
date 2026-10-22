@@ -190,9 +190,11 @@ def run_bh_batch(
     fix_w_inst: bool = False,
     dx_tol_nm: float | None = None,
     base_bound: float | None = None,
+    model_options: Mapping[str, Any] | None = None,
     out_dir: str | Path = "results",
     run_fit_limit: int | None = None,
     save_frames: bool = True,
+    save_grid: bool = True,
 ):
     """Run BH batch fitting for a single VIS-1.33 m FITS file.
 
@@ -212,7 +214,10 @@ def run_bh_batch(
     Parameters
     ----------
     bh_fit_range, bh_scale_range : (float, float)
-        BH fit and scale wavelength windows [nm].
+        BH fit and scale wavelength windows [nm].  The upper edge of
+        ``bh_fit_range`` is the fit-window upper limit, e.g.
+        ``(433.05, 433.80)`` trims the H-gamma wing; the normalisation
+        (inside ``bh_scale_range``) does not depend on it.
     w_inst_default : float or None
         Initial guess (and, when ``fix_w_inst=True``, the fixed value) for
         the instrumental width [nm].  ``None`` keeps the fitter default.
@@ -230,12 +235,23 @@ def run_bh_batch(
     base_bound : float or None
         Half-width of the tight ``base`` bound applied after preprocessing.
         ``None`` keeps the fitter default (``DEFAULT_BASE_TIGHT_NM``).
+        Asymmetric bounds go through ``bounds``, e.g.
+        ``{"lower": {"base": -0.05}, "upper": {"base": 0.5}}``.
+    model_options : mapping or None
+        Keyword arguments for :class:`~bh_molecule.physics.BHModel`
+        (``upper_energies``, ``v_max``, ``band_positions``, ``T_vib``,
+        ``baseline``, ``h2_lines``).  ``None`` builds ``BHModel()``, the
+        production model.  Extra fit parameters of the model (e.g.
+        ``base_slope``) become extra columns of ``summary.csv``.
     run_fit_limit : int or None
         If set, run only the first N (frame, channel) fits after selection
         (for quick pipeline testing).
     save_frames : bool
         Save per-(frame, channel) fit plots under ``<shot_dir>/frames/``
         using zero-padded filenames from :func:`frame_plot_filename`.
+    save_grid : bool
+        Write the multi-page ``<shot_dir>/grid.pdf`` (default ``True``).
+        ``False`` skips it, e.g. for long sensitivity runs.
     """
     fits_path = Path(fits_file)
     if not fits_path.is_file():
@@ -307,7 +323,10 @@ def run_bh_batch(
     _emit(f"Using frames {sorted(set(frames_list))}")
     _emit(f"Using channels {sorted(set(channels_list))}")
 
-    model = BHModel()
+    model_kw = dict(model_options or {})
+    model = BHModel(**model_kw)
+    if model_kw:
+        _emit(f"Model options: {model_kw}")
     fitter_kwargs = dict(fitter_kwargs or {})
 
     # Build the shared BH preprocessor (background subtraction + BH-window
@@ -369,6 +388,20 @@ def run_bh_batch(
             f"base_bound={constraints['base_bound']:.4f}, "
             f"base_tight={constraints['base_tight']}"
         )
+        # Report the bounds actually in force for base and any extra model
+        # parameters (``bounds`` may have overridden the symmetric base bound).
+        names = list(constraints.get("param_names", []))
+        lo_all = constraints.get("bounds_lower", [])
+        hi_all = constraints.get("bounds_upper", [])
+        shown = [n for n in names if n == "base" or names.index(n) >= 7]
+        if shown and len(lo_all) == len(names) and len(hi_all) == len(names):
+            _emit(
+                "Bounds in force: "
+                + ", ".join(
+                    f"{n}=[{lo_all[names.index(n)]:g}, {hi_all[names.index(n)]:g}]"
+                    for n in shown
+                )
+            )
 
     resb, curves = _batch_with_progress(
         fitr, frames_list, channels_list, run_fit_limit=run_fit_limit
@@ -382,15 +415,18 @@ def run_bh_batch(
     with curves_path.open("wb") as f:
         pickle.dump(curves, f)
 
-    _log_rss(f"[{shot_id}] before save_batch_fit_grid")
-    save_batch_fit_grid(
-        curves,
-        frames_list,
-        channels_list,
-        pdf_path=grid_pdf_path,
-        channels_per_page=6,
-    )
-    _log_rss(f"[{shot_id}] after save_batch_fit_grid")
+    if save_grid:
+        _log_rss(f"[{shot_id}] before save_batch_fit_grid")
+        save_batch_fit_grid(
+            curves,
+            frames_list,
+            channels_list,
+            pdf_path=grid_pdf_path,
+            channels_per_page=6,
+        )
+        _log_rss(f"[{shot_id}] after save_batch_fit_grid")
+    else:
+        _emit("Grid PDF disabled.")
 
     if save_frames:
         frames_set = sorted(set(frames_list))
@@ -421,7 +457,8 @@ def run_bh_batch(
 
     _emit(f"Finished shot {shot_id}")
     _emit(f"Summary: {summary_path}")
-    _emit(f"Grid: {grid_pdf_path}")
+    if save_grid:
+        _emit(f"Grid: {grid_pdf_path}")
     return resb, curves, shot_dir
 
 
