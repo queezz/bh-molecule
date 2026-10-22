@@ -25,6 +25,22 @@ BASELINES = ("constant", "linear", "quadratic")
 ISOTOPOLOGUES = ("11BH", "natural")
 H2_LINE_SETS = (False, True, "R2")
 ROT_COMPONENTS = (1, 2)
+R11_LINE_MODES = ("free", "tied")
+
+# Positions of the 11BH (1-1) R(7) and R(8) lines in ``full_fit_model``
+# [nm]. ``r11_lines="free"`` (production) keeps the values the model has
+# always used; they lie 0.0037 nm red of Fernando & Bernath (1991) Table I
+# converted with the package's own ``n_air`` (433.644051 / 433.331292 nm,
+# ``load_band_wavelengths(1)``), the positions ``r11_lines="tied"`` uses.
+R11_MODEL_NM: dict[str, float] = {
+    "R7": 433.6477624402892,
+    "R8": 433.3350058444114,
+}
+
+# Pivot of the optional linear wavelength stretch (``stretch=True``) [nm]:
+# the centre of the production window, as for the linear baseline, so that
+# ``dx`` keeps its meaning (the shift at the window centre).
+STRETCH_REF_NM: float = 433.475
 
 # Unidentified features in the fit window used as optional free nuisance
 # lines (``extra_lines``), rest-frame air wavelengths [nm]: F1 on the blue
@@ -78,6 +94,14 @@ EXTRA_PARAM_SPECS: dict[str, tuple[float, float, float]] = {
     # fraction; the first component is the production T_rot.
     "T_rot2": (6000.0, 200.0, 30000.0),
     "frac2": (0.1, 0.0, 1.0),
+    # r11_lines="tied": population of the (1-1) upper levels relative to the
+    # (0-0) ones, n(v'=1, N'=1) / n(v'=0, N'=1) at the common T_rot.
+    "S_v1": (0.4, 0.0, 5.0),
+    # stretch=True: relative dispersion error eps of the wavelength grid,
+    # x_rest = x + dx + eps * (x - STRETCH_REF_NM). +-0.02 is +-8.5 pm at the
+    # blue end of the 433.05-433.80 nm window and +-3 pm at Q(18) and Q(21),
+    # several times the 3-4 pm mismatches seen there.
+    "stretch": (0.0, -0.02, 0.02),
 }
 
 
@@ -152,6 +176,25 @@ class BHModel:
         normalised by its partition function, scaled so that ``frac2 = 0``
         is the one-temperature model with the same ``C``. Adds ``T_rot2``
         [K] and ``frac2``. Needs ``v_max=0``.
+    r11_lines : {"free", "tied"}, default "free"
+        The 11BH (1-1) R(7) and R(8) lines in the window. ``"free"``
+        (default): two free amplitudes ``I_R7``, ``I_R8`` at
+        ``R11_MODEL_NM``. ``"tied"``: their areas follow from the common
+        ``T_rot`` and the Hoenl-London factors of the (1-1) band
+        (:meth:`r11_tied_areas`: upper e levels N' = 8, 9 of v' = 1), with
+        one free population scale ``S_v1`` = n(v'=1, N'=1) / n(v'=0, N'=1),
+        at F&B Table I positions (433.644051 / 433.331292 nm, the 0.0037 nm
+        offset of ``R11_MODEL_NM`` removed). ``I_R7`` and ``I_R8`` stay in
+        the signature but are ignored, and :attr:`fixed_params` holds them
+        at 0 in the fit. Needs ``v_max=0`` and ``rot_components=1``.
+    stretch : bool, default False
+        ``True`` adds a linear wavelength stretch ``stretch`` (eps,
+        dimensionless): the model lines sit on ``x + dx + eps * (x -
+        STRETCH_REF_NM)`` instead of ``x + dx``, i.e. a relative dispersion
+        error of the measured grid. The Gaussian width is scaled by
+        ``1 + eps`` with it, so the line width on the measured grid stays
+        ``w_inst`` (the instrument function is fixed in pixels) and only the
+        positions move. The baseline stays on the measured grid.
 
     Extra fit parameters are appended to the production signature of
     :meth:`full_fit_model` in the order of :attr:`extra_param_names`.
@@ -173,6 +216,8 @@ class BHModel:
         bh10_positions: str = "fb91",
         extra_lines: tuple[str, ...] = (),
         rot_components: int = 1,
+        r11_lines: str = "free",
+        stretch: bool = False,
     ):
         # DataFrame with columns P,Q,R (wavelengths in nm). If not provided,
         # load the default v00 table from package resources.
@@ -222,6 +267,12 @@ class BHModel:
             raise ValueError(f"rot_components must be one of {ROT_COMPONENTS}")
         if rot_components == 2 and int(v_max) != 0:
             raise ValueError("rot_components=2 needs v_max=0")
+        if r11_lines not in R11_LINE_MODES:
+            raise ValueError(f"r11_lines must be one of {R11_LINE_MODES}")
+        if r11_lines == "tied" and (int(v_max) != 0 or rot_components != 1):
+            raise ValueError("r11_lines='tied' needs v_max=0 and rot_components=1")
+        if not isinstance(stretch, bool):
+            raise ValueError("stretch must be True or False")
 
         self.v00_wl = v00_wl_df
         self.upper_energies = upper_energies
@@ -236,6 +287,8 @@ class BHModel:
         # keep the EXTRA_LINES_NM order whatever order was given
         self.extra_lines = tuple(n for n in EXTRA_LINES_NM if n in extra_lines)
         self.rot_components = int(rot_components)
+        self.r11_lines = r11_lines
+        self.stretch = stretch
         self._bh10 = self._bh10_tables() if isotopologue == "natural" else None
 
         # Per-band line tables for band_positions="own" (v=0 is v00_wl).
@@ -251,6 +304,7 @@ class BHModel:
         self.M_BH = 11.81  # amu
         self.wn2Hz = spc.c * 1e2
         self.g_as = 8
+        self._r11_fb91 = self._r11_fb91_tables() if r11_lines == "tied" else None
 
     # MARK: energy
     @staticmethod
@@ -326,7 +380,20 @@ class BHModel:
         names.extend(f"I_{n}" for n in self.extra_lines)
         if self.rot_components == 2:
             names.extend(("T_rot2", "frac2"))
+        if self.r11_lines == "tied":
+            names.append("S_v1")
+        if self.stretch:
+            names.append("stretch")
         return tuple(names)
+
+    @property
+    def fixed_params(self) -> dict[str, float]:
+        """Parameters of the production seven that this model ignores, with
+        the value the fitter holds them at (``BHFitter`` eliminates them as it
+        does a fixed ``w_inst``); empty for the defaults."""
+        if self.r11_lines == "tied":
+            return {"I_R7": 0.0, "I_R8": 0.0}
+        return {}
 
     @property
     def extra_p0(self) -> tuple[float, ...]:
@@ -346,6 +413,45 @@ class BHModel:
         """Line centres [nm] indexed by table row J, under ``band_positions``."""
         table = self.v00_wl if self.band_positions == "v00" else self._band_wl[v]
         return table[branch.value].to_numpy()
+
+    # MARK: (1-1) R(7)/R(8)
+    def _r11_fb91_tables(self) -> dict:
+        """F&B Table I positions [nm, air] and upper e-level energies above
+        v' = 1, N' = 1 [cm^-1] of the (1-1) R(7) and R(8) lines."""
+        from .dataio import load_band_wavelengths
+
+        r = load_band_wavelengths(1).set_index("J")["R"]
+        E1 = self.upper_energy(1, 1, Branch.R)
+        out = {}
+        for J in (7, 8):
+            N2 = J + 1
+            out[f"R{J}"] = {
+                "wl": float(r.loc[J]),
+                "N2": N2,
+                "dF": float(self.upper_energy(1, N2, Branch.R) - E1),
+            }
+        return out
+
+    def r11_tied_areas(self, C: float, T_rot: float, S_v1: float) -> tuple[float, float]:
+        r"""Areas of the (1-1) R(7) and R(8) lines for ``r11_lines="tied"``.
+
+        In the units of :meth:`full_fit_model` (the Q branch is ``1e8 *``
+        :meth:`spectrum`): ``1e8 C S_v1 g (2N'+1) exp(-dF / k T_rot)
+        A(1, N', N'') h nu / 4 pi`` with N' = N'' + 1, dF the upper e-level
+        energy above v' = 1, N' = 1 (``upper_energies``), and
+        :meth:`A_coeff`'s R-branch Hoenl-London factor (N' + 1)/2 and v' = 1
+        band coefficient. ``S_v1`` is therefore n(v'=1, N'=1) / n(v'=0, N'=1).
+        """
+        if self._r11_fb91 is None:
+            raise ValueError("r11_tied_areas needs r11_lines='tied'")
+        areas = []
+        for J in (7, 8):
+            line = self._r11_fb91[f"R{J}"]
+            N2 = line["N2"]
+            pop = self.g_as * (2 * N2 + 1) * np.exp(-line["dF"] / (T_rot * self.K2wn))
+            photon_E = spc.h * (spc.c / (line["wl"] * 1e-9)) / (4 * np.pi)
+            areas.append(1e8 * C * S_v1 * photon_E * pop * self.A_coeff(1, N2, J))
+        return float(areas[0]), float(areas[1])
 
     # MARK: 10BH, partition, two-T
     def _bh10_tables(self) -> dict:
@@ -622,7 +728,9 @@ class BHModel:
             then ``I_H2_R01`` and ``I_H2_R2`` for ``h2_lines=True`` (only
             ``I_H2_R2`` when ``h2_r01_ratio`` ties the two, or for
             ``h2_lines="R2"``), then ``I_F1``, ``I_F3`` of ``extra_lines``,
-            then ``T_rot2``, ``frac2`` for ``rot_components=2``.
+            then ``T_rot2``, ``frac2`` for ``rot_components=2``,
+            then ``S_v1`` for ``r11_lines="tied"`` (``I_R7`` and ``I_R8``
+            are then ignored), then ``stretch`` for ``stretch=True``.
 
         Returns
         -------
@@ -637,11 +745,22 @@ class BHModel:
                 f"full_fit_model expects {len(names)} extra parameter(s) "
                 f"{names} for this model, got {len(extra)}"
             )
-        wl_R7 = 433.6477624402892  # 1-1, R7
-        wl_R8 = 433.3350058444114  # 1-1, R8
+        wl_R7 = R11_MODEL_NM["R7"]  # 1-1, R7
+        wl_R8 = R11_MODEL_NM["R8"]  # 1-1, R8
         T_tra = 0.0
-        xs = x + dx
         values = dict(zip(names, extra))
+        if self.stretch:
+            # relative dispersion error; the width on the measured grid stays w_inst
+            eps = values["stretch"]
+            xs = x + dx + eps * (np.asarray(x, dtype=float) - STRETCH_REF_NM)
+            w_inst = w_inst * (1.0 + eps)
+        else:
+            xs = x + dx
+        if self._r11_fb91 is not None:
+            # (1-1) R(7)/R(8) from T_rot and Hoenl-London, F&B Table I positions
+            I_R7, I_R8 = self.r11_tied_areas(C, T_rot, values["S_v1"])
+            wl_R7 = self._r11_fb91["R7"]["wl"]
+            wl_R8 = self._r11_fb91["R8"]["wl"]
         if self._bh10 is None and self.rot_components == 1:
             # production path, unchanged
             band = 1e8 * self.spectrum(xs, C, T_rot, w_inst, T_tra, Branch.Q)

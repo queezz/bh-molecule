@@ -39,7 +39,10 @@ class BHFitter:
         A model with ``extra_param_names`` (``BHModel`` built with
         ``baseline="linear"`` or ``h2_lines=True``) takes those parameters
         after the seven; the fitter appends them to ``param_names`` with the
-        model's ``extra_p0`` and ``extra_bounds``.
+        model's ``extra_p0`` and ``extra_bounds``. A model with non-empty
+        ``fixed_params`` (``BHModel(r11_lines="tied")``: ``I_R7``, ``I_R8``)
+        has those parameters held at the given values and eliminated from
+        the fit, as a fixed ``w_inst`` is; their errors and covariance are 0.
     nm_window : tuple, optional
         Wavelength window `(lo, hi)` in nanometers to select data for
         fitting. Default is ``(433.05, 433.90)``.
@@ -217,6 +220,20 @@ class BHFitter:
             self._w_inst_fixed_value = w_fixed
         else:
             self._w_inst_fixed_value = None
+
+        # Parameters the model itself declares fixed (e.g. the free R(7)/R(8)
+        # amplitudes of a model that ties them): held at their values and
+        # eliminated from the fit. Empty for the production model, whose fit
+        # path is then unchanged.
+        self._model_fixed: dict[int, float] = {}
+        for name, value in dict(getattr(model, "fixed_params", {}) or {}).items():
+            i = self.param_names.index(name)
+            if i == self._w_inst_idx:
+                raise ValueError("w_inst is fixed through fix_w_inst, not the model")
+            self._model_fixed[i] = float(value)
+            self.p0[i] = float(value)
+            self.bounds[0][i] = float(value)
+            self.bounds[1][i] = float(value)
 
     @staticmethod
     def _check_exclude(exclude_nm) -> tuple[tuple[float, float], ...]:
@@ -409,6 +426,7 @@ class BHFitter:
             ),
             "exclude_nm": [list(r) for r in self.exclude_nm],
             "exclude_frame": self.exclude_frame,
+            "model_fixed": {names[i]: v for i, v in self._model_fixed.items()},
         }
 
     # MARK: Fit
@@ -488,6 +506,9 @@ class BHFitter:
         ``(params, cov)`` in the full parameter layout."""
         sigma = self._sigma(x, y)
 
+        if self._model_fixed:
+            return self._curve_fit_fixed(x, y, p0, sigma)
+
         if self._fix_w_inst:
             # Parameter elimination: drop the w_inst slot.
             p0_arr = np.asarray(p0, float)
@@ -518,6 +539,46 @@ class BHFitter:
                 sigma=sigma,
                 absolute_sigma=bool(sigma is not None),
             )
+        return params, cov
+
+    def _fixed_values(self) -> dict[int, float]:
+        """Index -> value of every eliminated parameter (model-fixed and,
+        when ``fix_w_inst``, ``w_inst``)."""
+        fixed = dict(self._model_fixed)
+        if self._fix_w_inst:
+            fixed[self._w_inst_idx] = float(self._w_inst_fixed_value)
+        return fixed
+
+    def _curve_fit_fixed(self, x, y, p0, sigma):
+        """``_curve_fit`` for a model with ``fixed_params``: every fixed
+        parameter (and a fixed ``w_inst``) is eliminated, the rest fitted."""
+        n = len(self.param_names)
+        fixed = self._fixed_values()
+        free = np.array([i for i in range(n) if i not in fixed], dtype=int)
+        full0 = np.zeros(n, dtype=float)
+        for i, v in fixed.items():
+            full0[i] = v
+
+        def f(xx, *p_free):
+            full = full0.copy()
+            full[free] = p_free
+            return self.model.full_fit_model(xx, *full)
+
+        lo, hi = self.bounds
+        p_red, cov_red = curve_fit(
+            f,
+            x,
+            y,
+            p0=np.asarray(p0, float)[free],
+            bounds=(np.asarray(lo, float)[free], np.asarray(hi, float)[free]),
+            maxfev=self.maxfev,
+            sigma=sigma,
+            absolute_sigma=bool(sigma is not None),
+        )
+        params = full0.copy()
+        params[free] = p_red
+        cov = np.zeros((n, n), dtype=float)
+        cov[np.ix_(free, free)] = cov_red
         return params, cov
 
     def set_bounds(self, lower=None, upper=None):
@@ -569,6 +630,8 @@ class BHFitter:
         free = np.ones(lo.size, dtype=bool)
         if self._fix_w_inst:
             free[self._w_inst_idx] = False
+        for i in self._model_fixed:
+            free[i] = False
         if np.any(lo[free] >= hi[free]):
             raise ValueError(
                 "Each lower bound must be strictly smaller than upper bound"
