@@ -4,6 +4,14 @@ Dated record of shipped work, newest first; per-session detail in `log/`.
 
 ## 2026-10-23
 
+- S5h switches for the NME revision's last checks (Reviewer 1, D6):
+  `BHModel(r11_lines="tied")` ties the (1-1) R(7)/R(8) areas to T_rot through the
+  Hoenl-London factors (one free scale `S_v1` = n(v'=1)/n(v'=0); F&B Table I positions,
+  the 0.0037 nm offset removed; `I_R7`, `I_R8` held at 0 through the new
+  `BHModel.fixed_params`, which `BHFitter` now eliminates), and `BHModel(stretch=True)`
+  adds a linear wavelength stretch about 433.475 nm (+-0.02, width kept on the measured
+  grid). Defaults and set C unchanged; 20 new tests. See
+  `log/2026-10-23-s5h-r11-stretch-switches.md`.
 - S5e refinement switches for the NME revision (Reviewer 1 critical read):
   `BHModel(isotopologue="natural", bh10_positions="fb91"|"mass_scaled")` (10BH at
   0.199 of BH, new `isotopes.py` with F&B Tables V, VII, VIII), `extra_lines=("F1",
