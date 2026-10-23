@@ -36,6 +36,15 @@ with a default that keeps set C and production unchanged; the paper repo runs it
 - Set C bit-identical: the paper repo's `analysis/tests/test_run_bh_batch.py` (193788
   refit against the stored production `summary.csv`) passes on this tree.
 
+- Full-dataset runs in the paper repo (analysis `0a56a68`, `scripts/s12_run_variants.py`),
+  8,638 fits each, 0 errors. Median T/T(set C): +1.3 % (3.6 m) and +1.0 % (3.9 m);
+  worst channel +3.1 %. The fitted `base_hg` has median 0.105 / 0.071. It is 0 in 1.3 %
+  of the retained fits; no retained fit has the slope or base at a bound. It tracks the
+  measured H-gamma level at 433.85-433.92 nm (Spearman 0.65 / 0.70). With F1/F3 added:
+  +2.9 / +2.5 %.
+- bh-molecule's `BHFitter` with the switch reproduces the paper repo's S12 engine on
+  Figure 8's averaged spectra (2614.5 and 3276.8 K).
+
 ## Not done
 
 - The wing exponent and width are module constants, not fit parameters (the far wing
