@@ -21,7 +21,7 @@ class Branch(enum.Enum):
 # Sensitivity switches of `BHModel`; the first entry is the production default.
 UPPER_ENERGIES = ("huber_herzberg", "fernando_bernath")
 BAND_POSITIONS = ("v00", "own")
-BASELINES = ("constant", "linear", "quadratic", "hgamma")
+BASELINES = ("constant", "linear", "quadratic", "hgamma", "fixed")
 ISOTOPOLOGUES = ("11BH", "natural")
 H2_LINE_SETS = (False, True, "R2")
 ROT_COMPONENTS = (1, 2)
@@ -146,7 +146,7 @@ class BHModel:
         ``None`` (default): every band is normalised at its own N = 1 level,
         with no vibrational population factor. A value in K weights band v by
         ``exp(-(T_v - T_0) / (k T_vib))`` with the F&B band origins T_v.
-    baseline : {"constant", "linear", "quadratic"}
+    baseline : {"constant", "linear", "quadratic", "hgamma", "fixed"}
         ``"constant"`` (default): the baseline is the constant ``base``.
         ``"linear"``: ``base + base_slope * (x - BASELINE_REF_NM)`` on the
         measured (unshifted) wavelength grid; adds the fit parameter
@@ -159,6 +159,11 @@ class BHModel:
         HWHM ``HGAMMA_WING_HWHM_NM``, 1 at 433.80 nm); adds ``base_slope`` and
         ``base_hg`` (bounds [0, 10]). The wing is convex and rises toward
         H-gamma only, unlike the symmetric quadratic.
+        ``"fixed"``: a continuum computed before the fit and held: the model
+        adds :meth:`continuum_on` (the array given to :meth:`set_continuum`,
+        interpolated onto the measured grid) and holds ``base`` at 0
+        (:attr:`fixed_params`); no continuum parameter is fitted. ``BHFitter``
+        takes a ``continuum`` callable that sets it per spectrum.
     h2_lines : {False, True, "R2"}, default False
         ``True`` adds the two H2 Y 1 -> 2B 0 lines of ``H2_NUISANCE_LINES_NM``
         as free-amplitude Gaussians with the BH line width, on the same
@@ -325,6 +330,9 @@ class BHModel:
         self.wn2Hz = spc.c * 1e2
         self.g_as = 8
         self._r11_fb91 = self._r11_fb91_tables() if r11_lines == "tied" else None
+        # Held continuum of baseline="fixed" (measured grid, values); set per
+        # spectrum with set_continuum().
+        self._continuum: tuple[np.ndarray, np.ndarray] | None = None
 
     # MARK: energy
     @staticmethod
@@ -412,10 +420,48 @@ class BHModel:
     def fixed_params(self) -> dict[str, float]:
         """Parameters of the production seven that this model ignores, with
         the value the fitter holds them at (``BHFitter`` eliminates them as it
-        does a fixed ``w_inst``); empty for the defaults."""
+        does a fixed ``w_inst``); empty for the defaults. ``baseline="fixed"``
+        holds ``base`` at 0 (the continuum is the held array)."""
+        out: dict[str, float] = {}
+        if self.baseline == "fixed":
+            out["base"] = 0.0
         if self.r11_lines == "tied":
-            return {"I_R7": 0.0, "I_R8": 0.0}
-        return {}
+            out.update({"I_R7": 0.0, "I_R8": 0.0})
+        return out
+
+    # MARK: held continuum
+    def set_continuum(self, x, values) -> None:
+        """Set the held continuum of ``baseline="fixed"``: ``values`` on the
+        measured wavelength grid ``x`` [nm] (any range covering the fit window;
+        :meth:`continuum_on` interpolates linearly)."""
+        if self.baseline != "fixed":
+            raise ValueError('set_continuum needs baseline="fixed"')
+        x = np.asarray(x, dtype=float).ravel()
+        v = np.asarray(values, dtype=float).ravel()
+        if x.size != v.size or x.size < 2:
+            raise ValueError("continuum x and values must have the same length >= 2")
+        if not (np.all(np.isfinite(x)) and np.all(np.isfinite(v))):
+            raise ValueError("continuum x and values must be finite")
+        order = np.argsort(x)
+        x, v = x[order], v[order]
+        if np.any(np.diff(x) <= 0):
+            raise ValueError("continuum x must be strictly increasing once sorted")
+        self._continuum = (x, v)
+
+    def continuum_on(self, x) -> np.ndarray:
+        """The held continuum on the measured grid ``x`` (``baseline="fixed"``).
+
+        Raises if none is set or ``x`` leaves its range (by more than 1e-9 nm)."""
+        if self._continuum is None:
+            raise ValueError('baseline="fixed" needs a continuum: call set_continuum(x, values)')
+        cx, cv = self._continuum
+        x = np.asarray(x, dtype=float)
+        if x.size and (x.min() < cx[0] - 1e-9 or x.max() > cx[-1] + 1e-9):
+            raise ValueError(
+                f"fit grid {x.min():.4f}-{x.max():.4f} nm leaves the held continuum "
+                f"{cx[0]:.4f}-{cx[-1]:.4f} nm"
+            )
+        return np.interp(x, cx, cv)
 
     @property
     def extra_p0(self) -> tuple[float, ...]:
@@ -820,6 +866,8 @@ class BHModel:
                 I_R7 * self.line_profile(xs, self._bh10["wl_R7"], w_inst, T_tra)
                 + I_R8 * self.line_profile(xs, self._bh10["wl_R8"], w_inst, T_tra)
             )
+        if self.baseline == "fixed":
+            y = y + self.continuum_on(x)
         if not names:
             return y
         if self.baseline in ("linear", "quadratic", "hgamma"):

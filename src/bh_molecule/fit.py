@@ -73,6 +73,15 @@ class BHFitter:
         ``x + dx``, where line positions are fixed; a first fit of all
         points gives ``dx`` and starts the second. ``"measured"``: the data
         grid.
+    continuum : callable or None, optional
+        For a model built with ``baseline="fixed"``: a callable
+        ``continuum(vis, frame, channel) -> (x_c, values)`` returning a
+        continuum on the measured grid, computed before and independently of
+        the band fit (e.g. from the pixels outside the BH window). ``fit``
+        calls it for each spectrum and hands the result to
+        ``model.set_continuum``; the continuum is then held and only the band,
+        ``T_rot``, ``dx`` and the lines are fitted. ``None`` (default): no
+        call, the production path is unchanged.
 
     Attributes
     ----------
@@ -106,6 +115,7 @@ class BHFitter:
         dx_tol_nm=None,
         exclude_nm=None,
         exclude_frame="rest",
+        continuum=None,
     ):
         self.vis = vis
         self.model = model
@@ -117,6 +127,12 @@ class BHFitter:
         if exclude_frame not in ("rest", "measured"):
             raise ValueError("exclude_frame must be 'rest' or 'measured'")
         self.exclude_frame = exclude_frame
+        if continuum is not None:
+            if not callable(continuum):
+                raise ValueError("continuum must be a callable (vis, frame, channel) -> (x, values)")
+            if getattr(model, "baseline", None) != "fixed":
+                raise ValueError('continuum needs a model built with baseline="fixed"')
+        self.continuum = continuum
         self.maxfev = int(maxfev)
         self.weight = weight
         self.warm_start = bool(warm_start)
@@ -427,6 +443,7 @@ class BHFitter:
             "exclude_nm": [list(r) for r in self.exclude_nm],
             "exclude_frame": self.exclude_frame,
             "model_fixed": {names[i]: v for i, v in self._model_fixed.items()},
+            "continuum": "callable" if self.continuum is not None else None,
         }
 
     # MARK: Fit
@@ -463,6 +480,9 @@ class BHFitter:
               ``return_fit`` is True
         """
         x, y = self._window_data(frame, channel)
+        if self.continuum is not None:
+            xc, vc = self.continuum(self.vis, frame, channel)
+            self.model.set_continuum(xc, vc)
         if p0 is None:
             p0 = (
                 self._last_params
