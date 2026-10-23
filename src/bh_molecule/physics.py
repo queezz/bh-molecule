@@ -21,7 +21,7 @@ class Branch(enum.Enum):
 # Sensitivity switches of `BHModel`; the first entry is the production default.
 UPPER_ENERGIES = ("huber_herzberg", "fernando_bernath")
 BAND_POSITIONS = ("v00", "own")
-BASELINES = ("constant", "linear", "quadratic")
+BASELINES = ("constant", "linear", "quadratic", "hgamma")
 ISOTOPOLOGUES = ("11BH", "natural")
 H2_LINE_SETS = (False, True, "R2")
 ROT_COMPONENTS = (1, 2)
@@ -41,6 +41,18 @@ R11_MODEL_NM: dict[str, float] = {
 # the centre of the production window, as for the linear baseline, so that
 # ``dx`` keeps its meaning (the shift at the window centre).
 STRETCH_REF_NM: float = 433.475
+
+# H-gamma far wing of ``baseline="hgamma"``: a Lorentzian centred on H-gamma (NIST ASD,
+# H I 4340.472 A in air) on the shifted grid x + dx, HWHM ``HGAMMA_WING_HWHM_NM``,
+# normalised to 1 at ``HGAMMA_WING_REF_NM`` from the line centre (433.80 nm, the red edge
+# of set C's window), so that its amplitude ``base_hg`` is the wing level there. In the
+# BH window the line centre is 0.25-1.0 nm away and the shape is the far wing ~ d^-2;
+# the measured H-gamma profiles of the 1.33 m spectrometer follow d^-2 from 0.03 to
+# 0.3 nm (paper repo S12). ``HGAMMA_WING_POWER`` is the exponent of the far wing.
+HGAMMA_AIR_NM: float = 434.0472
+HGAMMA_WING_HWHM_NM: float = 0.03
+HGAMMA_WING_REF_NM: float = 0.25
+HGAMMA_WING_POWER: float = 2.0
 
 # Unidentified features in the fit window used as optional free nuisance
 # lines (``extra_lines``), rest-frame air wavelengths [nm]: F1 on the blue
@@ -86,6 +98,9 @@ EXTRA_PARAM_SPECS: dict[str, tuple[float, float, float]] = {
     # base_curv [1/nm^2] of baseline="quadratic": +-5 is +-0.9 at 433.05 nm
     # and +-0.5 at 433.80 nm, far above the 0.2-0.4 the data take.
     "base_curv": (0.0, -5.0, 5.0),
+    # base_hg of baseline="hgamma": the H-gamma wing level at 433.80 nm (dx = 0), in
+    # normalised units; the measured weak spectra take 0.1-0.5.
+    "base_hg": (0.05, 0.0, 10.0),
     "I_H2_R01": (1e-3, 0.0, 1.0),
     "I_H2_R2": (1e-3, 0.0, 1.0),
     "I_F1": (1e-3, 0.0, 1.0),
@@ -139,6 +154,11 @@ class BHModel:
         ``"quadratic"``: the linear form plus
         ``base_curv * (x - BASELINE_REF_NM)**2``; adds ``base_slope`` and
         ``base_curv`` [1/nm^2], the curvature bounded to +-5 /nm^2.
+        ``"hgamma"``: the linear form plus ``base_hg * L(x + dx)``, the far wing
+        of H-gamma (:meth:`hgamma_wing`: a Lorentzian at ``HGAMMA_AIR_NM`` with
+        HWHM ``HGAMMA_WING_HWHM_NM``, 1 at 433.80 nm); adds ``base_slope`` and
+        ``base_hg`` (bounds [0, 10]). The wing is convex and rises toward
+        H-gamma only, unlike the symmetric quadratic.
     h2_lines : {False, True, "R2"}, default False
         ``True`` adds the two H2 Y 1 -> 2B 0 lines of ``H2_NUISANCE_LINES_NM``
         as free-amplitude Gaussians with the BH line width, on the same
@@ -366,10 +386,12 @@ class BHModel:
         """Fit parameters added by the switches, appended after
         ``(C, T_rot, dx, w_inst, base, I_R7, I_R8)``; empty for the defaults."""
         names: list[str] = []
-        if self.baseline in ("linear", "quadratic"):
+        if self.baseline in ("linear", "quadratic", "hgamma"):
             names.append("base_slope")
         if self.baseline == "quadratic":
             names.append("base_curv")
+        if self.baseline == "hgamma":
+            names.append("base_hg")
         if self.h2_lines == "R2":
             names.append("I_H2_R2")
         elif self.h2_lines:
@@ -515,6 +537,21 @@ class BHModel:
             scale = BH10_OVER_BH11 * self.rot_partition(T_rot) / self.rot_partition(T_rot, "10BH")
             y = y + scale * self.bh10_spectrum(xs, T_rot, w_inst, T_tra)
         return y
+
+    # MARK: H-gamma wing
+    @staticmethod
+    def hgamma_wing(xs: np.ndarray, power: float = HGAMMA_WING_POWER) -> np.ndarray:
+        r"""Far wing of H-gamma for ``baseline="hgamma"`` on the rest-frame grid ``xs``.
+
+        :math:`L(d) = [1 + (d/\gamma)^p]^{-1} / [1 + (d_0/\gamma)^p]^{-1}` with
+        :math:`d = |x_s - \lambda_{H\gamma}|`, :math:`\gamma` =
+        ``HGAMMA_WING_HWHM_NM``, :math:`d_0` = ``HGAMMA_WING_REF_NM`` and
+        :math:`p` = ``power`` (2: Lorentzian); 1 at 0.25 nm from the line centre.
+        """
+        d = np.abs(np.asarray(xs, dtype=float) - HGAMMA_AIR_NM)
+        g = HGAMMA_WING_HWHM_NM
+        ref = 1.0 / (1.0 + (HGAMMA_WING_REF_NM / g) ** power)
+        return (1.0 / (1.0 + (d / g) ** power)) / ref
 
     # MARK: line prof
     def line_profile(self, x, wl, w_inst, T):
@@ -785,11 +822,13 @@ class BHModel:
             )
         if not names:
             return y
-        if self.baseline in ("linear", "quadratic"):
+        if self.baseline in ("linear", "quadratic", "hgamma"):
             u = np.asarray(x, dtype=float) - BASELINE_REF_NM
             y = y + values["base_slope"] * u
             if self.baseline == "quadratic":
                 y = y + values["base_curv"] * u**2
+            elif self.baseline == "hgamma":
+                y = y + values["base_hg"] * self.hgamma_wing(xs)
         if self.h2_lines == "R2":
             y = y + values["I_H2_R2"] * self.line_profile(
                 xs, H2_NUISANCE_LINES_NM["I_H2_R2"], w_inst, T_tra

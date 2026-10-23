@@ -4,6 +4,11 @@ Dated record of shipped work, newest first; per-session detail in `log/`.
 
 ## 2026-10-23
 
+- S12 continuum switch for the NME revision (owner's request on Figure 8a):
+  `BHModel(baseline="hgamma")` adds to the linear continuum the far wing of H-gamma, a
+  Lorentzian at 434.0472 nm (HWHM 0.03 nm) on the shifted grid, normalised to 1 at
+  433.80 nm, with free amplitude `base_hg` [0, 10] (`BHModel.hgamma_wing`). Defaults and
+  set C unchanged; 7 new tests. See `log/2026-10-23-s12-hgamma-baseline.md`.
 - S5h switches for the NME revision's last checks (Reviewer 1, D6):
   `BHModel(r11_lines="tied")` ties the (1-1) R(7)/R(8) areas to T_rot through the
   Hoenl-London factors (one free scale `S_v1` = n(v'=1)/n(v'=0); F&B Table I positions,
