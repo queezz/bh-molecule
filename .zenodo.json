@@ -1,0 +1,26 @@
+{
+  "upload_type": "software",
+  "title": "bh-molecule: BH A–X band spectrum model and fitting tools",
+  "description": "<p>This release archives the software version used for the revised BH\nA–X rotational-temperature analysis of the LHD study (the revision of\nthe paper).</p>\n<ul>\n<li>Models BH A¹Π–X¹Σ⁺ band spectra and fits measured spectra for\nrotational temperature.</li>\n<li>Provides single-spectrum and batch workflows, configurable fit\nconstraints, instrumental-width calibration, and tabular and graphical\noutputs.</li>\n<li>New since v0.1.2: <code>BHModel</code> keyword switches whose\ndefaults keep the v0.1.2 model bit-identical. The revised analysis (set\nC) is\n<code>BHModel(upper_energies=\"fernando_bernath\", v_max=0, baseline=\"linear\", h2_lines=True)</code>:\nFernando–Bernath f-level energies, the (0–0) band only, a linear\ncontinuum and the two H₂ lines of the fit window as free features,\nfitted over 433.05–433.80 nm\n(<code>run_bh_batch(bh_fit_range=(433.05, 433.80), model_options={...})</code>).</li>\n<li>Sensitivity switches used in the revision’s checks:\n<code>h2_r01_ratio</code> (H₂ R0/R1 tied to R2),\n<code>isotopologue=\"natural\"</code> with <code>bh10_positions</code>\n(10BH), <code>extra_lines=(\"F1\", \"F3\")</code>,\n<code>baseline=\"quadratic\"</code>, <code>rot_components=2</code>,\n<code>r11_lines=\"tied\"</code>, <code>stretch=True</code>,\n<code>baseline=\"hgamma\"</code> and <code>baseline=\"fixed\"</code> with\n<code>BHFitter(continuum=...)</code>, plus <code>h2_lines=\"R2\"</code>\nand <code>BHFitter(exclude_nm=...)</code>.</li>\n<li><code>BHFitter</code> carries a model’s extra and fixed parameters,\n<code>run_bh_batch</code> takes <code>model_options</code> and\n<code>save_grid</code>, <code>set_bounds</code> works with a fixed\n<code>w_inst</code>; the switches are documented in\n<code>docs/phys.md</code>.</li>\n</ul>\n<p>Validation for this release: 155 tests passed, 1 skipped; the\ndocumentation built successfully in strict mode.</p>",
+  "creators": [
+    {
+      "name": "Kuzmin, Arseniy A.",
+      "affiliation": "Kyoto University",
+      "orcid": "0000-0002-8429-3298"
+    },
+    {
+      "name": "Shikama, Taiichi",
+      "affiliation": "Kyoto University",
+      "orcid": "0000-0001-7331-5204"
+    }
+  ],
+  "license": "mit",
+  "keywords": [
+    "boron hydride",
+    "BH spectroscopy",
+    "molecular spectra",
+    "rotational temperature",
+    "plasma spectroscopy"
+  ],
+  "access_right": "open"
+}
