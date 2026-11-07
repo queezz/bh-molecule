@@ -17,7 +17,7 @@
       
       
       <link rel="icon" href="../assets/h2icon.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -25,10 +25,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1750,24 +1750,24 @@
 <h2 id="create-activate-the-venv">Create &amp; activate the venv<a class="headerlink" href="#create-activate-the-venv" title="Permanent link">&para;</a></h2>
 <h3 id="windows-powershell">Windows (PowerShell)<a class="headerlink" href="#windows-powershell" title="Permanent link">&para;</a></h3>
 <p><strong>1) Pick a home for all your venvs</strong></p>
-<div class="highlight"><pre><span></span><code><span class="nv">$ENV_DIR</span> <span class="p">=</span> <span class="s2">&quot;$env:USERPROFILE\.venvs&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nv">$ENV_DIR</span> <span class="p">=</span> <span class="s2">"$env:USERPROFILE\.venvs"</span>
 <span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Force</span> <span class="nv">$ENV_DIR</span> <span class="p">|</span> <span class="nb">Out-Null</span>
 </code></pre></div>
 <p><strong>2) Create the venv (choose ONE of these)</strong></p>
 <p>Option A — with the Python launcher:</p>
-<div class="highlight"><pre><span></span><code><span class="n">py</span> <span class="p">-</span><span class="n">3</span><span class="p">.</span><span class="n">12</span> <span class="n">-m</span> <span class="n">venv</span> <span class="s2">&quot;$ENV_DIR\bh-molecule&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="n">py</span> <span class="p">-</span><span class="n">3</span><span class="p">.</span><span class="n">12</span> <span class="n">-m</span> <span class="n">venv</span> <span class="s2">"$ENV_DIR\bh-molecule"</span>
 </code></pre></div>
 <p>Option B — with <code>python</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="n">python</span> <span class="n">-m</span> <span class="n">venv</span> <span class="s2">&quot;$ENV_DIR\bh-molecule&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="n">python</span> <span class="n">-m</span> <span class="n">venv</span> <span class="s2">"$ENV_DIR\bh-molecule"</span>
 </code></pre></div>
 <p><strong>3) Activate</strong></p>
-<div class="highlight"><pre><span></span><code><span class="p">&amp;</span> <span class="s2">&quot;$ENV_DIR\bh-molecule\Scripts\Activate.ps1&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="p">&amp;</span> <span class="s2">"$ENV_DIR\bh-molecule\Scripts\Activate.ps1"</span>
 </code></pre></div>
 <p><strong>4) Upgrade pip</strong></p>
 <div class="highlight"><pre><span></span><code><span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-U</span> <span class="n">pip</span>
 </code></pre></div>
 <p><strong>5) Install this project (dev extras)</strong></p>
-<div class="highlight"><pre><span></span><code><span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-e</span> <span class="s2">&quot;.[dev]&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-e</span> <span class="s2">".[dev]"</span>
 </code></pre></div>
 <blockquote>
 <p>If activation is blocked on Windows, run once:</p>
@@ -1775,14 +1775,14 @@
 </code></pre></div>
 </blockquote>
 <h3 id="macos-linux">macOS / Linux<a class="headerlink" href="#macos-linux" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nv">ENV_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.venvs&quot;</span>
-mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ENV_DIR</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nv">ENV_DIR</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/.venvs"</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">"</span><span class="nv">$ENV_DIR</span><span class="s2">"</span>
 
-python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ENV_DIR</span><span class="s2">/bh-molecule&quot;</span>
-<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ENV_DIR</span><span class="s2">/bh-molecule/bin/activate&quot;</span>
+python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span><span class="s2">"</span><span class="nv">$ENV_DIR</span><span class="s2">/bh-molecule"</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">"</span><span class="nv">$ENV_DIR</span><span class="s2">/bh-molecule/bin/activate"</span>
 
 python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>pip
-python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[dev]"</span>
 </code></pre></div>
 <p>Deactivate any time:</p>
 <div class="highlight"><pre><span></span><code>deactivate
@@ -1804,14 +1804,14 @@ python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </sp
 <p>Create <code>.vscode/settings.json</code>:</p>
 <p><strong>Windows</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;python.defaultInterpreterPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${env:USERPROFILE}\\.venvs\\bh-molecule\\Scripts\\python.exe&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;python.terminal.activateEnvironment&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="nt">"python.defaultInterpreterPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${env:USERPROFILE}\\.venvs\\bh-molecule\\Scripts\\python.exe"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"python.terminal.activateEnvironment"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>macOS/Linux</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;python.defaultInterpreterPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${env:HOME}/.venvs/bh-molecule/bin/python&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;python.terminal.activateEnvironment&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="nt">"python.defaultInterpreterPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${env:HOME}/.venvs/bh-molecule/bin/python"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"python.terminal.activateEnvironment"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>(Optional) Make external venvs auto-discoverable in the picker:</p>
@@ -1829,7 +1829,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </sp
 <h2 id="common-tasks">Common tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
 <p>Install/upgrade project deps:</p>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>pip
-python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[dev]"</span>
 </code></pre></div>
 <p>Add a package:</p>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>&lt;package&gt;
@@ -1842,18 +1842,18 @@ python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </sp
 <h2 id="recreate-the-environment">Recreate the environment<a class="headerlink" href="#recreate-the-environment" title="Permanent link">&para;</a></h2>
 <p>If things drift, rebuild quickly:</p>
 <p><strong>Windows</strong></p>
-<div class="highlight"><pre><span></span><code><span class="nb">Remove-Item</span> <span class="n">-Recurse</span> <span class="n">-Force</span> <span class="s2">&quot;$env:USERPROFILE\.venvs\bh-molecule&quot;</span>
-<span class="n">python</span> <span class="n">-m</span> <span class="n">venv</span> <span class="s2">&quot;$env:USERPROFILE\.venvs\bh-molecule&quot;</span>
-<span class="p">&amp;</span> <span class="s2">&quot;$env:USERPROFILE\.venvs\bh-molecule\Scripts\Activate.ps1&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Remove-Item</span> <span class="n">-Recurse</span> <span class="n">-Force</span> <span class="s2">"$env:USERPROFILE\.venvs\bh-molecule"</span>
+<span class="n">python</span> <span class="n">-m</span> <span class="n">venv</span> <span class="s2">"$env:USERPROFILE\.venvs\bh-molecule"</span>
+<span class="p">&amp;</span> <span class="s2">"$env:USERPROFILE\.venvs\bh-molecule\Scripts\Activate.ps1"</span>
 <span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-U</span> <span class="n">pip</span>
-<span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-e</span> <span class="s2">&quot;.[dev]&quot;</span>
+<span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-e</span> <span class="s2">".[dev]"</span>
 </code></pre></div>
 <p><strong>macOS / Linux</strong></p>
-<div class="highlight"><pre><span></span><code>rm<span class="w"> </span>-rf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.venvs/bh-molecule&quot;</span>
-python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.venvs/bh-molecule&quot;</span>
-<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.venvs/bh-molecule/bin/activate&quot;</span>
+<div class="highlight"><pre><span></span><code>rm<span class="w"> </span>-rf<span class="w"> </span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/.venvs/bh-molecule"</span>
+python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/.venvs/bh-molecule"</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/.venvs/bh-molecule/bin/activate"</span>
 python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>pip
-python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[dev]"</span>
 </code></pre></div>
 <hr />
 <h2 id="notes-gotchas">Notes &amp; gotchas<a class="headerlink" href="#notes-gotchas" title="Permanent link">&para;</a></h2>
@@ -1916,15 +1916,122 @@ python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </sp
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "content.code.copy"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../javascripts/mathjax.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       
     
-  </body>
+  <script data-mkdocs-jupyter-mathjax="{&quot;url&quot;: &quot;https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.js&quot;, &quot;version&quot;: 4}">
+/* Shared by full pages and Material's instant navigation. */
+(() => {
+  const config = JSON.parse(document.currentScript.dataset.mkdocsJupyterMathjax);
+  if (window.mkdocsJupyterMathJax) return;
+
+  let loading;
+  let queue = Promise.resolve();
+  let previous = [];
+
+  const ready = async () => {
+    if (!loading) {
+      loading = (async () => {
+        let math = window.MathJax;
+        if (!math?.typesetPromise) {
+          const url = new URL(config.url, document.baseURI).href;
+          const existing = Array.from(document.scripts).find(script =>
+            script.src && (script.src === url || script.id === 'MathJax-script' ||
+              (/mathjax/i.test(script.src) &&
+               /\/(?:MathJax|latest|(?:tex|mml)(?:-mml)?-(?:chtml|svg))\.js(?:[?#]|$)/i.test(script.src))));
+          if (existing) {
+            if (!math?.startup?.promise) {
+              await new Promise((resolve, reject) => {
+                existing.addEventListener('load', resolve, { once: true });
+                existing.addEventListener('error', reject, { once: true });
+              });
+            }
+          } else {
+            // Keep site macros, delimiters and startup hooks when supplied.
+            const options = math || {};
+            window.MathJax = {
+              ...options,
+              loader: {
+                ...options.loader,
+                load: Array.from(new Set(['ui/safe', ...(options.loader?.load || [])]))
+              },
+              startup: { typeset: false, ...options.startup },
+              tex: {
+                tags: 'ams',
+                useLabelIds: true,
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                ...options.tex
+              }
+            };
+            await new Promise((resolve, reject) => {
+              const script = document.createElement('script');
+              script.src = config.url;
+              script.id = 'MathJax-script';
+              script.async = true;
+              script.onload = resolve;
+              script.onerror = reject;
+              document.head.appendChild(script);
+            });
+          }
+        }
+        math = window.MathJax;
+        await math.startup.promise;
+        return math;
+      })();
+    }
+    const math = await loading;
+    // A site owner can extend the v3 queue again on each navigation.
+    await math.startup.promise;
+    return math;
+  };
+
+  const unrendered = node => {
+    if (node.matches('mjx-container')) return [];
+    if (!node.querySelector('mjx-container')) return [node];
+    // In v3, scanning generated assistive MathML again produces nested output.
+    return Array.from(node.children).flatMap(unrendered);
+  };
+
+  const refresh = () => {
+    // A separate chain also serializes v3, without changing v4's startup promise.
+    queue = queue.then(async () => {
+      const notebooks = Array.from(document.querySelectorAll('.jupyter-wrapper'));
+      if (!notebooks.length && !previous.length) return;
+      if (notebooks.length === previous.length &&
+          notebooks.every((node, index) => node === previous[index])) return;
+      const math = await ready();
+      if (previous.length) {
+        math.typesetClear(previous);
+        math.texReset();
+      }
+      previous = notebooks.filter(node => node.isConnected);
+      const pending = previous.flatMap(unrendered);
+      if (pending.length) await math.typesetPromise(pending);
+    }).catch(error => console.error('mkdocs-jupyter: MathJax rendering failed', error));
+    return queue;
+  };
+
+  window.mkdocsJupyterMathJax = { refresh };
+  const start = () => {
+    if (typeof document$ !== 'undefined') document$.subscribe(refresh);
+    else refresh();
+  };
+  // Theme bundles and user-provided MathJax scripts can follow notebook content.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else start();
+})();
+
+</script>
+</body>
 </html>

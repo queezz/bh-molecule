@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../assets/h2icon.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -27,10 +27,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -561,6 +561,17 @@
     <span class="md-ellipsis">
       
         full_fit_model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-switches-sensitivity-studies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model switches (sensitivity studies)
       
     </span>
   </a>
@@ -1612,6 +1623,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#model-switches-sensitivity-studies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model switches (sensitivity studies)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1712,6 +1734,92 @@ I_\ell(x)=\frac{h\nu_0}{4\pi}\; n'(v',N_2)\; A_{ul}(v',N_2\!\to\!N_1)\; g_\lambd
 {}+ I_{R7}\, g\!\left(x; \lambda_{R7}, w_{\mathrm{inst}}\right) \\ &amp;
      {}+ I_{R8}\, g\!\left(x; \lambda_{R8}, w_{\mathrm{inst}}\right) + b. \end{aligned} \]</div>
 <p><strong>Notes.</strong> The X-state affects only line centers (via tables). If Doppler broadening is also required for the auxiliary features, replace their <span class="arithmatex">\(g\)</span> with the full Doppler + instrument <span class="arithmatex">\(\Delta\lambda\)</span>.</p>
+<hr />
+<h2 id="model-switches-sensitivity-studies">Model switches (sensitivity studies)<a class="headerlink" href="#model-switches-sensitivity-studies" title="Permanent link">&para;</a></h2>
+<p><code>BHModel(...)</code> takes thirteen keyword switches. Their defaults are the production model above; any other value is a sensitivity variant, not a replacement.</p>
+<table>
+<thead>
+<tr>
+<th>Switch</th>
+<th>Default</th>
+<th>Alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>upper_energies</code></td>
+<td><code>"huber_herzberg"</code>: <code>energy</code> with <code>BH_A</code></td>
+<td><code>"fernando_bernath"</code>: Fernando &amp; Bernath (1991) Eq. (1) with the per-level Table III constants <code>BH_A_FB91</code>; f level for Q lines, e level for P/R lines</td>
+</tr>
+<tr>
+<td><code>v_max</code></td>
+<td><code>2</code>: <span class="arithmatex">\(v'=0,1,2\)</span> co-added</td>
+<td><code>0</code>: the 0–0 band only (the R7/R8 features of <code>full_fit_model</code> stay)</td>
+</tr>
+<tr>
+<td><code>band_positions</code></td>
+<td><code>"v00"</code>: every band at the 0–0 line positions</td>
+<td><code>"own"</code>: each band at its measured positions (F&amp;B Table I: <code>11BH_v11.csv</code>, <code>11BH_v22.csv</code>); lines not observed are skipped</td>
+</tr>
+<tr>
+<td><code>T_vib</code></td>
+<td><code>None</code>: each band normalised at its own <span class="arithmatex">\(N=1\)</span></td>
+<td>a temperature [K]: band <span class="arithmatex">\(v\)</span> weighted by <span class="arithmatex">\(\exp[-(T_v-T_0)/k_B T_{\rm vib}]\)</span> with the F&amp;B band origins</td>
+</tr>
+<tr>
+<td><code>baseline</code></td>
+<td><code>"constant"</code>: the constant <code>base</code></td>
+<td><code>"linear"</code>: <code>base + base_slope * (x - 433.475)</code> on the measured (unshifted) grid, so <code>base</code> is the value at the centre of the production window; adds the fit parameter <code>base_slope</code> [1/nm], start 0, bounds ±1; <code>"quadratic"</code>: the same plus <code>base_curv * (x - 433.475)**2</code>, adds <code>base_slope</code> and <code>base_curv</code> [1/nm²], start 0, bounds ±5; <code>"hgamma"</code>: the linear form plus <code>base_hg * L(x + dx)</code>, the far wing of H<span class="arithmatex">\(\gamma\)</span> (<code>BHModel.hgamma_wing</code>: a Lorentzian at 434.0472 nm with HWHM 0.03 nm, normalised to 1 at 0.25 nm from the line centre, i.e. at 433.80 nm), adds <code>base_slope</code> and <code>base_hg</code>, start 0.05, bounds [0, 10]; <code>"fixed"</code>: a continuum computed before the fit and held, <code>BHModel.set_continuum(x, values)</code> on the measured grid (interpolated linearly, never extrapolated), <code>base</code> held at 0 (<code>fixed_params</code>), no continuum parameter fitted; <code>BHFitter(continuum=f)</code> calls <code>f(vis, frame, channel) -&gt; (x, values)</code> for each spectrum and sets it</td>
+</tr>
+<tr>
+<td><code>h2_lines</code></td>
+<td><code>False</code></td>
+<td><code>"R2"</code>: only the R2 line (<code>I_H2_R2</code>), for fits that leave the R0/R1 region out of the data (<code>BHFitter(exclude_nm=...)</code>); <code>True</code>: the H<span class="arithmatex">\(_2\)</span> lines Y 1 → 2B 0 R0/R1 (433.2619 nm) and R2 (433.5522 nm), Dieke's air wavelengths (Crosswhite 1972, Table T), as free-amplitude Gaussians with the BH line width on the shifted grid <code>x + dx</code>; adds <code>I_H2_R01</code>, <code>I_H2_R2</code>, start 1e-3, bounds [0, 1] like <code>I_R7</code>, <code>I_R8</code></td>
+</tr>
+<tr>
+<td><code>h2_r01_ratio</code></td>
+<td><code>None</code>: the two H<span class="arithmatex">\(_2\)</span> amplitudes are free</td>
+<td>a positive number <span class="arithmatex">\(r\)</span> (only with <code>h2_lines=True</code>): the R0/R1 amplitude is tied to R2, <span class="arithmatex">\(I_{\rm R0/R1} = r\,I_{\rm R2}\)</span>, so only <code>I_H2_R2</code> is fitted. R0/R1 lies on BH Q(17) (0.002 nm away) and the low-<span class="arithmatex">\(N\)</span> Q lines, so a free amplitude there can take BH intensity; the tie sets it from the resolved R2 line. <code>DIEKE_H2_R01_OVER_R2</code> <span class="arithmatex">\(= 1.29/1.20 = 1.075\)</span> is the ratio of Dieke's photoelectric intensities <span class="arithmatex">\(I_4\)</span> (Crosswhite 1972, Table T, pp. T104–T105), read as linear; the eye estimates give 0.9/0.8 and 1.0/1.0</td>
+</tr>
+<tr>
+<td><code>isotopologue</code></td>
+<td><code>"11BH"</code></td>
+<td><code>"natural"</code> (needs <code>upper_energies="fernando_bernath"</code>, <code>v_max=0</code>): adds <span class="arithmatex">\(^{10}\)</span>BH at its natural share (0.199 of BH, <code>BH10_OVER_BH11</code> = 0.248 of <span class="arithmatex">\(^{11}\)</span>BH) with the same <span class="arithmatex">\(T_{\rm rot}\)</span>: the <span class="arithmatex">\(^{10}\)</span>BH 0–0 Q lines with their own f-level energies, each isotopologue normalised by its own partition sum <span class="arithmatex">\(Z=\sum_{N=1}^{22}(2N+1)e^{-\Delta F_N/kT}\)</span>, and the <span class="arithmatex">\(^{10}\)</span>BH 1–1 R(7)/R(8) lines (F&amp;B Table V) at 0.248 times the free <span class="arithmatex">\(^{11}\)</span>BH amplitudes. No new fit parameters</td>
+</tr>
+<tr>
+<td><code>bh10_positions</code></td>
+<td><code>"fb91"</code>: F&amp;B Table V where measured, their Table VII <span class="arithmatex">\(^{10}\)</span>BH constants elsewhere</td>
+<td><code>"mass_scaled"</code>: the <span class="arithmatex">\(^{11}\)</span>BH Dunham set of F&amp;B Table VIII scaled with <span class="arithmatex">\(\rho=\sqrt{\mu_{11}/\mu_{10}}\)</span> (<span class="arithmatex">\(Y_{kl}\rho^{k+2l}\)</span>, <span class="arithmatex">\(\Lambda\)</span>-doubling <span class="arithmatex">\(Q_{kl}\rho^{k+2l+2}\)</span>). The two agree within 0.0015 nm to Q(11) and for every measured P and R line; Table V's Q(18)–Q(20) lie 2.4–5.5 cm⁻¹ blue of the scaled values (<code>bh_molecule.isotopes</code>)</td>
+</tr>
+<tr>
+<td><code>extra_lines</code></td>
+<td><code>()</code></td>
+<td><code>("F1", "F3")</code>: the unidentified features at 433.100 and 433.750 nm (rest frame, <code>EXTRA_LINES_NM</code>) as free Gaussians with the BH width on the shifted grid; adds <code>I_F1</code>, <code>I_F3</code>, bounds [0, 1]</td>
+</tr>
+<tr>
+<td><code>rot_components</code></td>
+<td><code>1</code></td>
+<td><code>2</code> (needs <code>v_max=0</code>): upper-level populations <span class="arithmatex">\((1-f)\,n(T_{\rm rot}) + f\,n(T_{\rm rot,2})\)</span>, each normalised by <span class="arithmatex">\(Z(T)\)</span> and scaled so that <span class="arithmatex">\(f=0\)</span> is the one-temperature model with the same <code>C</code>; adds <code>T_rot2</code> [K] (start 6000, bounds 200–30 000) and <code>frac2</code> (0.1, [0, 1])</td>
+</tr>
+<tr>
+<td><code>r11_lines</code></td>
+<td><code>"free"</code>: the <span class="arithmatex">\(^{11}\)</span>BH 1–1 R(7) and R(8) lines with free amplitudes <code>I_R7</code>, <code>I_R8</code> at 433.64776 / 433.33501 nm (<code>R11_MODEL_NM</code>, 0.0037 nm red of F&amp;B Table I)</td>
+<td><code>"tied"</code> (needs <code>v_max=0</code>, <code>rot_components=1</code>): their areas follow from the common <span class="arithmatex">\(T_{\rm rot}\)</span>, <span class="arithmatex">\(1\mathrm{e}8\,C\,S_{v1}\,g\,(2N'+1)\,e^{-\Delta F_e(1,N')/kT}\,A(1,N',N'')\,h\nu/4\pi\)</span> with <span class="arithmatex">\(N'=N''+1\)</span>, the R-branch Hönl–London factor <span class="arithmatex">\((N'+1)/2\)</span> of <code>A_coeff</code>, and the e-level energies of <span class="arithmatex">\(v'=1\)</span> above <span class="arithmatex">\(N'=1\)</span> (<code>BHModel.r11_tied_areas</code>); one free scale <code>S_v1</code> <span class="arithmatex">\(= n(v'=1,N'=1)/n(v'=0,N'=1)\)</span> (start 0.4, bounds [0, 5]); positions F&amp;B Table I (433.644051 / 433.331292 nm). <code>I_R7</code>, <code>I_R8</code> stay in the signature, are ignored, and <code>BHModel.fixed_params</code> makes <code>BHFitter</code> hold them at 0</td>
+</tr>
+<tr>
+<td><code>stretch</code></td>
+<td><code>False</code></td>
+<td><code>True</code>: a linear wavelength stretch <code>stretch</code> (<span class="arithmatex">\(\varepsilon\)</span>, start 0, bounds ±0.02): the model lines sit on <code>x + dx + eps * (x - 433.475)</code> (<code>STRETCH_REF_NM</code>), a relative dispersion error of the measured grid, and the Gaussian width is scaled by <span class="arithmatex">\(1+\varepsilon\)</span> so that the width on the measured grid stays <code>w_inst</code>; the baseline stays on the measured grid</td>
+</tr>
+</tbody>
+</table>
+<p>The Fernando–Bernath term value is</p>
+<div class="arithmatex">\[
+F_{e/f}(J) = T_v + B_v x - D_v x^2 + H_v x^3 + L_v x^4 \pm \tfrac12 x\,(q_v + q_{Dv}\,x), \qquad x = J(J+1),
+\]</div>
+<p>with "+" for e and "−" for f. A Q line (<span class="arithmatex">\(\Delta J = 0\)</span>) joins an f level of A<span class="arithmatex">\(\,^1\Pi\)</span> to an e level of X<span class="arithmatex">\(\,^1\Sigma^+\)</span>, so the Q-branch populations use <span class="arithmatex">\(F_f\)</span>. With the f sign the tabulated constants reproduce every observed Q line of the 0–0, 1–1 and 2–2 bands to 0.03 cm⁻¹; the e sign misses by up to 17 cm⁻¹.</p>
+<p>With <code>band_positions="own"</code> the 1–1 and 2–2 Q branches lie at 436.7–439.9 nm and 443.4–446.8 nm (air), outside the 433.05–433.90 nm fit window, so in that window the mixture reduces to the 0–0 model whatever <code>T_vib</code> is.</p>
+<p>The extra fit parameters follow the seven of <code>full_fit_model</code> in the order <code>base_slope</code>, <code>base_curv</code> or <code>base_hg</code>, <code>I_H2_R01</code>, <code>I_H2_R2</code>, <code>I_F1</code>, <code>I_F3</code>, <code>T_rot2</code>, <code>frac2</code>, <code>S_v1</code>, <code>stretch</code> (<code>BHModel.extra_param_names</code>, only those the switches add; <code>I_H2_R2</code> alone when <code>h2_r01_ratio</code> ties the two lines or <code>h2_lines="R2"</code>). <code>BHFitter</code> appends them to <code>param_names</code> with the model's start values and bounds; <code>run_bh_batch(..., model_options={...})</code> builds the model with any of the switches and writes the extra parameters as <code>summary.csv</code> columns. The fit-window upper limit is the upper edge of <code>run_bh_batch</code>'s <code>bh_fit_range</code> (e.g. <code>(433.05, 433.80)</code> leaves out the H<span class="arithmatex">\(\gamma\)</span> wing); the normalisation, taken inside <code>bh_scale_range</code>, does not depend on it. The offset <code>base</code> keeps the fitter's bound (<code>base_tight</code>, <code>base_bound</code>) unless <code>bounds</code> overrides it, e.g. <code>{"lower": {"base": -0.05}, "upper": {"base": 0.5}}</code>. <code>BHFitter(exclude_nm=[(lo, hi), ...], exclude_frame="rest")</code> gives zero weight to wavelength ranges: in the rest frame <code>x + dx</code> (a first fit of all points gives <code>dx</code>) or on the measured grid; the returned <code>x</code>, <code>y</code>, <code>yfit</code> and hence R² cover the points fitted. Parameters a model lists in <code>fixed_params</code> are eliminated from the fit like a fixed <code>w_inst</code> (value held, error and covariance 0); <code>describe_constraints()</code> reports them as <code>model_fixed</code>.</p>
 
 
 
@@ -1761,15 +1869,122 @@ I_\ell(x)=\frac{h\nu_0}{4\pi}\; n'(v',N_2)\; A_{ul}(v',N_2\!\to\!N_1)\; g_\lambd
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "content.code.copy"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../javascripts/mathjax.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       
     
-  </body>
+  <script data-mkdocs-jupyter-mathjax="{&quot;url&quot;: &quot;https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.js&quot;, &quot;version&quot;: 4}">
+/* Shared by full pages and Material's instant navigation. */
+(() => {
+  const config = JSON.parse(document.currentScript.dataset.mkdocsJupyterMathjax);
+  if (window.mkdocsJupyterMathJax) return;
+
+  let loading;
+  let queue = Promise.resolve();
+  let previous = [];
+
+  const ready = async () => {
+    if (!loading) {
+      loading = (async () => {
+        let math = window.MathJax;
+        if (!math?.typesetPromise) {
+          const url = new URL(config.url, document.baseURI).href;
+          const existing = Array.from(document.scripts).find(script =>
+            script.src && (script.src === url || script.id === 'MathJax-script' ||
+              (/mathjax/i.test(script.src) &&
+               /\/(?:MathJax|latest|(?:tex|mml)(?:-mml)?-(?:chtml|svg))\.js(?:[?#]|$)/i.test(script.src))));
+          if (existing) {
+            if (!math?.startup?.promise) {
+              await new Promise((resolve, reject) => {
+                existing.addEventListener('load', resolve, { once: true });
+                existing.addEventListener('error', reject, { once: true });
+              });
+            }
+          } else {
+            // Keep site macros, delimiters and startup hooks when supplied.
+            const options = math || {};
+            window.MathJax = {
+              ...options,
+              loader: {
+                ...options.loader,
+                load: Array.from(new Set(['ui/safe', ...(options.loader?.load || [])]))
+              },
+              startup: { typeset: false, ...options.startup },
+              tex: {
+                tags: 'ams',
+                useLabelIds: true,
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                ...options.tex
+              }
+            };
+            await new Promise((resolve, reject) => {
+              const script = document.createElement('script');
+              script.src = config.url;
+              script.id = 'MathJax-script';
+              script.async = true;
+              script.onload = resolve;
+              script.onerror = reject;
+              document.head.appendChild(script);
+            });
+          }
+        }
+        math = window.MathJax;
+        await math.startup.promise;
+        return math;
+      })();
+    }
+    const math = await loading;
+    // A site owner can extend the v3 queue again on each navigation.
+    await math.startup.promise;
+    return math;
+  };
+
+  const unrendered = node => {
+    if (node.matches('mjx-container')) return [];
+    if (!node.querySelector('mjx-container')) return [node];
+    // In v3, scanning generated assistive MathML again produces nested output.
+    return Array.from(node.children).flatMap(unrendered);
+  };
+
+  const refresh = () => {
+    // A separate chain also serializes v3, without changing v4's startup promise.
+    queue = queue.then(async () => {
+      const notebooks = Array.from(document.querySelectorAll('.jupyter-wrapper'));
+      if (!notebooks.length && !previous.length) return;
+      if (notebooks.length === previous.length &&
+          notebooks.every((node, index) => node === previous[index])) return;
+      const math = await ready();
+      if (previous.length) {
+        math.typesetClear(previous);
+        math.texReset();
+      }
+      previous = notebooks.filter(node => node.isConnected);
+      const pending = previous.flatMap(unrendered);
+      if (pending.length) await math.typesetPromise(pending);
+    }).catch(error => console.error('mkdocs-jupyter: MathJax rendering failed', error));
+    return queue;
+  };
+
+  window.mkdocsJupyterMathJax = { refresh };
+  const start = () => {
+    if (typeof document$ !== 'undefined') document$.subscribe(refresh);
+    else refresh();
+  };
+  // Theme bundles and user-provided MathJax scripts can follow notebook content.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else start();
+})();
+
+</script>
+</body>
 </html>

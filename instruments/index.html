@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../assets/h2icon.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -27,10 +27,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -2069,10 +2069,10 @@ set it explicitly.</p>
 </tbody>
 </table>
 <p>Examples:</p>
-<div class="highlight"><pre><span></span><code><span class="n">s</span> <span class="o">=</span> <span class="n">Vis133M</span><span class="o">.</span><span class="n">from_files</span><span class="p">(</span><span class="s2">&quot;193791.fits&quot;</span><span class="p">)</span>                    <span class="c1"># dispersion only</span>
-<span class="n">s</span> <span class="o">=</span> <span class="n">Vis133M</span><span class="o">.</span><span class="n">from_files</span><span class="p">(</span><span class="s2">&quot;193791.fits&quot;</span><span class="p">,</span> <span class="n">cw</span><span class="o">=</span><span class="mf">434.05</span><span class="p">)</span>        <span class="c1"># use CW directly</span>
-<span class="n">s</span> <span class="o">=</span> <span class="n">Vis133M</span><span class="o">.</span><span class="n">from_files</span><span class="p">(</span><span class="s2">&quot;193791.fits&quot;</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="s2">&quot;H_gamma&quot;</span><span class="p">)</span>   <span class="c1"># store line, no CW yet</span>
-<span class="n">s</span> <span class="o">=</span> <span class="n">Vis133M</span><span class="o">.</span><span class="n">from_files</span><span class="p">(</span><span class="s2">&quot;193791.fits&quot;</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="mf">434.0462</span><span class="p">)</span>    <span class="c1"># store wavelength</span>
+<div class="highlight"><pre><span></span><code><span class="n">s</span> <span class="o">=</span> <span class="n">Vis133M</span><span class="o">.</span><span class="n">from_files</span><span class="p">(</span><span class="s2">"193791.fits"</span><span class="p">)</span>                    <span class="c1"># dispersion only</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">Vis133M</span><span class="o">.</span><span class="n">from_files</span><span class="p">(</span><span class="s2">"193791.fits"</span><span class="p">,</span> <span class="n">cw</span><span class="o">=</span><span class="mf">434.05</span><span class="p">)</span>        <span class="c1"># use CW directly</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">Vis133M</span><span class="o">.</span><span class="n">from_files</span><span class="p">(</span><span class="s2">"193791.fits"</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="s2">"H_gamma"</span><span class="p">)</span>   <span class="c1"># store line, no CW yet</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">Vis133M</span><span class="o">.</span><span class="n">from_files</span><span class="p">(</span><span class="s2">"193791.fits"</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="mf">434.0462</span><span class="p">)</span>    <span class="c1"># store wavelength</span>
 </code></pre></div>
 <hr />
 <h2 id="5-inspecting-spectra-before-calibration">5. Inspecting spectra before calibration<a class="headerlink" href="#5-inspecting-spectra-before-calibration" title="Permanent link">&para;</a></h2>
@@ -2083,7 +2083,7 @@ a frame and a peak pixel for CW estimation.</p>
 </code></pre></div>
 <h3 id="spectrum-in-pixel-space">Spectrum in pixel space<a class="headerlink" href="#spectrum-in-pixel-space" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Single channel or sum over channels</span>
-<span class="n">pixels</span><span class="p">,</span> <span class="n">intensity</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">spectrum</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reduce</span><span class="o">=</span><span class="s2">&quot;sum_channels&quot;</span><span class="p">)</span>
+<span class="n">pixels</span><span class="p">,</span> <span class="n">intensity</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">spectrum</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reduce</span><span class="o">=</span><span class="s2">"sum_channels"</span><span class="p">)</span>
 <span class="c1"># Or one channel:</span>
 <span class="n">pixels</span><span class="p">,</span> <span class="n">intensity</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">spectrum</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
 </code></pre></div>
@@ -2103,10 +2103,10 @@ the instance; it only returns the CW value.</p>
 <h3 id="balmer-line-constants">Balmer line constants<a class="headerlink" href="#balmer-line-constants" title="Permanent link">&para;</a></h3>
 <p>Wavelengths (nm, in air) for common reference lines:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bh_molecule.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">BALMER_LINES_NM</span>
-<span class="c1"># {&quot;H_alpha&quot;: 656.279, &quot;H_beta&quot;: 486.133, &quot;H_gamma&quot;: 434.0462, &quot;H_delta&quot;: 410.174}</span>
+<span class="c1"># {"H_alpha": 656.279, "H_beta": 486.133, "H_gamma": 434.0462, "H_delta": 410.174}</span>
 </code></pre></div>
 <h3 id="estimate_cw_from_line">estimate_cw_from_line<a class="headerlink" href="#estimate_cw_from_line" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">cw_nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">estimate_cw_from_line</span><span class="p">(</span><span class="n">peak_pixel</span><span class="o">=</span><span class="mi">876</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="s2">&quot;H_gamma&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">cw_nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">estimate_cw_from_line</span><span class="p">(</span><span class="n">peak_pixel</span><span class="o">=</span><span class="mi">876</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="s2">"H_gamma"</span><span class="p">)</span>
 <span class="c1"># or</span>
 <span class="n">cw_nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">estimate_cw_from_line</span><span class="p">(</span><span class="n">peak_pixel</span><span class="o">=</span><span class="mi">876</span><span class="p">,</span> <span class="n">wavelength</span><span class="o">=</span><span class="mf">434.0462</span><span class="p">)</span>
 </code></pre></div>
@@ -2126,7 +2126,7 @@ the instance; it only returns the CW value.</p>
 <div class="highlight"><pre><span></span><code><span class="n">s</span><span class="o">.</span><span class="n">apply_cw</span><span class="p">(</span><span class="n">cw_nm</span><span class="p">)</span>
 </code></pre></div>
 <p>Optional line metadata (for the calibration report):</p>
-<div class="highlight"><pre><span></span><code><span class="n">s</span><span class="o">.</span><span class="n">apply_cw</span><span class="p">(</span><span class="n">cw_nm</span><span class="p">,</span> <span class="n">line_name</span><span class="o">=</span><span class="s2">&quot;H_gamma&quot;</span><span class="p">,</span> <span class="n">peak_pixel</span><span class="o">=</span><span class="mi">876</span><span class="p">,</span> <span class="n">frame_used</span><span class="o">=</span><span class="n">frame</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">s</span><span class="o">.</span><span class="n">apply_cw</span><span class="p">(</span><span class="n">cw_nm</span><span class="p">,</span> <span class="n">line_name</span><span class="o">=</span><span class="s2">"H_gamma"</span><span class="p">,</span> <span class="n">peak_pixel</span><span class="o">=</span><span class="mi">876</span><span class="p">,</span> <span class="n">frame_used</span><span class="o">=</span><span class="n">frame</span><span class="p">)</span>
 </code></pre></div>
 <p>If you pass <strong>line_name</strong> and omit <strong>line_wavelength</strong>, the wavelength is looked
 up in <code>BALMER_LINES_NM</code>. <strong>apply_cw</strong> is only available for instances created
@@ -2147,14 +2147,14 @@ per-channel wavelength axis stored in the Vis133M instance.</p>
 <h2 id="9-typical-workflow-jupyter">9. Typical workflow (Jupyter)<a class="headerlink" href="#9-typical-workflow-jupyter" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bh_molecule.instruments</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vis133M</span>
 
-<span class="n">s</span> <span class="o">=</span> <span class="n">Vis133M</span><span class="o">.</span><span class="n">from_files</span><span class="p">(</span><span class="s2">&quot;193791.fits&quot;</span><span class="p">)</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">Vis133M</span><span class="o">.</span><span class="n">from_files</span><span class="p">(</span><span class="s2">"193791.fits"</span><span class="p">)</span>
 
 <span class="n">frame</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">pick_frame</span><span class="p">()</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">plot_spectrum_pixels</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">show_peaks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-<span class="n">cw</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">estimate_cw_from_line</span><span class="p">(</span><span class="n">peak_pixel</span><span class="o">=</span><span class="mi">876</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="s2">&quot;H_gamma&quot;</span><span class="p">)</span>
-<span class="n">s</span><span class="o">.</span><span class="n">apply_cw</span><span class="p">(</span><span class="n">cw</span><span class="p">,</span> <span class="n">line_name</span><span class="o">=</span><span class="s2">&quot;H_gamma&quot;</span><span class="p">,</span> <span class="n">peak_pixel</span><span class="o">=</span><span class="mi">876</span><span class="p">,</span> <span class="n">frame_used</span><span class="o">=</span><span class="n">frame</span><span class="p">)</span>
+<span class="n">cw</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">estimate_cw_from_line</span><span class="p">(</span><span class="n">peak_pixel</span><span class="o">=</span><span class="mi">876</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="s2">"H_gamma"</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">apply_cw</span><span class="p">(</span><span class="n">cw</span><span class="p">,</span> <span class="n">line_name</span><span class="o">=</span><span class="s2">"H_gamma"</span><span class="p">,</span> <span class="n">peak_pixel</span><span class="o">=</span><span class="mi">876</span><span class="p">,</span> <span class="n">frame_used</span><span class="o">=</span><span class="n">frame</span><span class="p">)</span>
 
 <span class="n">s</span><span class="o">.</span><span class="n">calibration_report</span><span class="p">()</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">plot_spectrum_plotly</span><span class="p">(</span><span class="mi">31</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
@@ -2238,15 +2238,122 @@ is explicit CW via <strong>estimate_cw_from_line</strong> + <strong>apply_cw</st
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "content.code.copy"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../javascripts/mathjax.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       
     
-  </body>
+  <script data-mkdocs-jupyter-mathjax="{&quot;url&quot;: &quot;https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.js&quot;, &quot;version&quot;: 4}">
+/* Shared by full pages and Material's instant navigation. */
+(() => {
+  const config = JSON.parse(document.currentScript.dataset.mkdocsJupyterMathjax);
+  if (window.mkdocsJupyterMathJax) return;
+
+  let loading;
+  let queue = Promise.resolve();
+  let previous = [];
+
+  const ready = async () => {
+    if (!loading) {
+      loading = (async () => {
+        let math = window.MathJax;
+        if (!math?.typesetPromise) {
+          const url = new URL(config.url, document.baseURI).href;
+          const existing = Array.from(document.scripts).find(script =>
+            script.src && (script.src === url || script.id === 'MathJax-script' ||
+              (/mathjax/i.test(script.src) &&
+               /\/(?:MathJax|latest|(?:tex|mml)(?:-mml)?-(?:chtml|svg))\.js(?:[?#]|$)/i.test(script.src))));
+          if (existing) {
+            if (!math?.startup?.promise) {
+              await new Promise((resolve, reject) => {
+                existing.addEventListener('load', resolve, { once: true });
+                existing.addEventListener('error', reject, { once: true });
+              });
+            }
+          } else {
+            // Keep site macros, delimiters and startup hooks when supplied.
+            const options = math || {};
+            window.MathJax = {
+              ...options,
+              loader: {
+                ...options.loader,
+                load: Array.from(new Set(['ui/safe', ...(options.loader?.load || [])]))
+              },
+              startup: { typeset: false, ...options.startup },
+              tex: {
+                tags: 'ams',
+                useLabelIds: true,
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                ...options.tex
+              }
+            };
+            await new Promise((resolve, reject) => {
+              const script = document.createElement('script');
+              script.src = config.url;
+              script.id = 'MathJax-script';
+              script.async = true;
+              script.onload = resolve;
+              script.onerror = reject;
+              document.head.appendChild(script);
+            });
+          }
+        }
+        math = window.MathJax;
+        await math.startup.promise;
+        return math;
+      })();
+    }
+    const math = await loading;
+    // A site owner can extend the v3 queue again on each navigation.
+    await math.startup.promise;
+    return math;
+  };
+
+  const unrendered = node => {
+    if (node.matches('mjx-container')) return [];
+    if (!node.querySelector('mjx-container')) return [node];
+    // In v3, scanning generated assistive MathML again produces nested output.
+    return Array.from(node.children).flatMap(unrendered);
+  };
+
+  const refresh = () => {
+    // A separate chain also serializes v3, without changing v4's startup promise.
+    queue = queue.then(async () => {
+      const notebooks = Array.from(document.querySelectorAll('.jupyter-wrapper'));
+      if (!notebooks.length && !previous.length) return;
+      if (notebooks.length === previous.length &&
+          notebooks.every((node, index) => node === previous[index])) return;
+      const math = await ready();
+      if (previous.length) {
+        math.typesetClear(previous);
+        math.texReset();
+      }
+      previous = notebooks.filter(node => node.isConnected);
+      const pending = previous.flatMap(unrendered);
+      if (pending.length) await math.typesetPromise(pending);
+    }).catch(error => console.error('mkdocs-jupyter: MathJax rendering failed', error));
+    return queue;
+  };
+
+  window.mkdocsJupyterMathJax = { refresh };
+  const start = () => {
+    if (typeof document$ !== 'undefined') document$.subscribe(refresh);
+    else refresh();
+  };
+  // Theme bundles and user-provided MathJax scripts can follow notebook content.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else start();
+})();
+
+</script>
+</body>
 </html>
