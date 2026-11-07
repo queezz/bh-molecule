@@ -221,6 +221,8 @@ class BHModel:
         ``w_inst`` (the instrument function is fixed in pixels) and only the
         positions move. The baseline stays on the measured grid.
 
+    Notes
+    -----
     Extra fit parameters are appended to the production signature of
     :meth:`full_fit_model` in the order of :attr:`extra_param_names`.
     The defaults reproduce the production model exactly.
